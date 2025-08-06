@@ -1,0 +1,94 @@
+/* Main Theme Styles */
+:root {
+    --thm-font: "Rubik", sans-serif;
+    --thm-b-font: "Rubik", sans-serif;
+    --thm-primary: #f94d1c;
+    --thm-primary-rgb: 249, 77, 28;
+    --thm-black: #1c1c27;
+    --thm-black-rgb: 28, 28, 39;
+}
+
+/* Reset */
+body {
+    font-family: var(--thm-font);
+    color: #686a6f;
+    font-size: 16px;
+    line-height: 1.875;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Header Styles */
+.main-header {
+    background-color: var(--thm-black);
+    padding: 0 0;
+}
+
+/* Mobile Menu */
+.mobile-nav__wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0;
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: opacity 500ms ease 0s, visibility 500ms ease 0s, transform 500ms ease 0s;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.mobile-nav__wrapper.expanded {
+    opacity: 1;
+    transform: translateX(0%);
+    visibility: visible;
+}
+
+.mobile-nav__content {
+    width: 300px;
+    background-color: var(--thm-black);
+    z-index: 10;
+    position: relative;
+    height: 100%;
+    overflow-y: auto;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Buttons */
+.thm-btn {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-appearance: none;
+    border: none;
+    outline: none !important;
+    background-color: var(--thm-primary);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 18px 50px 18px;
+    transition: all 0.3s linear;
+    overflow: hidden;
+    text-align: center;
+}
+
+/* Theme Colors */
+.bg-thm-color1 {
+    background-color: var(--thm-primary);
+}
+
+.bg-thm-color2 {
+    background-color: var(--thm-black);
+}
+
+/* Navigation */
+.main-menu__list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    align-items: center;
+    display: flex;
+}
