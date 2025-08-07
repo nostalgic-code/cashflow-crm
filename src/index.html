@@ -415,9 +415,9 @@
                         </div>
                     </div><!-- /.col-lg-6 -->
                     <div class="col-lg-12 col-xl-5">
-                        <form action="#" id="loan-calculator" class="about-one__form wow fadeInUp" data-wow-duration="1500ms">
-                            <h3>How Much You Need</h3>
-                            <div class="about-one__form-content">
+                        <form action="#" id="loan-calculator" class="about-one__form wow fadeInUp" data-wow-duration="1500ms" >
+                            <h3 style="background-color: var(--money-green);">How Much You Need</h3>
+                            <div class="about-one__form-content" >
                                 <div class="loan-type-toggle" style="margin-bottom: 20px; text-align: center;">
                                     <style>
                                         .toggle-switch {
@@ -532,27 +532,95 @@
                                     <input type="hidden" value="" id="max-value-rangeslider-count">
                                 </div><!-- /.input-box -->
                                 <div class="input-box__top">
+                                    <span>Fixed Term:</span>
                                     <span>1 Month</span>
-                                    <span>12 Months</span>
                                 </div><!-- /.input-box__top -->
                                 <div class="input-box">
+                                    <style>
+                                        .range-slider-month {
+                                            opacity: 0.5;
+                                            pointer-events: none;
+                                        }
+                                        .range-slider-month .noUi-handle {
+                                            cursor: not-allowed;
+                                        }
+                                        .range-slider-month .noUi-pips-horizontal {
+                                            display: none;
+                                        }
+                                        .range-slider-month .noUi-value,
+                                        .range-slider-month .noUi-marker {
+                                            display: none;
+                                        }
+                                    </style>
                                     <div class="range-slider-month" id="range-slider-month"></div>
-                                    <input type="hidden" value="" id="min-value-rangeslider-month">
-                                    <input type="hidden" value="" id="max-value-rangeslider-month">
+                                    <input type="hidden" value="1" id="min-value-rangeslider-month">
+                                    <input type="hidden" value="1" id="max-value-rangeslider-month">
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            if (typeof noUiSlider !== 'undefined') {
+                                                var monthSlider = document.getElementById('range-slider-month');
+                                                if (monthSlider.noUiSlider) {
+                                                    monthSlider.noUiSlider.updateOptions({
+                                                        start: 1,
+                                                        range: {
+                                                            'min': 1,
+                                                            'max': 1
+                                                        },
+                                                        step: 1,
+                                                        connect: true
+                                                    });
+                                                    monthSlider.noUiSlider.set(1);
+                                                    monthSlider.setAttribute('disabled', true);
+                                                }
+                                            }
+                                        });
+                                    </script>
                                 </div><!-- /.input-box -->
                                  <div class="input-box__top">
-                                    <span>1%</span>
-                                    <span>15%</span>
+                                    <span>Fixed Interest:</span>
+                                    <span>50%</span>
                                 </div><!-- /.input-box__top -->
                                  <div class="input-box">
+                                    <style>
+                                        .range-slider-interest {
+                                            opacity: 0.5;
+                                            pointer-events: none;
+                                        }
+                                        .range-slider-interest .noUi-handle {
+                                            cursor: not-allowed;
+                                        }
+                                        .range-slider-interest .noUi-pips-horizontal {
+                                            display: none;
+                                        }
+                                        .range-slider-interest .noUi-value,
+                                        .range-slider-interest .noUi-marker {
+                                            display: none;
+                                        }
+                                    </style>
                                     <div class="range-slider-interest" id="range-slider-interest"></div>
-                                    <input type="hidden" value="" id="min-value-rangeslider-interest">
-                                    <input type="hidden" value="" id="max-value-rangeslider-interest">
+                                    <input type="hidden" value="50" id="min-value-rangeslider-interest">
+                                    <input type="hidden" value="50" id="max-value-rangeslider-interest">
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            if (typeof noUiSlider !== 'undefined') {
+                                                var interestSlider = document.getElementById('range-slider-interest');
+                                                if (interestSlider.noUiSlider) {
+                                                    interestSlider.noUiSlider.updateOptions({
+                                                        start: 50,
+                                                        range: {
+                                                            'min': 50,
+                                                            'max': 50
+                                                        },
+                                                        step: 1,
+                                                        connect: true
+                                                    });
+                                                    interestSlider.noUiSlider.set(50);
+                                                    interestSlider.setAttribute('disabled', true);
+                                                }
+                                            }
+                                        });
+                                    </script>
                                 </div><!-- /.input-box -->
-                                <p>
-                                    <span>Pay Monthly</span>
-                                    <b>R<i id="loan-monthly-pay"></i></b>
-                                </p>
                                 <p>
                                     <span>Total Pay Back</span>
                                     <b>R<i id="loan-total"></i></b>
@@ -566,6 +634,59 @@
                                     const amount = document.querySelector('.range-slider-count').noUiSlider.get();
                                     const loanType = isUnsecured ? 'unsecured' : 'secured';
                                     window.location.href = `apply-for-loan.html?type=${loanType}&amount=${amount}`;
+                                });
+
+                                // Initialize range slider with more granular steps
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    if (typeof noUiSlider !== 'undefined' && document.getElementById('range-slider-count')) {
+                                        const rangeSlider = document.getElementById('range-slider-count');
+                                        if (!rangeSlider.noUiSlider) {
+                                            noUiSlider.create(rangeSlider, {
+                                                start: 100,
+                                                step: 1,  // Changed to allow any amount selection
+                                                range: {
+                                                    'min': 100,
+                                                    'max': 10000
+                                                },
+                                                connect: 'lower',
+                                                format: {
+                                                    to: function (value) {
+                                                        return parseInt(value);
+                                                    },
+                                                    from: function (value) {
+                                                        return parseInt(value);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+
+                                // Add calculation for the total payback amount
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const amountSlider = document.querySelector('.range-slider-count');
+                                    const totalPayback = document.getElementById('loan-total');
+
+                                    function calculateTotalPayback(amount) {
+                                        // Convert amount to number and remove any commas
+                                        amount = parseFloat(amount.toString().replace(/,/g, ''));
+                                        
+                                        // Calculate interest (50% of amount)
+                                        const interest = amount * 50 / 100;
+                                        
+                                        // Calculate total (amount + interest)
+                                        const total = amount + interest;
+                                        
+                                        // Update the total payback display
+                                        totalPayback.textContent = total.toLocaleString();
+                                    }
+
+                                    // Initialize noUiSlider event
+                                    if (amountSlider.noUiSlider) {
+                                        amountSlider.noUiSlider.on('update', function(values) {
+                                            calculateTotalPayback(values[0]);
+                                        });
+                                    }
                                 });
                             </script>
                         </form><!-- /.about-one__form -->
