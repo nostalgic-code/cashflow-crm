@@ -156,6 +156,20 @@
                             <input type="file" name="bankStatement" accept=".pdf" required>
                         </div>
                     </div>
+
+                    <div class="form-group terms-group">
+                        <div class="terms-container">
+                            <div class="terms-text">
+                                <h4>Terms and Conditions for Cashflow Loans</h4>
+                                <p><em>Effective Date: August 11, 2025</em></p>
+                                <p>By applying for or obtaining a loan from Cashflow Loans ("we," "us," or "our"), you ("the Borrower" or "you") agree to be bound by the following Terms and Conditions ("Terms"). Please read these Terms carefully before entering into any loan agreement with us. If you do not agree with these Terms, you should not apply for or accept a loan from Cashflow Loans.</p>
+                            </div>
+                        </div>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="unsecuredTerms" name="terms" required>
+                            <label for="unsecuredTerms">I have read and agree to the Terms and Conditions</label>
+                        </div>
+                    </div>
                     
                     <button type="submit" class="submit-btn">Submit Application</button>
                 </form>
@@ -184,6 +198,20 @@
                         <div class="file-upload">
                             <input type="file" name="collateralImages" accept="image/*" multiple required>
                             <p style="margin-top: 10px; color: #666;">Upload clear images of your collateral item (e.g., phone)</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group terms-group">
+                        <div class="terms-container">
+                            <div class="terms-text">
+                                <h4>Terms and Conditions for Cashflow Loans</h4>
+                                <p><em>Effective Date: August 11, 2025</em></p>
+                                <p>By applying for or obtaining a loan from Cashflow Loans ("we," "us," or "our"), you ("the Borrower" or "you") agree to be bound by the following Terms and Conditions ("Terms"). Please read these Terms carefully before entering into any loan agreement with us. If you do not agree with these Terms, you should not apply for or accept a loan from Cashflow Loans.</p>
+                            </div>
+                        </div>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="securedTerms" name="terms" required>
+                            <label for="securedTerms">I have read and agree to the Terms and Conditions</label>
                         </div>
                     </div>
                     
@@ -255,6 +283,49 @@
                         background: var(--money-dark-green, #45a049);
                         transform: translateY(-1px);
                     }
+
+                    .terms-group {
+                        margin-top: 30px;
+                        border: 1px solid #ddd;
+                        padding: 20px;
+                        border-radius: 4px;
+                    }
+
+                    .terms-container {
+                        margin-bottom: 20px;
+                    }
+
+                    .terms-text {
+                        max-height: 200px;
+                        overflow-y: auto;
+                        padding: 15px;
+                        background: #f9f9f9;
+                        border: 1px solid #eee;
+                        border-radius: 4px;
+                        margin-bottom: 15px;
+                    }
+
+                    .terms-text h4 {
+                        color: var(--money-green, #4CAF50);
+                        margin-bottom: 10px;
+                    }
+
+                    .checkbox-wrapper {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+                    .checkbox-wrapper input[type="checkbox"] {
+                        width: 18px;
+                        height: 18px;
+                        cursor: pointer;
+                    }
+
+                    .checkbox-wrapper label {
+                        margin: 0;
+                        cursor: pointer;
+                    }
                 </style>
 
                 <script>
@@ -286,6 +357,11 @@
                         // Handle form submissions
                         securedForm.addEventListener('submit', function(e) {
                             e.preventDefault();
+                            const termsChecked = document.getElementById('securedTerms').checked;
+                            if (!termsChecked) {
+                                alert('Please read and accept the Terms and Conditions to proceed.');
+                                return;
+                            }
                             const formData = new FormData(this);
                             const subject = 'New Secured Loan Application';
                             const mailtoLink = `mailto:info@cashflowloans.co.za?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(formatFormData(formData))}`;
@@ -295,6 +371,11 @@
 
                         unsecuredForm.addEventListener('submit', function(e) {
                             e.preventDefault();
+                            const termsChecked = document.getElementById('unsecuredTerms').checked;
+                            if (!termsChecked) {
+                                alert('Please read and accept the Terms and Conditions to proceed.');
+                                return;
+                            }
                             const formData = new FormData(this);
                             const subject = 'New Unsecured Loan Application';
                             const mailtoLink = `mailto:info@cashflowloans.co.za?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(formatFormData(formData))}`;
