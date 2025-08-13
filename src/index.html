@@ -267,10 +267,7 @@
                         <li class="dropdown">
                             <a href="about.html">About Us</a>
                             
-                        </li>
-                        <li class="dropdown"><a href="services.html">Service</a>
-                            
-                        </li>
+                      
                         <li class="dropdown"><a href="apply-for-loan.html">Apply Now</a>
                             <ul>
                                 
@@ -320,7 +317,7 @@
     }'>
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">
-                        <div class="image-layer" style="background-image: url(assets/images/main-slider/main-slider-1-1.jpg);"></div>
+                        <div class="image-layer" style="background-image: url(assets/images/home\ \(1\).jpeg);"></div>
                         <!-- /.image-layer -->
                         <div class="container">
                             <div class="row">
@@ -335,7 +332,7 @@
                         </div><!-- /.container -->
                     </div><!-- /.swiper-slide -->
                     <div class="swiper-slide">
-                        <div class="image-layer" style="background-image: url(assets/images/main-slider/main-slider-1-2.jpg);"></div>
+                        <div class="image-layer" style="background-image: url(assets/images/home\ \(2\).jpeg);"></div>
                         <!-- /.image-layer -->
                         <div class="container">
                             <div class="row">
@@ -350,7 +347,7 @@
                         </div><!-- /.container -->
                     </div><!-- /.swiper-slide -->
                     <div class="swiper-slide">
-                        <div class="image-layer" style="background-image: url(assets/images/main-slider/main-slider-1-1.jpg);"></div>
+                        <div class="image-layer" style="background-image: url(assets/images/home\ \(3\).jpeg);"></div>
                         <!-- /.image-layer -->
                         <div class="container">
                             <div class="row">
@@ -538,31 +535,17 @@
                                     <div class="range-slider-count" id="range-slider-count"></div>
                                     <input type="hidden" value="" id="min-value-rangeslider-count">
                                     <input type="hidden" value="" id="max-value-rangeslider-count">
+                                    <div style="text-align: center; margin-top: 10px;">
+                                        <span style="font-size: 18px; color: #333;">Selected Amount: R<span id="current-amount">100</span></span>
+                                    </div>
                                 </div><!-- /.input-box -->
                                 <div class="input-box__top">
                                     <span>Fixed Term:</span>
                                     <span>1 Month</span>
                                 </div><!-- /.input-box__top -->
-                                <div class="input-box">
-                                    <style>
-                                        .range-slider-month {
-                                            opacity: 0.5;
-                                            pointer-events: none;
-                                        }
-                                        .range-slider-month .noUi-handle {
-                                            cursor: not-allowed;
-                                        }
-                                        .range-slider-month .noUi-pips-horizontal {
-                                            display: none;
-                                        }
-                                        .range-slider-month .noUi-value,
-                                        .range-slider-month .noUi-marker {
-                                            display: none;
-                                        }
-                                    </style>
-                                    <div class="range-slider-month" id="range-slider-month"></div>
-                                    <input type="hidden" value="1" id="min-value-rangeslider-month">
-                                    <input type="hidden" value="1" id="max-value-rangeslider-month">
+                                <div class="input-box text-only">
+                                    <p style="text-align: center; margin: 10px 0; color: #666;">Fixed term of 1 month applies to all loans</p>
+
                                     <script>
                                         document.addEventListener('DOMContentLoaded', function() {
                                             if (typeof noUiSlider !== 'undefined') {
@@ -588,26 +571,9 @@
                                     <span>Fixed Interest:</span>
                                     <span>50%</span>
                                 </div><!-- /.input-box__top -->
-                                 <div class="input-box">
-                                    <style>
-                                        .range-slider-interest {
-                                            opacity: 0.5;
-                                            pointer-events: none;
-                                        }
-                                        .range-slider-interest .noUi-handle {
-                                            cursor: not-allowed;
-                                        }
-                                        .range-slider-interest .noUi-pips-horizontal {
-                                            display: none;
-                                        }
-                                        .range-slider-interest .noUi-value,
-                                        .range-slider-interest .noUi-marker {
-                                            display: none;
-                                        }
-                                    </style>
-                                    <div class="range-slider-interest" id="range-slider-interest"></div>
-                                    <input type="hidden" value="50" id="min-value-rangeslider-interest">
-                                    <input type="hidden" value="50" id="max-value-rangeslider-interest">
+                                 <div class="input-box text-only">
+                                    <p style="text-align: center; margin: 10px 0; color: #666;">Fixed interest rate of 50% applies to all loans</p>
+
                                     <script>
                                         document.addEventListener('DOMContentLoaded', function() {
                                             if (typeof noUiSlider !== 'undefined') {
@@ -648,6 +614,7 @@
                                 document.addEventListener('DOMContentLoaded', function() {
                                     if (typeof noUiSlider !== 'undefined' && document.getElementById('range-slider-count')) {
                                         const rangeSlider = document.getElementById('range-slider-count');
+                                        const currentAmount = document.getElementById('current-amount');
                                         if (!rangeSlider.noUiSlider) {
                                             noUiSlider.create(rangeSlider, {
                                                 start: 100,
@@ -657,6 +624,11 @@
                                                     'max': 10000
                                                 },
                                                 connect: 'lower',
+                                                tooltips: {
+                                                    to: function(value) {
+                                                        return 'R' + parseInt(value).toLocaleString();
+                                                    }
+                                                },
                                                 format: {
                                                     to: function (value) {
                                                         return parseInt(value);
@@ -665,6 +637,11 @@
                                                         return parseInt(value);
                                                     }
                                                 }
+                                            });
+                                            
+                                            // Update the current amount display when slider value changes
+                                            rangeSlider.noUiSlider.on('update', function(values) {
+                                                currentAmount.textContent = parseInt(values[0]).toLocaleString();
                                             });
                                         }
                                     }
@@ -716,21 +693,21 @@
                                 <a href="service-details.html">
                                     <div class="post-thumbnail">
                                         <div style="display: flex; flex-direction: column; align-items: center;">
-                                            <img src="assets/images/logo.jpeg" alt="" style="width: 100px; border-radius: 50%;">
-                                            <h6 style="margin: 10px 0 0 0; color: #004aa1;">cashflowloans</h6>
+                                            <img src="assets/images/logo2.jpeg" alt="">
+                                            
                                         </div>
                                     </div>
                                 </a>
                             </div><!-- /.service-one__image -->
                             <div class="service-one__content">
-                                <a href="service-details.html">
+                                <a href="apply-for-loan.html">
                                     <div class="service-icon" style="background-color: var(--money-green);">
                                         <i class="flaticon-car-loan" style="background-color: white"></i>
                                     </div>
                                 </a>
-                                <h3><a href="service-details.html">Personal Loan</a></h3>
+                                <h3><a href="apply-for-loan.html">Personal Loan</a></h3>
                                 <p>There are many variations of passages of lorem ipsum available the majority have some.</p>
-                                <a href="service-details.html" class="pylon-icon-right-arrow service-one__link" style="background-color: var(--money-green);"></a><!-- /.service-one__link -->
+                                <a href="apply-for-loan.html?type=unsecured" class="pylon-icon-right-arrow service-one__link" style="background-color: var(--money-green);"></a><!-- /.service-one__link -->
                             </div><!-- /.service-one__content -->
                         </div><!-- /.service-one__card -->
                     </div><!-- /.col-lg-4 -->
@@ -808,10 +785,10 @@
             <img src="assets/images/shapes/why-choose-shape-1-2.png" class="why-choose__shape-2" alt="">
             <div class="container" >
                 <div class="row" >
-                    <div class="col-lg-6" style="background-color: var(--money-green);">
-                        <div class="why-choose__image" style="background-color: var(--money-green);">
+                    <div class="col-lg-6">
+                        <div class="why-choose__image" style= "padding: 20px; display: flex; flex-direction: column; align-items: center;">
                             <p><i class="pylon-icon-investment"></i></p>
-                            <img src="assets/images/resources/why-choose-1-1.png" alt="">
+                            <img src="assets/images/home (4).jpeg" alt="" style="max-width: 100%; height: auto; max-height: 400px; object-fit: contain; border-radius: 8px;">
                         </div><!-- /.why-choose__image -->
                     </div><!-- /.col-lg-6 -->
                     <div class="col-lg-6">
@@ -1267,14 +1244,14 @@
                                     <img src="assets/images/resources/footer-post-1-1.png" alt="">
                                     <div class="footer-widget__post-list-content">
                                         <span>7 Aug, 2025</span>
-                                        <h3><a href="https://www.oldmutual.co.za/articles/how-to-avoid-the-debt-spiral/">How to avoid the debt spiral</a></h3>
+                                        <h3><a href="blog/avoid-debt-spiral.html">How to avoid the debt spiral</a></h3>
                                     </div><!-- /.footer-widget__post-content -->
                                 </li>
                                 <li>
                                     <img src="assets/images/resources/footer-post-1-2.png" alt="">
                                     <div class="footer-widget__post-list-content">
                                         <span>7 Aug, 2025</span>
-                                        <h3><a href="https://www.oldmutual.co.za/articles/needs-vs-wants/">Needs vs wants</a></h3>
+                                        <h3><a href="blog/needs-vs-wants.html">Needs vs wants</a></h3>
                                     </div><!-- /.footer-widget__post-content -->
                                 </li>
                             </ul><!-- /.list-unstyled -->
