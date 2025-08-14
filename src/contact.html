@@ -27,6 +27,116 @@
 
     <!-- template styles -->
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/mobile-nav.css">
+    <style>
+        :root {
+            --money-green: #1b4d3e;
+            --light-money-green: #2e8b57;
+            --pale-money-green: #98c9a3;
+        }
+        /* Remove all dropdown arrows */
+        .mobile-nav__container .dropdown > a:after,
+        .mobile-nav__container .dropdown > a:before,
+        .mobile-nav__container li.dropdown:after,
+        .mobile-nav__container li.dropdown:before {
+            display: none !important;
+        }
+        /* Clean menu styling */
+        .mobile-nav__container .main-menu__list > li > a {
+            display: block;
+            padding: 10px 0;
+            color: white;
+            font-size: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+            border: none;
+            background: transparent !important;
+        }
+        .mobile-nav__container .main-menu__list > li {
+            background: transparent !important;
+            border: none !important;
+        }
+        .mobile-nav__container .main-menu__list > li.dropdown {
+            background: transparent !important;
+            border: none !important;
+        }
+        .mobile-nav__container .main-menu__list > li ul {
+            padding-left: 15px;
+            margin-left: 5px;
+            border: none !important;
+            background: transparent !important;
+        }
+        .mobile-nav__container .main-menu__list > li ul li {
+            background: transparent !important;
+            border: none !important;
+        }
+        .mobile-nav__container .main-menu__list > li ul li a {
+            padding: 8px 0;
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            background: transparent !important;
+            border: none !important;
+        }
+        /* Override any theme dropdown backgrounds */
+        .mobile-nav__container .dropdown,
+        .mobile-nav__container .dropdown > a,
+        .mobile-nav__container .dropdown ul,
+        .mobile-nav__container .dropdown ul li,
+        .mobile-nav__container .dropdown ul li a {
+            background: transparent !important;
+            border: none !important;
+        }
+        /* Additional overrides for any remaining blue elements */
+        .mobile-nav__container *,
+        .mobile-nav__container *:before,
+        .mobile-nav__container *:after {
+            background: transparent !important;
+            border-color: transparent !important;
+        }
+        .mobile-nav__container .main-menu__list li.dropdown ul {
+            border: none !important;
+            background: rgba(0, 0, 0, 0.1) !important;
+            margin: 0;
+            padding-left: 15px;
+        }
+        /* Override any theme arrows */
+        .mobile-nav__container .fa,
+        .mobile-nav__container .fas,
+        .mobile-nav__container [class^="fa-"] {
+            display: none !important;
+        }
+    </style>
+    <script src="assets/js/mobile-nav.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileNavTogglers = document.querySelectorAll('.mobile-nav__toggler');
+            const mobileNavWrapper = document.querySelector('.mobile-nav__wrapper');
+            mobileNavTogglers.forEach(function(toggler) {
+                toggler.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    mobileNavWrapper.classList.toggle('expanded');
+                    document.body.classList.toggle('active');
+                });
+            });
+            // Close menu when clicking overlay
+            const mobileNavOverlay = document.querySelector('.mobile-nav__overlay');
+            if (mobileNavOverlay) {
+                mobileNavOverlay.addEventListener('click', function() {
+                    mobileNavWrapper.classList.remove('expanded');
+                    document.body.classList.remove('active');
+                });
+            }
+            // Close menu when clicking close button
+            const mobileNavClose = document.querySelector('.mobile-nav__close');
+            if (mobileNavClose) {
+                mobileNavClose.addEventListener('click', function() {
+                    mobileNavWrapper.classList.remove('expanded');
+                    document.body.classList.remove('active');
+                });
+            }
+        });
+    </script>
 </head>
 
 <body>
@@ -42,12 +152,11 @@
                 <div class="container">
                     <div class="topbar__left">
                         <div class="topbar__social">
-                            <a href="#" class="fab fa-facebook-square"></a>
-                            <a href="#" class="fab fa-twitter"></a>
-                            <a href="#" class="fab fa-pinterest-p"></a>
-                            <a href="#" class="fab fa-instagram"></a>
+                            <a href="https://www.facebook.com/share/1Jcb8SKRQd/" class="fab fa-facebook-f"></a>
+                            <a href="https://wa.me/27614011426" aria-label="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                             <a href="https://www.instagram.com/cashflowloans27?igsh=aGdieno5Mmd1NGNn" aria-label="instagram"><i class="fab fa-instagram"></i></a>
                         </div><!-- /.topbar__social -->
-                        <a href="#">Login</a>
+                        
                         <a href="news.html">Company News</a>
                         <a href="faq.html">FAQs</a>
                     </div><!-- /.topbar__left -->
@@ -288,19 +397,20 @@
             <div class="logo-box">
                 <a href="index.html" aria-label="logo image" style="display: flex; flex-direction: column; align-items: center; text-decoration: none;">
                     <img src="assets/images/logo.jpeg" width="100" alt="" style="border-radius: 50%;">
-                    <h6 style="margin: 10px 0; color: white;">cashflowloans</h6>
+                    
                 </a>
             </div>
+            <!-- /.logo-box -->
             <!-- /.logo-box -->
             <div class="mobile-nav__container">
                 <ul class="main-menu__list">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="about.html">About</a></li>
-                    <li><a href="services.html">Services</a></li>
+                    <li><a href="apply-for-loan.html" class="thm-btn">Apply For Loan</a></li>
                     <li><a href="news.html">News</a></li>
                     <li><a href="contact.html">Contact</a></li>
-                    <li><a href="loan-calculator.html">Loan Calculator</a></li>
-                    <li><a href="apply-now.html" class="thm-btn">Apply For Loan</a></li>
+                    
+                    
                 </ul>
             </div>
             <!-- /.mobile-nav__container -->
