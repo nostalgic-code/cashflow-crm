@@ -634,48 +634,7 @@
                                 document.getElementById('securedCheckbox')
                             );
                         }
-
-                        // Handle form submissions
-                        securedForm.addEventListener('submit', function(e) {
-                            e.preventDefault();
-                            const termsChecked = document.getElementById('securedTerms').checked;
-                            if (!termsChecked) {
-                                alert('Please read and accept the Terms and Conditions to proceed.');
-                                return;
-                            }
-                            const formData = new FormData(this);
-                            const subject = 'New Secured Loan Application';
-                            const mailtoLink = `mailto:info@cashflowloans.co.za?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(formatFormData(formData))}`;
-                            window.location.href = mailtoLink;
-                            alert('Redirecting to your email client to submit the application...');
-                        });
-
-                        unsecuredForm.addEventListener('submit', function(e) {
-                            e.preventDefault();
-                            const termsChecked = document.getElementById('unsecuredTerms').checked;
-                            if (!termsChecked) {
-                                alert('Please read and accept the Terms and Conditions to proceed.');
-                                return;
-                            }
-                            const formData = new FormData(this);
-                            const subject = 'New Unsecured Loan Application';
-                            const mailtoLink = `mailto:info@cashflowloans.co.za?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(formatFormData(formData))}`;
-                            window.location.href = mailtoLink;
-                            alert('Redirecting to your email client to submit the application...');
-                        });
-
-                        // Function to format form data for email
-                        function formatFormData(formData) {
-                            let emailBody = 'New Loan Application:\n\n';
-                            for (let pair of formData.entries()) {
-                                if (pair[0] !== 'payslip' && pair[0] !== 'idDocument' && pair[0] !== 'bankStatement' && pair[0] !== 'collateralImages') {
-                                    emailBody += `${pair[0]}: ${pair[1]}\n`;
-                                }
-                            }
-                            emailBody += '\nNote: File attachments should be sent separately due to email client limitations.\n';
-                            emailBody += '\nThis application was submitted through Cashflow Loans website.';
-                            return emailBody;
-                        }
+                        // No form submission interception here; forms will submit to getform.io
                     });
                 </script>
             </div>
