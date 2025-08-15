@@ -472,18 +472,6 @@
                                             function updateLoanAmounts(isUnsecured) {
                                                 if (isUnsecured) {
                                                     minAmount.textContent = 'R100';
-                                                    maxAmount.textContent = 'R100,000';
-                                                    // Update slider max value if it exists
-                                                    if (typeof noUiSlider !== 'undefined' && document.getElementById('range-slider-count').noUiSlider) {
-                                                        document.getElementById('range-slider-count').noUiSlider.updateOptions({
-                                                            range: {
-                                                                'min': 100,
-                                                                'max': 100000
-                                                            }
-                                                        });
-                                                    }
-                                                } else {
-                                                    minAmount.textContent = 'R100';
                                                     maxAmount.textContent = 'R10,000';
                                                     // Update slider max value if it exists
                                                     if (typeof noUiSlider !== 'undefined' && document.getElementById('range-slider-count').noUiSlider) {
@@ -491,6 +479,18 @@
                                                             range: {
                                                                 'min': 100,
                                                                 'max': 10000
+                                                            }
+                                                        });
+                                                    }
+                                                } else {
+                                                    minAmount.textContent = 'R100';
+                                                    maxAmount.textContent = 'R100,000';
+                                                    // Update slider max value if it exists
+                                                    if (typeof noUiSlider !== 'undefined' && document.getElementById('range-slider-count').noUiSlider) {
+                                                        document.getElementById('range-slider-count').noUiSlider.updateOptions({
+                                                            range: {
+                                                                'min': 100,
+                                                                'max': 100000
                                                             }
                                                         });
                                                     }
@@ -519,7 +519,7 @@
                                 </div>
                                 <div class="input-box__top">
                                     <span id="min-amount">R100</span>
-                                    <span id="max-amount">R10000</span>
+                                    <span id="max-amount">R100,000</span>
                                 </div><!-- /.input-box__top -->
                                 <div class="input-box">
                                     <div class="range-slider-count" id="range-slider-count"></div>
@@ -611,7 +611,7 @@
                                                 step: 1,  // Changed to allow any amount selection
                                                 range: {
                                                     'min': 100,
-                                                    'max': 10000
+                                                    'max': 100000
                                                 },
                                                 connect: 'lower',
                                                 tooltips: {
