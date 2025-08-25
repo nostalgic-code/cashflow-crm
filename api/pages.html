@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Submitted Forms - Cashflow Loans</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-50 min-h-screen">
+  <div class="max-w-6xl mx-auto my-10 bg-white p-8 rounded-3xl shadow-2xl border border-green-100">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-green-900">Submitted Loan Applications</h1>
+      <a href="/dashboard.html" class="bg-green-100 hover:bg-green-200 text-green-900 font-semibold px-5 py-2 rounded-lg shadow transition-all duration-200">Back to Dashboard</a>
+    </div>
+    <div class="mb-8">
+      <button class="tab-btn px-6 py-2 rounded-t-lg font-semibold text-lg bg-green-50 text-green-900 border-none transition-colors active" data-tab="unsecured">Unsecured Loans</button>
+      <button class="tab-btn px-6 py-2 rounded-t-lg font-semibold text-lg bg-green-50 text-green-900 border-none transition-colors" data-tab="secured">Secured Loans</button>
+    </div>
+    <div class="tab-content active" id="tab-unsecured">
+      <div class="overflow-x-auto">
+        <table id="unsecured-table" class="min-w-full bg-white border border-green-200 rounded-xl shadow-sm overflow-hidden">
+          <thead>
+            <tr class="bg-gradient-to-r from-green-100 to-green-50 text-green-900">
+              <th class="py-3 px-4 font-semibold text-left">ID</th>
+              <th class="py-3 px-4 font-semibold text-left">Name</th>
+              <th class="py-3 px-4 font-semibold text-left">Surname</th>
+              <th class="py-3 px-4 font-semibold text-left">Amount</th>
+              <th class="py-3 px-4 font-semibold text-left">Email</th>
+              <th class="py-3 px-4 font-semibold text-left">Details</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tab-content" id="tab-secured">
+      <div class="overflow-x-auto">
+        <table id="secured-table" class="min-w-full bg-white border border-green-200 rounded-xl shadow-sm overflow-hidden">
+          <thead>
+            <tr class="bg-gradient-to-r from-green-100 to-green-50 text-green-900">
+              <th class="py-3 px-4 font-semibold text-left">ID</th>
+              <th class="py-3 px-4 font-semibold text-left">Name</th>
+              <th class="py-3 px-4 font-semibold text-left">Amount</th>
+              <th class="py-3 px-4 font-semibold text-left">Email</th>
+              <th class="py-3 px-4 font-semibold text-left">Details</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div id="modal-bg" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 hidden flex items-center justify-center transition-all duration-300">
+      <div id="modal-content" class="bg-white rounded-2xl max-w-2xl w-[95vw] p-10 shadow-2xl border-2 border-green-200 relative scale-90 opacity-0">
+        <button class="absolute top-4 right-6 text-3xl text-gray-400 hover:text-green-900 transition-colors duration-200" onclick="closeModal()">&times;</button>
+        <div id="modal-body" class="text-gray-800"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('active', 'bg-green-900', 'text-white');
+          b.classList.add('bg-green-50', 'text-green-900');
+        });
+        document.querySelectorAll('.tab-content').forEach(tc => {
+          tc.classList.remove('active');
+          tc.style.display = 'none';
+        });
+        btn.classList.add('active', 'bg-green-900', 'text-white');
+        btn.classList.remove('bg-green-50', 'text-green-900');
+        const tab = document.getElementById('tab-' + btn.dataset.tab);
+        tab.classList.add('active');
+        tab.style.display = 'block';
+      });
+    });
+    document.querySelectorAll('.tab-content').forEach((tc, i) => {
+      if (i === 0) {
+        tc.classList.add('active');
+        tc.style.display = 'block';
+      } else {
+        tc.classList.remove('active');
+        tc.style.display = 'none';
+      }
+    });
+    // Fetch and render unsecured loans
+    let unsecuredData = [];
+    fetch('/submissions/unsecured').then(r=>r.json()).then(data=>{
+      unsecuredData = data;
+      renderUnsecuredTable();
+    });
+    function renderUnsecuredTable() {
+      const tbody = document.querySelector('#unsecured-table tbody');
+      tbody.innerHTML = '';
+      unsecuredData.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${row.id}</td><td>${row.name}</td><td>${row.surname}</td><td>R${row.amount}</td><td>${row.email}</td><td><button class='btn' onclick='showModal(unsecuredDetails(${JSON.stringify(row)}))'>View</button></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    // Fetch and render secured loans
+    let securedData = [];
+    fetch('/submissions/secured').then(r=>r.json()).then(data=>{
+      securedData = data;
+      renderSecuredTable();
+    });
+    function renderSecuredTable() {
+      const tbody = document.querySelector('#secured-table tbody');
+      tbody.innerHTML = '';
+      securedData.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${row.id}</td><td>${row.name}</td><td>R${row.amount}</td><td>${row.email}</td><td><button class='btn' onclick='showModal(securedDetails(${JSON.stringify(row)}))'>View</button></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    function createFileLink(filename) {
+      if (!filename) return '';
+      const ext = filename.split('.').pop().toLowerCase();
+      const isImage = ['jpg','jpeg','png'].includes(ext);
+      let html = '';
+      if (isImage) {
+        html += `<a href="/uploads/${encodeURIComponent(filename)}" target="_blank"><img src="/uploads/${encodeURIComponent(filename)}" alt="image" class="inline-block max-w-[80px] max-h-[80px] align-middle mr-2 rounded border border-gray-300"></a>`;
+      }
+      html += `<a class='file-link text-green-700 underline mr-2' href="/uploads/${encodeURIComponent(filename)}" target="_blank" download>Download</a>`;
+      return html;
+    }
+    function unsecuredDetails(row) {
+      return `<h3 class='text-xl font-bold text-green-900 mb-2'>Unsecured Loan Details</h3>
+        <div class='bg-gray-50 rounded p-4 mb-2'>
+        <span class='font-semibold'>ID:</span> ${row.id}<br>
+        <span class='font-semibold'>Name:</span> ${row.name} ${row.surname}<br>
+        <span class='font-semibold'>ID Number:</span> ${row.id_number}<br>
+        <span class='font-semibold'>Phone:</span> ${row.phone}<br>
+        <span class='font-semibold'>Email:</span> ${row.email}<br>
+        <span class='font-semibold'>Amount:</span> R${row.amount}<br>
+        <span class='font-semibold'>Payslip:</span> ${createFileLink(row.payslip_filename)}<br>
+        <span class='font-semibold'>ID Document:</span> ${createFileLink(row.id_document_filename)}<br>
+        <span class='font-semibold'>Bank Statement:</span> ${createFileLink(row.bank_statement_filename)}<br>
+        <span class='font-semibold'>Terms Accepted:</span> ${row.terms_accepted ? 'Yes' : 'No'}
+    </div>`;
+    }
+    function securedDetails(row) {
+      let images = (row.collateral_images_filenames || []).map(f => createFileLink(f)).join(' ');
+      return `<h3 class='text-xl font-bold text-green-900 mb-2'>Secured Loan Details</h3>
+        <div class='bg-gray-50 rounded p-4 mb-2'>
+        <span class='font-semibold'>ID:</span> ${row.id}<br>
+        <span class='font-semibold'>Name:</span> ${row.name}<br>
+        <span class='font-semibold'>ID Number:</span> ${row.id_number}<br>
+        <span class='font-semibold'>Phone:</span> ${row.phone}<br>
+        <span class='font-semibold'>Email:</span> ${row.email}<br>
+        <span class='font-semibold'>Amount:</span> R${row.amount}<br>
+        <span class='font-semibold'>Collateral Images:</span><br>${images ? images : 'None'}<br>
+        <span class='font-semibold'>Terms Accepted:</span> ${row.terms_accepted ? 'Yes' : 'No'}
+    </div>`;
+    }
+    function showModal(html) {
+      document.getElementById('modal-body').innerHTML = html;
+      document.getElementById('modal-bg').classList.remove('hidden');
+    }
+    function closeModal() {
+      document.getElementById('modal-bg').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>

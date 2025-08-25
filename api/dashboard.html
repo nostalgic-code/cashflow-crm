@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Cashflow Loans</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-50 min-h-screen">
+  <div class="max-w-5xl mx-auto my-12 bg-white rounded-3xl shadow-2xl p-10 border border-green-100">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-green-900">Admin Dashboard</h1>
+      <button id="logout-btn" class="bg-green-100 hover:bg-green-200 text-green-900 font-semibold px-5 py-2 rounded-lg shadow transition-all duration-200">Logout</button>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+      <div class="bg-green-100 rounded-xl p-6 flex flex-col items-center">
+        <div class="text-4xl font-bold text-green-900" id="stat-unsecured">0</div>
+        <div class="text-green-800 mt-2 font-semibold">Unsecured Applications</div>
+      </div>
+      <div class="bg-green-100 rounded-xl p-6 flex flex-col items-center">
+        <div class="text-4xl font-bold text-green-900" id="stat-secured">0</div>
+        <div class="text-green-800 mt-2 font-semibold">Secured Applications</div>
+      </div>
+      <div class="bg-green-100 rounded-xl p-6 flex flex-col items-center">
+        <div class="text-4xl font-bold text-green-900" id="stat-admins">0</div>
+        <div class="text-green-800 mt-2 font-semibold">Admins</div>
+      </div>
+    </div>
+    <div class="flex gap-4">
+      <a href="/pages.html" class="bg-green-700 hover:bg-green-900 text-white font-semibold px-6 py-3 rounded-lg shadow transition-all duration-200">View Submitted Forms</a>
+    </div>
+  </div>
+  <script>
+    // Fetch stats
+    fetch('/admin/stats').then(r=>r.json()).then(stats => {
+      document.getElementById('stat-unsecured').textContent = stats.unsecured;
+      document.getElementById('stat-secured').textContent = stats.secured;
+      document.getElementById('stat-admins').textContent = stats.admins;
+    });
+    document.getElementById('logout-btn').onclick = function() {
+      localStorage.removeItem('admin-auth');
+      window.location.href = '/admin.html';
+    };
+  </script>
+</body>
+</html>
