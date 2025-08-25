@@ -5,14 +5,14 @@
     <title>Cashflow Loan Applications Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-        <script src="https://unpkg.com/framer-motion/dist/framer-motion.umd.js"></script>
+    <script src="/static/assets/js/gsap.min.js"></script>
+    <script src="/static/assets/js/framer-motion.umd.js"></script>
 </head>
 <body class="bg-green-50 min-h-screen">
 <!-- Login Modal -->
 <div id="login-modal" class="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-green-100 via-white to-green-50 z-50">
     <div id="login-modal-inner" class="bg-white rounded-3xl shadow-2xl px-8 py-10 max-w-sm w-full border border-gray-200 flex flex-col items-center relative">
-        <img src="/src/assets/images/logo.jpeg" alt="Cashflow Logo" class="w-16 h-16 rounded-full mb-4 shadow border border-gray-200">
+    <img src="/static/assets/images/logo.jpeg" alt="Cashflow Logo" class="w-16 h-16 rounded-full mb-4 shadow border border-gray-200">
         <h2 class="text-2xl font-semibold text-gray-800 mb-2 tracking-tight font-sans">Sign in to Admin</h2>
         <p class="text-gray-500 mb-6 text-base font-sans">to manage loan applications</p>
         <form id="login-form" class="w-full flex flex-col gap-4">
@@ -29,7 +29,7 @@
 <!-- Register Modal -->
 <div id="register-modal" class="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-green-100 via-white to-green-50 z-50 hidden">
     <div id="register-modal-inner" class="bg-white rounded-3xl shadow-2xl px-8 py-10 max-w-sm w-full border border-gray-200 flex flex-col items-center relative">
-        <img src="/src/assets/images/logo.jpeg" alt="Cashflow Logo" class="w-16 h-16 rounded-full mb-4 shadow border border-gray-200">
+    <img src="/static/assets/images/logo.jpeg" alt="Cashflow Logo" class="w-16 h-16 rounded-full mb-4 shadow border border-gray-200">
         <h2 class="text-2xl font-semibold text-gray-800 mb-2 tracking-tight font-sans">Register Admin</h2>
         <form id="register-form" class="w-full flex flex-col gap-4">
             <input type="text" id="register-username" class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-base font-sans bg-gray-50 placeholder-gray-400" placeholder="Username" required autocomplete="username">
