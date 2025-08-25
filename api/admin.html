@@ -153,7 +153,7 @@ function showDashboard() {
         adminContent.classList.add('hidden');
         gsap.fromTo(adminDashboard, {opacity:0, y:40}, {opacity:1, y:0, duration:0.4, ease:'power3.out'});
         // Fetch stats
-        fetch('/admin/stats').then(r=>r.json()).then(stats => {
+        fetch('https://cashflow-bybn.onrender.com/admin/stats').then(r=>r.json()).then(stats => {
             document.getElementById('stat-unsecured').textContent = stats.unsecured_loans;
             document.getElementById('stat-secured').textContent = stats.secured_loans;
             document.getElementById('stat-admins').textContent = stats.admins;
@@ -351,10 +351,33 @@ function closeModal() {
 
 // Fetch and render unsecured loans
 let unsecuredData = [];
-fetch('/submissions/unsecured').then(r=>r.json()).then(data=>{
+fetch('https://cashflow-bybn.onrender.com/submissions/unsecured').then(r=>r.json()).then(data=>{
     unsecuredData = data;
     renderUnsecuredTable();
 });
+
+// Fetch and render secured loans
+let securedData = [];
+fetch('https://cashflow-bybn.onrender.com/submissions/secured').then(r=>r.json()).then(data=>{
+    securedData = data;
+    renderSecuredTable();
+});
+
+function renderSecuredTable() {
+    const tbody = document.querySelector('#secured-table tbody');
+    tbody.innerHTML = '';
+    let search = document.getElementById('search-secured').value.toLowerCase();
+    securedData.filter(row =>
+        row.name.toLowerCase().includes(search) ||
+        row.email.toLowerCase().includes(search) ||
+        row.id_number.toLowerCase().includes(search)
+    ).forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${row.id}</td><td>${row.name}</td><td>R${row.amount}</td><td>${row.email}</td><td><button class='btn' onclick='showModal(securedDetails(${JSON.stringify(row)}))'>View</button></td>`;
+        tbody.appendChild(tr);
+    });
+}
+document.getElementById('search-secured').addEventListener('input', renderSecuredTable);
 function renderUnsecuredTable() {
     const tbody = document.querySelector('#unsecured-table tbody');
     tbody.innerHTML = '';
