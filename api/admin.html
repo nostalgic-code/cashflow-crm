@@ -342,11 +342,30 @@ function securedDetails(row) {
     </div>`;
 }
 function showModal(html) {
+    // Show modal and animate in
+    const modalBg = document.getElementById('modal-bg');
+    const modalContent = document.getElementById('modal-content');
     document.getElementById('modal-body').innerHTML = html;
-    document.getElementById('modal-bg').classList.remove('hidden');
+    modalBg.classList.remove('hidden');
+    // Animate modal in (Tailwind + GSAP fallback)
+    modalContent.style.opacity = 0;
+    modalContent.style.transform = 'scale(0.92)';
+    setTimeout(() => {
+        modalContent.style.transition = 'all 0.3s cubic-bezier(.4,2,.6,1)';
+        modalContent.style.opacity = 1;
+        modalContent.style.transform = 'scale(1)';
+    }, 10);
 }
 function closeModal() {
-    document.getElementById('modal-bg').classList.add('hidden');
+    // Animate modal out, then hide
+    const modalBg = document.getElementById('modal-bg');
+    const modalContent = document.getElementById('modal-content');
+    modalContent.style.transition = 'all 0.2s cubic-bezier(.4,2,.6,1)';
+    modalContent.style.opacity = 0;
+    modalContent.style.transform = 'scale(0.92)';
+    setTimeout(() => {
+        modalBg.classList.add('hidden');
+    }, 200);
 }
 
 // Fetch and render unsecured loans
