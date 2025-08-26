@@ -1,15 +1,4 @@
 
-# Serve dashboard.html at /dashboard.html (after app is defined)
-@app.route('/dashboard.html')
-def serve_dashboard():
-    dashboard_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dashboard.html')
-    return send_file(dashboard_path)
-
-# Serve pages.html at /pages.html (after app is defined)
-@app.route('/pages.html')
-def serve_pages():
-    pages_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'pages.html')
-    return send_file(pages_path)
 
 
 import os
