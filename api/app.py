@@ -244,12 +244,6 @@ def list_unsecured_loans():
             'id_document_filename': loan.id_document_filename,
             'bank_statement_filename': loan.bank_statement_filename,
             'terms_accepted': loan.terms_accepted
-        })
-    return jsonify(result)
-
-@app.route('/submissions/secured', methods=['GET'])
-def list_secured_loans():
-    loans = SecuredLoan.query.all()
     result = []
     for loan in loans:
         result.append({
