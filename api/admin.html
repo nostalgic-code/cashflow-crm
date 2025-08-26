@@ -224,7 +224,8 @@ window.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if(data.success) {
                 localStorage.setItem('admin-auth','1');
-                showAdmin();
+                localStorage.setItem('admin-username', user); // Store username for dashboard
+                window.location.href = '/dashboard.html'; // Redirect to dashboard after login
                 loginForm.reset();
             } else {
                 loginError.textContent = data.message || 'Invalid username or password.';
