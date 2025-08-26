@@ -1,4 +1,16 @@
 
+# Serve dashboard.html at /dashboard.html (after app is defined)
+@app.route('/dashboard.html')
+def serve_dashboard():
+    dashboard_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dashboard.html')
+    return send_file(dashboard_path)
+
+# Serve pages.html at /pages.html (after app is defined)
+@app.route('/pages.html')
+def serve_pages():
+    pages_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'pages.html')
+    return send_file(pages_path)
+
 
 import os
 from flask import Flask, request, jsonify, send_file, send_from_directory
@@ -108,6 +120,18 @@ def serve_apply_for_loan():
     # Serve the static HTML file directly for exact styling and behavior
     src_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src', 'apply-for-loan.html')
     return send_file(src_path)
+
+# Serve dashboard.html at /dashboard.html
+@app.route('/dashboard.html')
+def serve_dashboard():
+    dashboard_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dashboard.html')
+    return send_file(dashboard_path)
+
+# Serve pages.html at /pages.html
+@app.route('/pages.html')
+def serve_pages():
+    pages_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'pages.html')
+    return send_file(pages_path)
 
 # Serve favicon.ico if present in src/assets/images or root
 @app.route('/favicon.ico')
