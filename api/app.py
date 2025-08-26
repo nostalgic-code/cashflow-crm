@@ -1,3 +1,9 @@
+# TEMPORARY: Route to drop the admin_user table for schema reset
+@app.route('/drop-admin-table')
+def drop_admin_table():
+    db.session.execute('DROP TABLE IF EXISTS admin_user CASCADE;')
+    db.session.commit()
+    return 'admin_user table dropped!'
 
 import os
 from flask import Flask, request, jsonify, send_file, send_from_directory
@@ -69,7 +75,7 @@ def admin_register():
 class AdminUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
+    password_hash = db.Column(db.String(256), nullable=False)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
