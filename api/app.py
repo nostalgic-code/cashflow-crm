@@ -21,10 +21,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
+
+# Import text for raw SQL execution
+from sqlalchemy import text
+
 # TEMPORARY: Route to drop the admin_user table for schema reset
 @app.route('/drop-admin-table')
 def drop_admin_table():
-    db.session.execute('DROP TABLE IF EXISTS admin_user CASCADE;')
+    db.session.execute(text('DROP TABLE IF EXISTS admin_user CASCADE;'))
     db.session.commit()
     return 'admin_user table dropped!'
 
