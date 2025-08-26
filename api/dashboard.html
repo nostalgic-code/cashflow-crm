@@ -33,9 +33,9 @@
   <script>
     // Fetch stats
     fetch('/admin/stats').then(r=>r.json()).then(stats => {
-      document.getElementById('stat-unsecured').textContent = stats.unsecured;
-      document.getElementById('stat-secured').textContent = stats.secured;
-      document.getElementById('stat-admins').textContent = stats.admins;
+        document.getElementById('stat-unsecured').textContent = stats.unsecured_loans;
+        document.getElementById('stat-secured').textContent = stats.secured_loans;
+        document.getElementById('stat-admins').textContent = stats.admins;
     });
     document.getElementById('logout-btn').onclick = function() {
       localStorage.removeItem('admin-auth');
