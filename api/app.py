@@ -1,16 +1,21 @@
 
+import os
 from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-import os
 
-# Ensure consistent absolute path for SQLite DB
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-# Initialize Flask app and database
+# Use DATABASE_URL from environment (Render sets this for you)
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'cashflow.db')
+db_url = os.environ.get('DATABASE_URL')
+if db_url:
+    # Render gives a URL starting with 'postgres://', but SQLAlchemy needs 'postgresql://'
+    db_url = db_url.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url
+else:
+    # Fallback to SQLite for local development
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'cashflow.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
