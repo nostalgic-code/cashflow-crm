@@ -6,55 +6,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-green-50 min-h-screen">
-  <div class="max-w-6xl mx-auto my-10 bg-white p-8 rounded-3xl shadow-2xl border border-green-100">
-    <div class="flex justify-between items-center mb-8">
-      <h1 class="text-3xl font-bold text-green-900">Submitted Loan Applications</h1>
-      <a href="/dashboard.html" class="bg-green-100 hover:bg-green-200 text-green-900 font-semibold px-5 py-2 rounded-lg shadow transition-all duration-200">Back to Dashboard</a>
-    </div>
-    <div class="mb-8">
-      <button class="tab-btn px-6 py-2 rounded-t-lg font-semibold text-lg bg-green-50 text-green-900 border-none transition-colors active" data-tab="unsecured">Unsecured Loans</button>
-      <button class="tab-btn px-6 py-2 rounded-t-lg font-semibold text-lg bg-green-50 text-green-900 border-none transition-colors" data-tab="secured">Secured Loans</button>
-    </div>
-    <div class="tab-content active" id="tab-unsecured">
-      <div class="overflow-x-auto">
-        <table id="unsecured-table" class="min-w-full bg-white border border-green-200 rounded-xl shadow-sm overflow-hidden">
-          <thead>
-            <tr class="bg-gradient-to-r from-green-100 to-green-50 text-green-900">
-              <th class="py-3 px-4 font-semibold text-left">ID</th>
-              <th class="py-3 px-4 font-semibold text-left">Name</th>
-              <th class="py-3 px-4 font-semibold text-left">Surname</th>
-              <th class="py-3 px-4 font-semibold text-left">Amount</th>
-              <th class="py-3 px-4 font-semibold text-left">Email</th>
-              <th class="py-3 px-4 font-semibold text-left">Details</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+<body class="bg-gradient-to-br from-green-50 via-white to-green-100 min-h-screen">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-green-100 flex flex-col py-8 px-6 shadow-xl">
+      <div class="flex items-center gap-3 mb-10">
+        <img src="/static/assets/images/logo.jpeg" alt="Logo" class="w-12 h-12 rounded-full shadow border border-green-200">
+        <span class="text-2xl font-bold text-green-800 tracking-tight">Cashflow Admin</span>
       </div>
-    </div>
-    <div class="tab-content" id="tab-secured">
-      <div class="overflow-x-auto">
-        <table id="secured-table" class="min-w-full bg-white border border-green-200 rounded-xl shadow-sm overflow-hidden">
-          <thead>
-            <tr class="bg-gradient-to-r from-green-100 to-green-50 text-green-900">
-              <th class="py-3 px-4 font-semibold text-left">ID</th>
-              <th class="py-3 px-4 font-semibold text-left">Name</th>
-              <th class="py-3 px-4 font-semibold text-left">Amount</th>
-              <th class="py-3 px-4 font-semibold text-left">Email</th>
-              <th class="py-3 px-4 font-semibold text-left">Details</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <nav class="flex flex-col gap-2 mt-4">
+        <a href="/dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-green-700 hover:bg-green-50 transition">
+          <svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6"/></svg>
+          Dashboard
+        </a>
+        <a href="/pages.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-green-900 font-semibold bg-green-100">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6"/></svg>
+          Applications
+        </a>
+      </nav>
+    </aside>
+    <!-- Main Content -->
+    <main class="flex-1 p-12 bg-gradient-to-br from-white via-green-50 to-green-100">
+      <div class="flex justify-between items-center mb-10">
+        <h1 class="text-4xl font-extrabold text-green-900 tracking-tight">Submitted Loan Applications</h1>
+        <a href="/dashboard.html" class="bg-green-700 hover:bg-green-900 text-white font-semibold px-6 py-3 rounded-lg shadow transition-all duration-200 flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          Back to Dashboard
+        </a>
       </div>
-    </div>
-    <div id="modal-bg" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 hidden flex items-center justify-center transition-all duration-300">
-      <div id="modal-content" class="bg-white rounded-2xl max-w-2xl w-[95vw] p-10 shadow-2xl border-2 border-green-200 relative scale-90 opacity-0">
-        <button class="absolute top-4 right-6 text-3xl text-gray-400 hover:text-green-900 transition-colors duration-200" onclick="closeModal()">&times;</button>
-        <div id="modal-body" class="text-gray-800"></div>
+      <div class="mb-8 flex gap-4">
+        <button class="tab-btn px-8 py-3 rounded-t-xl font-semibold text-lg bg-green-50 text-green-900 border-none transition-colors active flex items-center gap-2" data-tab="unsecured">
+          <svg class="w-5 h-5 text-green-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 0V4m0 16v-4"/></svg>
+          Unsecured Loans
+        </button>
+        <button class="tab-btn px-8 py-3 rounded-t-xl font-semibold text-lg bg-green-50 text-green-900 border-none transition-colors flex items-center gap-2" data-tab="secured">
+          <svg class="w-5 h-5 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a5 5 0 00-10 0v2a5 5 0 00-1 9.9V21a1 1 0 001 1h10a1 1 0 001-1v-2.1A5 5 0 0017 9z"/></svg>
+          Secured Loans
+        </button>
       </div>
-    </div>
+      <div class="tab-content active" id="tab-unsecured">
+        <div class="overflow-x-auto rounded-2xl shadow-lg border border-green-200">
+          <table id="unsecured-table" class="min-w-full bg-white rounded-2xl overflow-hidden">
+            <thead>
+              <tr class="bg-gradient-to-r from-green-100 to-green-50 text-green-900 text-lg">
+                <th class="py-4 px-6 font-bold text-left">ID</th>
+                <th class="py-4 px-6 font-bold text-left">Name</th>
+                <th class="py-4 px-6 font-bold text-left">Surname</th>
+                <th class="py-4 px-6 font-bold text-left">Amount</th>
+                <th class="py-4 px-6 font-bold text-left">Email</th>
+                <th class="py-4 px-6 font-bold text-left">Details</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-secured">
+        <div class="overflow-x-auto rounded-2xl shadow-lg border border-blue-200">
+          <table id="secured-table" class="min-w-full bg-white rounded-2xl overflow-hidden">
+            <thead>
+              <tr class="bg-gradient-to-r from-blue-100 to-blue-50 text-blue-900 text-lg">
+                <th class="py-4 px-6 font-bold text-left">ID</th>
+                <th class="py-4 px-6 font-bold text-left">Name</th>
+                <th class="py-4 px-6 font-bold text-left">Amount</th>
+                <th class="py-4 px-6 font-bold text-left">Email</th>
+                <th class="py-4 px-6 font-bold text-left">Details</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="modal-bg" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 hidden flex items-center justify-center transition-all duration-300">
+        <div id="modal-content" class="bg-white rounded-2xl max-w-2xl w-[95vw] p-10 shadow-2xl border-2 border-green-200 relative scale-90 opacity-0">
+          <button class="absolute top-4 right-6 text-3xl text-gray-400 hover:text-green-900 transition-colors duration-200" onclick="closeModal()">&times;</button>
+          <div id="modal-body" class="text-gray-800"></div>
+        </div>
+      </div>
+    </main>
   </div>
   <script>
     // Tab switching
