@@ -1,9 +1,4 @@
-# TEMPORARY: Route to drop the admin_user table for schema reset
-@app.route('/drop-admin-table')
-def drop_admin_table():
-    db.session.execute('DROP TABLE IF EXISTS admin_user CASCADE;')
-    db.session.commit()
-    return 'admin_user table dropped!'
+
 
 import os
 from flask import Flask, request, jsonify, send_file, send_from_directory
@@ -24,6 +19,7 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'cashflow.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
 
 # TEMPORARY: Route to drop the admin_user table for schema reset
 @app.route('/drop-admin-table')
@@ -244,6 +240,12 @@ def list_unsecured_loans():
             'id_document_filename': loan.id_document_filename,
             'bank_statement_filename': loan.bank_statement_filename,
             'terms_accepted': loan.terms_accepted
+        })
+    return jsonify(result)
+
+@app.route('/submissions/secured', methods=['GET'])
+def list_secured_loans():
+    loans = SecuredLoan.query.all()
     result = []
     for loan in loans:
         result.append({
