@@ -19,6 +19,11 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+# Debug: Print which database is being used
+print('--- DATABASE CONFIG ---')
+print('SQLALCHEMY_DATABASE_URI:', app.config['SQLALCHEMY_DATABASE_URI'])
+print('------------------------')
+
 # Admin login endpoint
 @app.route('/admin/login', methods=['POST'])
 def admin_login():
