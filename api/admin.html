@@ -257,6 +257,8 @@ window.addEventListener('DOMContentLoaded', function() {
                 registerSuccess.classList.remove('hidden');
                 registerError.classList.add('hidden');
                 registerForm.reset();
+                // Refresh stats after successful registration
+                showDashboard();
             } else {
                 registerError.textContent = data.message || 'Registration failed.';
                 registerError.classList.remove('hidden');
