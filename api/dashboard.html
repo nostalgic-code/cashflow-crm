@@ -12,6 +12,9 @@
       <h1 class="text-3xl font-bold text-green-900">Admin Dashboard</h1>
       <button id="logout-btn" class="bg-green-100 hover:bg-green-200 text-green-900 font-semibold px-5 py-2 rounded-lg shadow transition-all duration-200">Logout</button>
     </div>
+    <div class="flex justify-end mb-4">
+      <button id="refresh-stats-btn" class="bg-green-200 hover:bg-green-300 text-green-900 font-semibold px-4 py-2 rounded-lg shadow transition-all duration-200">Refresh Stats</button>
+    </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
       <div class="bg-green-100 rounded-xl p-6 flex flex-col items-center">
         <div class="text-4xl font-bold text-green-900" id="stat-unsecured">0</div>
@@ -31,12 +34,22 @@
     </div>
   </div>
   <script>
-    // Fetch stats
-    fetch('https://cashflow-bybn.onrender.com/admin/stats').then(r=>r.json()).then(stats => {
-        document.getElementById('stat-unsecured').textContent = stats.unsecured_loans;
-        document.getElementById('stat-secured').textContent = stats.secured_loans;
-        document.getElementById('stat-admins').textContent = stats.admins;
-    });
+    function fetchStats() {
+      fetch('https://cashflow-bybn.onrender.com/admin/stats')
+        .then(r => r.json())
+        .then(stats => {
+          document.getElementById('stat-unsecured').textContent = stats.unsecured_loans;
+          document.getElementById('stat-secured').textContent = stats.secured_loans;
+          document.getElementById('stat-admins').textContent = stats.admins;
+        })
+        .catch(() => {
+          document.getElementById('stat-unsecured').textContent = 'Err';
+          document.getElementById('stat-secured').textContent = 'Err';
+          document.getElementById('stat-admins').textContent = 'Err';
+        });
+    }
+    fetchStats();
+    document.getElementById('refresh-stats-btn').onclick = fetchStats;
     document.getElementById('logout-btn').onclick = function() {
       localStorage.removeItem('admin-auth');
       window.location.href = '/admin.html';
