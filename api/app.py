@@ -307,6 +307,11 @@ def admin_stats():
     unsecured_count = UnsecuredLoan.query.count()
     secured_count = SecuredLoan.query.count()
     admin_count = AdminUser.query.count()
+    print('--- /admin/stats DEBUG ---')
+    print('Unsecured Loans:', unsecured_count)
+    print('Secured Loans:', secured_count)
+    print('Admins:', admin_count)
+    print('--------------------------')
     return jsonify({
         'unsecured_loans': unsecured_count,
         'secured_loans': secured_count,
