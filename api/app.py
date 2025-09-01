@@ -1,4 +1,11 @@
 # --- Delete endpoints for loan applications ---
+
+# --- Delete endpoints for loan applications (moved after app/db init) ---
+
+# ...existing code...
+
+# Place these after app and db are defined:
+
 @app.route('/submissions/unsecured/<int:loan_id>', methods=['DELETE'])
 def delete_unsecured_loan(loan_id):
     loan = UnsecuredLoan.query.get_or_404(loan_id)
