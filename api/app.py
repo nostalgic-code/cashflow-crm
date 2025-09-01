@@ -1,3 +1,13 @@
+from flask_mail import Mail, Message
+# Flask-Mail configuration (update with your SMTP details)
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.zoho.com')
+app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
+app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'True') == 'True'
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', app.config['MAIL_USERNAME'])
+mail = Mail(app)
+
 
 
 
@@ -7,9 +17,21 @@ from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+from flask_mail import Mail, Message
+
 
 # Use DATABASE_URL from environment (Render sets this for you)
 app = Flask(__name__)
+
+# Flask-Mail configuration (update with your SMTP details)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # e.g. smtp.gmail.com
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')  # set in your environment or .env
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')  # set in your environment or .env
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', app.config['MAIL_USERNAME'])
+mail = Mail(app)
+
 db_url = os.environ.get('DATABASE_URL')
 if db_url:
     # Render gives a URL starting with 'postgres://', but SQLAlchemy needs 'postgresql://'
@@ -190,6 +212,16 @@ def apply_unsecured():
     )
     db.session.add(loan)
     db.session.commit()
+    # Send email notification
+    try:
+        msg = Message(
+            subject="New Unsecured Loan Application",
+            recipients=["info@cashflowloans.co.za"],
+            body=f"A new unsecured loan application has been submitted.\n\nName: {loan.name} {loan.surname}\nEmail: {loan.email}\nAmount: R{loan.amount}\nPhone: {loan.phone}\nID Number: {loan.id_number}"
+        )
+        mail.send(msg)
+    except Exception as e:
+        print(f"Failed to send email notification: {e}")
     return jsonify({'message': 'Unsecured loan application submitted successfully.'}), 201
 
 @app.route('/apply/secured', methods=['POST'])
@@ -214,6 +246,16 @@ def apply_secured():
     )
     db.session.add(loan)
     db.session.commit()
+    # Send email notification
+    try:
+        msg = Message(
+            subject="New Secured Loan Application",
+            recipients=["info@cashflowloans.co.za"],
+            body=f"A new secured loan application has been submitted.\n\nName: {loan.name}\nEmail: {loan.email}\nAmount: R{loan.amount}\nPhone: {loan.phone}\nID Number: {loan.id_number}"
+        )
+        mail.send(msg)
+    except Exception as e:
+        print(f"Failed to send email notification: {e}")
     return jsonify({'message': 'Secured loan application submitted successfully.'}), 201
 
 class UnsecuredLoan(db.Model):
