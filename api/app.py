@@ -1,3 +1,17 @@
+# --- Delete endpoints for loan applications ---
+@app.route('/submissions/unsecured/<int:loan_id>', methods=['DELETE'])
+def delete_unsecured_loan(loan_id):
+    loan = UnsecuredLoan.query.get_or_404(loan_id)
+    db.session.delete(loan)
+    db.session.commit()
+    return jsonify({'message': f'Unsecured loan {loan_id} deleted.'}), 200
+
+@app.route('/submissions/secured/<int:loan_id>', methods=['DELETE'])
+def delete_secured_loan(loan_id):
+    loan = SecuredLoan.query.get_or_404(loan_id)
+    db.session.delete(loan)
+    db.session.commit()
+    return jsonify({'message': f'Secured loan {loan_id} deleted.'}), 200
 
 
 
