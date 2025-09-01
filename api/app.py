@@ -1,24 +1,4 @@
-# --- Delete endpoints for loan applications ---
 
-# --- Delete endpoints for loan applications (moved after app/db init) ---
-
-# ...existing code...
-
-# Place these after app and db are defined:
-
-@app.route('/submissions/unsecured/<int:loan_id>', methods=['DELETE'])
-def delete_unsecured_loan(loan_id):
-    loan = UnsecuredLoan.query.get_or_404(loan_id)
-    db.session.delete(loan)
-    db.session.commit()
-    return jsonify({'message': f'Unsecured loan {loan_id} deleted.'}), 200
-
-@app.route('/submissions/secured/<int:loan_id>', methods=['DELETE'])
-def delete_secured_loan(loan_id):
-    loan = SecuredLoan.query.get_or_404(loan_id)
-    db.session.delete(loan)
-    db.session.commit()
-    return jsonify({'message': f'Secured loan {loan_id} deleted.'}), 200
 
 
 
