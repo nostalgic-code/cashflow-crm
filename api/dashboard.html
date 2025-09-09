@@ -23,6 +23,10 @@
           <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6"/></svg>
           Applications
         </a>
+          <button id="advanced-tab" class="flex items-center gap-3 px-4 py-3 rounded-lg text-purple-700 hover:bg-purple-50 transition w-full text-left">
+            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01"/></svg>
+            Advanced Stats
+          </button>
       </nav>
       <div class="mt-auto flex items-center gap-3 pt-10">
         <div class="relative group">
@@ -77,6 +81,60 @@
           View Submitted Forms
         </a>
       </div>
+      <!-- Advanced Stats Section (hidden by default) -->
+      <section id="advanced-section" class="hidden">
+        <h2 class="text-3xl font-bold text-purple-900 mb-8">Advanced Statistics & Tables</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          <div class="bg-white rounded-2xl shadow-lg p-8 border-t-4 border-purple-600">
+            <h3 class="text-xl font-bold text-purple-800 mb-4">Dashboard Metrics</h3>
+            <ul class="space-y-2 text-purple-700 text-lg">
+              <li>Total Loan + Interest: <span id="metric-total-loan"></span></li>
+              <li>Outstanding Balance: <span id="metric-outstanding"></span></li>
+              <li>Number of Overdue Loans: <span id="metric-overdue"></span></li>
+              <li>Total Loans Disbursed: <span id="metric-disbursed"></span></li>
+              <li>Total Repayments Collected: <span id="metric-repaid"></span></li>
+            </ul>
+          </div>
+          <div class="bg-white rounded-2xl shadow-lg p-8 border-t-4 border-indigo-600">
+            <h3 class="text-xl font-bold text-indigo-800 mb-4">Money Out</h3>
+            <table class="w-full text-left border">
+              <thead><tr class="bg-indigo-100"><th>Recipient</th><th>Amount</th><th>Date</th></tr></thead>
+              <tbody id="moneyout-table"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white rounded-2xl shadow-lg p-8 border-t-4 border-green-600">
+            <h3 class="text-xl font-bold text-green-800 mb-4">Clients</h3>
+            <input type="text" id="client-search" placeholder="Search clients..." class="mb-4 px-3 py-2 border rounded w-full">
+            <table class="w-full text-left border">
+              <thead><tr class="bg-green-100"><th>Name</th><th>Surname</th><th>Email</th><th>Phone</th></tr></thead>
+              <tbody id="clients-table"></tbody>
+            </table>
+          </div>
+          <div class="bg-white rounded-2xl shadow-lg p-8 border-t-4 border-blue-600">
+            <h3 class="text-xl font-bold text-blue-800 mb-4">Loans</h3>
+            <select id="loan-status-filter" class="mb-4 px-3 py-2 border rounded w-full">
+              <option value="">All</option>
+              <option value="active">Active</option>
+              <option value="paid">Paid</option>
+              <option value="overdue">Overdue</option>
+            </select>
+            <table class="w-full text-left border">
+              <thead><tr class="bg-blue-100"><th>Name</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody id="loans-table"></tbody>
+            </table>
+          </div>
+          <div class="bg-white rounded-2xl shadow-lg p-8 border-t-4 border-yellow-600">
+            <h3 class="text-xl font-bold text-yellow-800 mb-4">Repayments</h3>
+            <input type="number" id="repayment-loan-id" placeholder="Loan ID (optional)" class="mb-4 px-3 py-2 border rounded w-full">
+            <table class="w-full text-left border">
+              <thead><tr class="bg-yellow-100"><th>Loan ID</th><th>Amount</th><th>Date</th></tr></thead>
+              <tbody id="repayments-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
   <script>
@@ -112,6 +170,74 @@
       icon.textContent = username.charAt(0).toUpperCase();
       icon.innerHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 absolute opacity-0 pointer-events-none"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a8.25 8.25 0 1115 0v.75a.75.75 0 01-.75.75h-13.5a.75.75 0 01-.75-.75v-.75z" /></svg>';
     }
+
+    // Advanced tab logic
+    const advancedTab = document.getElementById('advanced-tab');
+    const advancedSection = document.getElementById('advanced-section');
+    const mainContent = document.querySelector('main > div');
+    advancedTab.onclick = function() {
+      advancedSection.classList.remove('hidden');
+      mainContent.classList.add('hidden');
+    };
+    // Show main dashboard when not in advanced
+    document.querySelector('a[href="/dashboard.html"]').onclick = function(e) {
+      e.preventDefault();
+      advancedSection.classList.add('hidden');
+      mainContent.classList.remove('hidden');
+    };
+
+    // Fetch advanced metrics
+    function fetchAdvancedMetrics() {
+      fetch('https://cashflow-bybn.onrender.com/admin/metrics')
+        .then(r => r.json())
+        .then(m => {
+          document.getElementById('metric-total-loan').textContent = m.total_loan_with_interest.toFixed(2);
+          document.getElementById('metric-outstanding').textContent = m.outstanding_balance.toFixed(2);
+          document.getElementById('metric-overdue').textContent = m.number_of_overdue_loans;
+          document.getElementById('metric-disbursed').textContent = m.total_loans_disbursed.toFixed(2);
+          document.getElementById('metric-repaid').textContent = m.total_repayments_collected.toFixed(2);
+          // Money out table
+          const moneyoutTable = document.getElementById('moneyout-table');
+          moneyoutTable.innerHTML = m.money_out.map(row => `<tr><td>${row.recipient}</td><td>${row.amount}</td><td>${row.date}</td></tr>`).join('');
+        });
+    }
+    advancedTab.addEventListener('click', fetchAdvancedMetrics);
+
+    // Clients table
+    function fetchClients(q = '') {
+      fetch('https://cashflow-bybn.onrender.com/admin/clients?q=' + encodeURIComponent(q))
+        .then(r => r.json())
+        .then(clients => {
+          const table = document.getElementById('clients-table');
+          table.innerHTML = clients.map(c => `<tr><td>${c.name}</td><td>${c.surname}</td><td>${c.email}</td><td>${c.phone}</td></tr>`).join('');
+        });
+    }
+    document.getElementById('client-search').addEventListener('input', e => fetchClients(e.target.value));
+    advancedTab.addEventListener('click', () => fetchClients());
+
+    // Loans table
+    function fetchLoans(status = '') {
+      fetch('https://cashflow-bybn.onrender.com/admin/loans?status=' + encodeURIComponent(status))
+        .then(r => r.json())
+        .then(loans => {
+          const table = document.getElementById('loans-table');
+          table.innerHTML = loans.map(l => `<tr><td>${l.name}</td><td>${l.amount}</td><td>${l.status}</td></tr>`).join('');
+        });
+    }
+    document.getElementById('loan-status-filter').addEventListener('change', e => fetchLoans(e.target.value));
+    advancedTab.addEventListener('click', () => fetchLoans());
+
+    // Repayments table
+    function fetchRepayments(loanId = '') {
+      fetch('https://cashflow-bybn.onrender.com/admin/repayments' + (loanId ? ('?loan_id=' + loanId) : ''))
+        .then(r => r.json())
+        .then(repayments => {
+          const table = document.getElementById('repayments-table');
+          table.innerHTML = repayments.map(r => `<tr><td>${r.loan_id}</td><td>${r.amount}</td><td>${r.date}</td></tr>`).join('');
+        });
+    }
+    document.getElementById('repayment-loan-id').addEventListener('input', e => fetchRepayments(e.target.value));
+    advancedTab.addEventListener('click', () => fetchRepayments());
   </script>
 </body>
 </html>

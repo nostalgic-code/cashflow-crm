@@ -100,6 +100,28 @@ class AdminUser(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+# --- New Models ---
+class Client(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    surname = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    # Add more fields as needed
+
+class Repayment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    loan_id = db.Column(db.Integer, nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    # Add more fields as needed
+
+class MoneyOut(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    recipient = db.Column(db.String(120), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    # Add more fields as needed
 ALLOWED_EXTENSIONS = {'pdf', 'jpg', 'jpeg', 'png'}
 
 def allowed_file(filename):
@@ -359,6 +381,133 @@ def admin_stats():
         'secured_loans': secured_count,
         'admins': admin_count
     })
+
+# --- New Dashboard Metrics Endpoint ---
+@app.route('/admin/metrics', methods=['GET'])
+def admin_metrics():
+    # Total loan + interest (dummy interest 10%)
+    total_loan = db.session.query(db.func.sum(UnsecuredLoan.amount)).scalar() or 0
+    total_loan += db.session.query(db.func.sum(SecuredLoan.amount)).scalar() or 0
+    total_interest = total_loan * 0.10
+    total_with_interest = total_loan + total_interest
+
+    # Outstanding balance (total loan - repayments)
+    total_repaid = db.session.query(db.func.sum(Repayment.amount)).scalar() or 0
+    outstanding_balance = total_with_interest - total_repaid
+
+    # Overdue status (dummy: loans older than 30 days and not fully repaid)
+    from datetime import datetime, timedelta
+    overdue_loans = []
+    now = datetime.utcnow()
+    for loan in UnsecuredLoan.query.all() + SecuredLoan.query.all():
+        # Assume loan.id matches Repayment.loan_id
+        repaid = db.session.query(db.func.sum(Repayment.amount)).filter(Repayment.loan_id == loan.id).scalar() or 0
+        loan_date = getattr(loan, 'created_at', now - timedelta(days=31))
+        if (now - loan_date).days > 30 and repaid < loan.amount:
+            overdue_loans.append(loan.id)
+
+    # Money out
+    money_out = [
+        {'recipient': m.recipient, 'amount': m.amount, 'date': m.date.strftime('%Y-%m-%d')}
+        for m in MoneyOut.query.all()
+    ]
+
+    # Breakdown by status (dummy: Active, Paid, Overdue)
+    active_loans = []
+    paid_loans = []
+    for loan in UnsecuredLoan.query.all() + SecuredLoan.query.all():
+        repaid = db.session.query(db.func.sum(Repayment.amount)).filter(Repayment.loan_id == loan.id).scalar() or 0
+        if repaid >= loan.amount:
+            paid_loans.append(loan.id)
+        elif loan.id in overdue_loans:
+            continue
+        else:
+            active_loans.append(loan.id)
+
+    return jsonify({
+        'total_loan_with_interest': total_with_interest,
+        'outstanding_balance': outstanding_balance,
+        'overdue_loans': overdue_loans,
+        'money_out': money_out,
+        'active_loans': active_loans,
+        'paid_loans': paid_loans,
+        'total_loans_disbursed': total_loan,
+        'total_repayments_collected': total_repaid,
+        'number_of_overdue_loans': len(overdue_loans)
+    })
+
+# --- Clients Table Endpoint ---
+@app.route('/admin/clients', methods=['GET'])
+def admin_clients():
+    # Search and sort by query params
+    q = request.args.get('q', '').lower()
+    sort = request.args.get('sort', 'name')
+    clients = Client.query.all()
+    result = []
+    for c in clients:
+        if q and q not in c.name.lower() and q not in c.surname.lower() and q not in c.email.lower():
+            continue
+        result.append({
+            'id': c.id,
+            'name': c.name,
+            'surname': c.surname,
+            'email': c.email,
+            'phone': c.phone
+        })
+    result.sort(key=lambda x: x.get(sort, ''))
+    return jsonify(result)
+
+# --- Loans Table Endpoint ---
+@app.route('/admin/loans', methods=['GET'])
+def admin_loans():
+    status = request.args.get('status', '').lower()
+    loans = []
+    for loan in UnsecuredLoan.query.all() + SecuredLoan.query.all():
+        repaid = db.session.query(db.func.sum(Repayment.amount)).filter(Repayment.loan_id == loan.id).scalar() or 0
+        loan_status = 'active'
+        if repaid >= loan.amount:
+            loan_status = 'paid'
+        # Overdue logic
+        from datetime import datetime, timedelta
+        loan_date = getattr(loan, 'created_at', datetime.utcnow() - timedelta(days=31))
+        if (datetime.utcnow() - loan_date).days > 30 and repaid < loan.amount:
+            loan_status = 'overdue'
+        if status and loan_status != status:
+            continue
+        loans.append({
+            'id': loan.id,
+            'amount': loan.amount,
+            'name': getattr(loan, 'name', ''),
+            'status': loan_status
+        })
+    return jsonify(loans)
+
+# --- Repayments Table Endpoint ---
+@app.route('/admin/repayments', methods=['GET'])
+def admin_repayments():
+    loan_id = request.args.get('loan_id')
+    repayments = Repayment.query
+    if loan_id:
+        repayments = repayments.filter_by(loan_id=loan_id)
+    repayments = repayments.all()
+    result = []
+    for r in repayments:
+        result.append({
+            'id': r.id,
+            'loan_id': r.loan_id,
+            'amount': r.amount,
+            'date': r.date.strftime('%Y-%m-%d')
+        })
+    return jsonify(result)
+
+# --- Money Out Table Endpoint ---
+@app.route('/admin/moneyout', methods=['GET'])
+def admin_moneyout():
+    money_out = [
+        {'id': m.id, 'recipient': m.recipient, 'amount': m.amount, 'date': m.date.strftime('%Y-%m-%d')}
+        for m in MoneyOut.query.all()
+    ]
+    return jsonify(money_out)
 
 if __name__ == '__main__':
     app.run(debug=True)
