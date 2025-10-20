@@ -85,22 +85,7 @@ def health_check():
             'timestamp': datetime.now().isoformat()
         }), 500
 
-@app.route('/api/info', methods=['GET'])
-def api_info():
-    """API information endpoint"""
-    return jsonify({
-        'name': 'Cashflow CRM API',
-        'version': '1.0.0',
-        'description': 'Backend API for Cashflow CRM loan management system',
-        'endpoints': {
-            'clients': '/api/clients',
-            'payments': '/api/clients/{id}/payments',
-            'notes': '/api/clients/{id}/notes',
-            'analytics': '/api/analytics'
-        }
-    })
-
-# Client endpoints
+# Client management endpoints
 @app.route('/api/clients', methods=['GET'])
 def get_clients():
     """Get all clients"""
