@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS clients (
     address TEXT,
     loan_amount DECIMAL(12,2) DEFAULT 0,
     amount_paid DECIMAL(12,2) DEFAULT 0,
-    loan_type VARCHAR(50) DEFAULT 'personal',
+    loan_type VARCHAR(50) DEFAULT 'Secured Loan',
     status VARCHAR(20) DEFAULT 'active',
     repayment_due_date DATE,
     last_payment_date DATE,
@@ -177,12 +177,14 @@ INSERT INTO clients (
 ) VALUES 
 (
     'CL001', 'John', 'Doe', 'john.doe@example.com', '+1234567890',
-    '123 Main St, City, Country', 10000.00, 2500.00, 'personal',
+    '123 Main St, City, Country', 10000.00, 2500.00, 'Secured Loan',
     'active', '2025-12-31'
 ),
 (
     'CL002', 'Jane', 'Smith', 'jane.smith@example.com', '+1234567891',
-    '456 Oak Ave, City, Country', 15000.00, 0.00, 'business',
+    '456 Oak Ave, City, Country', 15000.00, 0.00, 'Unsecured Loan',
+    'active', '2025-11-30'
+)
     'active', '2025-11-30'
 )
 ON CONFLICT (custom_id) DO NOTHING;
