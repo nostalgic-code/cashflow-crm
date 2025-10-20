@@ -50,13 +50,38 @@ class SupabaseService:
     def create_client(self, client_data: Dict[str, Any]) -> Dict[str, Any]:
         """Create a new client"""
         try:
+            # Handle field mapping between frontend and database
+            mapped_data = client_data.copy()
+            
+            # Split name into first_name and last_name if needed
+            if 'name' in mapped_data and 'first_name' not in mapped_data:
+                name_parts = mapped_data['name'].split(' ', 1)
+                mapped_data['first_name'] = name_parts[0]
+                mapped_data['last_name'] = name_parts[1] if len(name_parts) > 1 else ''
+                del mapped_data['name']  # Remove the original name field
+            
+            # Map loanAmount to loan_amount
+            if 'loanAmount' in mapped_data:
+                mapped_data['loan_amount'] = mapped_data['loanAmount']
+                del mapped_data['loanAmount']
+            
+            # Map loanType to loan_type
+            if 'loanType' in mapped_data:
+                mapped_data['loan_type'] = mapped_data['loanType']
+                del mapped_data['loanType']
+            
+            # Map amountPaid to amount_paid
+            if 'amountPaid' in mapped_data:
+                mapped_data['amount_paid'] = mapped_data['amountPaid']
+                del mapped_data['amountPaid']
+            
             # Add timestamps
             now = datetime.now(timezone.utc).isoformat()
-            client_data['created_at'] = now
-            client_data['updated_at'] = now
+            mapped_data['created_at'] = now
+            mapped_data['updated_at'] = now
             
             # Insert into Supabase
-            result = self.client.table('clients').insert(client_data).execute()
+            result = self.client.table('clients').insert(mapped_data).execute()
             
             if result.data and len(result.data) > 0:
                 return result.data[0]
@@ -71,7 +96,23 @@ class SupabaseService:
         """Get all clients"""
         try:
             result = self.client.table('clients').select("*").order('created_at', desc=True).execute()
-            return result.data or []
+            clients = result.data or []
+            
+            # Map fields back to frontend format
+            for client in clients:
+                # Combine first_name and last_name into name
+                if 'first_name' in client and 'last_name' in client:
+                    client['name'] = f"{client['first_name']} {client['last_name']}".strip()
+                
+                # Map database fields to frontend fields
+                if 'loan_amount' in client:
+                    client['loanAmount'] = client['loan_amount']
+                if 'loan_type' in client:
+                    client['loanType'] = client['loan_type']
+                if 'amount_paid' in client:
+                    client['amountPaid'] = client['amount_paid']
+            
+            return clients
             
         except Exception as e:
             print(f"❌ Error getting clients: {e}")
