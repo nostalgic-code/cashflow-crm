@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+/* Custom Cashflow CRM Styles */
+.crm-card {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+.crm-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-color: #d1d5db;
+}
+
+.crm-dragging {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  border-color: #6554C0;
+  transform: rotate(3deg);
+  z-index: 50;
+}
+
+/* Monday.com Status Colors with proper text contrast */
+.status-new-lead {
+  background-color: #0073ea;
+  color: white;
+}
+
+.status-active {
+  background-color: #a25ddc;
+  color: white;
+}
+
+.status-repayment-due {
+  background-color: #ffcc00;
+  color: black;
+  font-weight: 600;
+}
+
+.status-paid {
+  background-color: #00d647;
+  color: white;
+}
+
+.status-overdue {
+  background-color: #e2445c;
+  color: white;
+}
+
+/* Progress bars with Monday.com colors */
+.progress-bar {
+  background: linear-gradient(90deg, #0073ea 0%, #00d647 100%);
+  transition: width 0.3s ease-in-out;
+}
+
+/* Custom scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f4f5f7;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #42526e;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #2c3e50;
+}
+
+/* Animation classes */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Line clamp utility for notes */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Responsive grid utilities */
+@media (max-width: 1280px) {
+  .xl\:grid-cols-5 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1024px) {
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  
+  .text-responsive {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .text-responsive {
+    font-size: 0.75rem;
+  }
+}
+
+/* Focus styles for accessibility */
+.focus-ring:focus {
+  outline: 2px solid #2684FF;
+  outline-offset: 2px;
+}
+
+/* Loading states */
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
