@@ -9,6 +9,7 @@ from bson import ObjectId
 from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
 import os
+import ssl
 from dotenv import load_dotenv
 from models import ClientModel, PaymentModel, DocumentModel, NoteModel, UserModel
 
@@ -35,46 +36,71 @@ class DatabaseService:
             if not mongo_uri:
                 raise ValueError("MONGODB_URI environment variable not found")
             
+            # Alternative connection strings for Render compatibility
+            connection_strings = [
+                # Primary: Original connection string with SSL disabled
+                mongo_uri.replace('?retryWrites=true&w=majority', '?ssl=false&retryWrites=true&w=majority'),
+                # Fallback 1: Original string
+                mongo_uri,
+                # Fallback 2: Standard MongoDB connection (if SRV fails)
+                "mongodb://tcityhorizon88_db_user:kHGmFJIUqsm51mYo@ac-joren2z-shard-00-00.pmt1i7t.mongodb.net:27017,ac-joren2z-shard-00-01.pmt1i7t.mongodb.net:27017,ac-joren2z-shard-00-02.pmt1i7t.mongodb.net:27017/cashflowloans?ssl=false&replicaSet=atlas-gjmxtg-shard-0&authSource=admin&retryWrites=true&w=majority"
+            ]
+            
+            # Create SSL context for bypass
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
             # Try multiple connection methods for Render compatibility
             connection_methods = [
-                # Method 1: Standard connection with SSL disabled
+                # Method 1: Complete SSL bypass
                 {
                     'ssl': False,
-                    'serverSelectionTimeoutMS': 30000,
-                    'socketTimeoutMS': 30000,
-                    'connectTimeoutMS': 30000
+                    'serverSelectionTimeoutMS': 50000,
+                    'socketTimeoutMS': 50000,
+                    'connectTimeoutMS': 50000,
+                    'maxPoolSize': 1
                 },
-                # Method 2: SSL with relaxed security (for Render)
+                # Method 2: SSL context bypass
+                {
+                    'ssl_context': ssl_context,
+                    'serverSelectionTimeoutMS': 50000,
+                    'socketTimeoutMS': 50000,
+                    'connectTimeoutMS': 50000
+                },
+                # Method 3: PyMongo SSL options
                 {
                     'ssl': True,
-                    'ssl_cert_reqs': 'CERT_NONE',
-                    'tlsAllowInvalidCertificates': True,
-                    'tlsAllowInvalidHostnames': True,
-                    'serverSelectionTimeoutMS': 30000,
-                    'socketTimeoutMS': 30000,
-                    'connectTimeoutMS': 30000
-                },
-                # Method 3: Default connection
-                {}
+                    'ssl_cert_reqs': ssl.CERT_NONE,
+                    'ssl_match_hostname': False,
+                    'serverSelectionTimeoutMS': 50000,
+                    'socketTimeoutMS': 50000,
+                    'connectTimeoutMS': 50000
+                }
             ]
             
             client = None
             last_error = None
             
-            for method in connection_methods:
-                try:
-                    print(f"Trying MongoDB connection method: {method}")
-                    client = MongoClient(mongo_uri, **method)
-                    # Test the connection
-                    client.admin.command('ping')
-                    print("✅ MongoDB connection successful!")
+            # Try different connection strings and methods
+            for uri in connection_strings:
+                for method in connection_methods:
+                    try:
+                        print(f"Trying MongoDB URI: {uri[:50]}... with method: {method}")
+                        client = MongoClient(uri, **method)
+                        # Test the connection
+                        client.admin.command('ping')
+                        print("✅ MongoDB connection successful!")
+                        print(f"✅ Connected using URI: {uri[:50]}... with method: {method}")
+                        break
+                    except Exception as e:
+                        print(f"❌ Connection failed: {str(e)[:100]}...")
+                        last_error = e
+                        if client:
+                            client.close()
+                        client = None
+                if client:  # Break outer loop if connection successful
                     break
-                except Exception as e:
-                    print(f"❌ Connection method failed: {e}")
-                    last_error = e
-                    if client:
-                        client.close()
-                    client = None
             
             if not client:
                 raise last_error or Exception("All MongoDB connection methods failed")
