@@ -14,14 +14,16 @@ CORS(app, origins=[
     "http://localhost:5173", 
     "http://localhost:5175",
     "https://cashflow-crm.vercel.app",
-    "https://cashflow-crm.vercel.app/crm"
+    "https://cashflow-crm.vercel.app/crm",
+    "https://cashflow-crm.onrender.com"
 ], supports_credentials=True)  # Allow requests from React frontend
 
 print(f"✅ Connected to Supabase successfully!")
 print(f"🚀 Starting Cashflow CRM API...")
 print(f"📊 Database: {os.getenv('DB_NAME', 'cashflowloans')}")
 print(f"📦 Collection: clients, payments, documents, notes")
-print(f"🌐 Frontend URL: http://localhost:5175 (and http://localhost:5173)")
+print(f"🌐 Frontend URL: https://cashflow-crm.vercel.app/crm")
+print(f"🔗 Backend URL: https://cashflow-crm.onrender.com")
 
 # Helper function for error responses
 def error_response(message: str, status_code: int = 400):

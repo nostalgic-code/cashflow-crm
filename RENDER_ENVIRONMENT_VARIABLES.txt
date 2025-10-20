@@ -1,0 +1,7 @@
+# Render Environment Variables
+# Add these in your Render dashboard under Environment
+
+SUPABASE_URL=https://ehlbupxheknhdycjxjdm.supabase.co
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVobGJ1cHhoZWtuaGR5Y2p4amRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA5MDk4NDUsImV4cCI6MjA3NjQ4NTg0NX0.Kmw_mhlQ5NC2gZYaqyT2unDzbol7BoDOW1TZksRScYY
+FLASK_ENV=production
+PYTHONPATH=/opt/render/project/src/backend
