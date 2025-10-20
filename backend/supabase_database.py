@@ -60,20 +60,25 @@ class SupabaseService:
                 mapped_data['last_name'] = name_parts[1] if len(name_parts) > 1 else ''
                 del mapped_data['name']  # Remove the original name field
             
-            # Map loanAmount to loan_amount
-            if 'loanAmount' in mapped_data:
-                mapped_data['loan_amount'] = mapped_data['loanAmount']
-                del mapped_data['loanAmount']
+            # Map camelCase to snake_case fields
+            field_mappings = {
+                'loanAmount': 'loan_amount',
+                'loanType': 'loan_type', 
+                'amountPaid': 'amount_paid',
+                'applicationDate': 'application_date',
+                'lastStatusUpdate': 'last_status_update',
+                'idNumber': 'id_number',
+                'interestRate': 'interest_rate',
+                'startDate': 'start_date',
+                'dueDate': 'due_date',
+                'monthlyPayment': 'monthly_payment',
+                'paymentHistory': 'payment_history'
+            }
             
-            # Map loanType to loan_type
-            if 'loanType' in mapped_data:
-                mapped_data['loan_type'] = mapped_data['loanType']
-                del mapped_data['loanType']
-            
-            # Map amountPaid to amount_paid
-            if 'amountPaid' in mapped_data:
-                mapped_data['amount_paid'] = mapped_data['amountPaid']
-                del mapped_data['amountPaid']
+            for frontend_field, db_field in field_mappings.items():
+                if frontend_field in mapped_data:
+                    mapped_data[db_field] = mapped_data[frontend_field]
+                    del mapped_data[frontend_field]
             
             # Add timestamps
             now = datetime.now(timezone.utc).isoformat()
@@ -104,13 +109,24 @@ class SupabaseService:
                 if 'first_name' in client and 'last_name' in client:
                     client['name'] = f"{client['first_name']} {client['last_name']}".strip()
                 
-                # Map database fields to frontend fields
-                if 'loan_amount' in client:
-                    client['loanAmount'] = client['loan_amount']
-                if 'loan_type' in client:
-                    client['loanType'] = client['loan_type']
-                if 'amount_paid' in client:
-                    client['amountPaid'] = client['amount_paid']
+                # Map snake_case to camelCase fields
+                field_mappings = {
+                    'loan_amount': 'loanAmount',
+                    'loan_type': 'loanType', 
+                    'amount_paid': 'amountPaid',
+                    'application_date': 'applicationDate',
+                    'last_status_update': 'lastStatusUpdate',
+                    'id_number': 'idNumber',
+                    'interest_rate': 'interestRate',
+                    'start_date': 'startDate',
+                    'due_date': 'dueDate',
+                    'monthly_payment': 'monthlyPayment',
+                    'payment_history': 'paymentHistory'
+                }
+                
+                for db_field, frontend_field in field_mappings.items():
+                    if db_field in client:
+                        client[frontend_field] = client[db_field]
             
             return clients
             

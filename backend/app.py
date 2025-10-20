@@ -92,27 +92,39 @@ def health_check():
 def get_clients():
     """Get all clients"""
     try:
+        print(f"🔍 GET /api/clients - Fetching all clients")
         clients = db_service.get_all_clients()
+        print(f"✅ Found {len(clients)} clients: {[c.get('name', 'No name') for c in clients]}")
         return jsonify(clients)
     except Exception as e:
+        print(f"❌ Error fetching clients: {str(e)}")
         return error_response(f"Failed to fetch clients: {str(e)}", 500)
 
 @app.route('/api/clients', methods=['POST'])
 def create_client():
     """Create a new client"""
     try:
+        print(f"🔍 POST /api/clients - Received request")
         data = request.get_json()
+        print(f"📝 Request data: {data}")
         
         if not data:
+            print("❌ No data provided")
             return error_response("No data provided")
         
         # Validate client data
+        print(f"🔍 Validating client data...")
         is_valid, errors = validate_client_data(data)
+        print(f"✅ Validation result: valid={is_valid}, errors={errors}")
+        
         if not is_valid:
+            print(f"❌ Validation failed: {errors}")
             return error_response(f"Validation errors: {', '.join(errors)}")
         
         # Create client
+        print(f"🔍 Creating client in database...")
         client = db_service.create_client(data)
+        print(f"✅ Client created successfully: {client}")
         
         return jsonify({
             'success': True,
@@ -121,6 +133,9 @@ def create_client():
         }), 201
         
     except Exception as e:
+        print(f"❌ Error creating client: {str(e)}")
+        import traceback
+        print(f"📍 Full traceback: {traceback.format_exc()}")
         return error_response(f"Failed to create client: {str(e)}", 500)
 
 @app.route('/api/clients/<client_id>', methods=['GET'])
