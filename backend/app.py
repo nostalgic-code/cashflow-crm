@@ -10,7 +10,12 @@ from models import validate_client_data, validate_payment_data, validate_user_da
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:5173", "http://localhost:5175"])  # Allow requests from React frontend
+CORS(app, origins=[
+    "http://localhost:5173", 
+    "http://localhost:5175",
+    "https://cashflow-crm.vercel.app",
+    "https://cashflow-crm.vercel.app/crm"
+], supports_credentials=True)  # Allow requests from React frontend
 
 print(f"✅ Connected to MongoDB Atlas successfully!")
 print(f"🚀 Starting Cashflow CRM API...")
@@ -30,6 +35,35 @@ def success_response(data=None, message: str = "Success"):
         else:
             response['data'] = data
     return jsonify(response)
+
+# Root and Info endpoints
+@app.route('/')
+def root():
+    """Root endpoint"""
+    return jsonify({
+        'message': 'Cashflow CRM Backend API',
+        'status': 'running',
+        'version': '1.0.0',
+        'frontend': 'https://cashflow-crm.vercel.app/crm',
+        'api_docs': '/api',
+        'health_check': '/api/health'
+    })
+
+@app.route('/api')
+def api_info():
+    """API information endpoint"""
+    return jsonify({
+        'message': 'Cashflow CRM API is running',
+        'status': 'healthy',
+        'version': '1.0.0',
+        'frontend_url': 'https://cashflow-crm.vercel.app/crm',
+        'endpoints': {
+            'health': '/api/health',
+            'clients': '/api/clients',
+            'users': '/api/users',
+            'analytics': '/api/analytics'
+        }
+    })
 
 # Health and Info endpoints
 @app.route('/api/health', methods=['GET'])
@@ -395,5 +429,9 @@ def update_user_login(user_id):
     except Exception as e:
         return error_response(f"Failed to update login: {str(e)}", 500)
 
+# For development only
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
+
+# For production, gunicorn will import the app directly

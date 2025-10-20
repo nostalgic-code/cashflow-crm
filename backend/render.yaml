@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: cashflow-crm-api
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: MONGODB_URI
+        value: mongodb+srv://tcityhorizon88_db_user:kHGmFJIUqsm51mYo@cluster0.pmt1i7t.mongodb.net/
+      - key: DATABASE_NAME  
+        value: cashflowloans
+      - key: FLASK_ENV
+        value: production
+      - key: SUPABASE_URL
+        value: https://ehlbupxheknhdycjxjdm.supabase.co
+      - key: SUPABASE_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVobGJ1cHhoZWtuaGR5Y2p4amRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA5MDk4NDUsImV4cCI6MjA3NjQ4NTg0NX0.Kmw_mhlQ5NC2gZYaqyT2unDzbol7BoDOW1TZksRScYY
