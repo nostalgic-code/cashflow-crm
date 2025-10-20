@@ -31,11 +31,55 @@ class DatabaseService:
     def _connect(self):
         """Connect to MongoDB Atlas"""
         try:
-            mongo_uri = os.getenv('MONGO_URI')
+            mongo_uri = os.getenv('MONGODB_URI') or os.getenv('MONGO_URI')
             if not mongo_uri:
-                raise ValueError("MONGO_URI environment variable not found")
+                raise ValueError("MONGODB_URI environment variable not found")
             
-            self.client = MongoClient(mongo_uri)
+            # Try multiple connection methods for Render compatibility
+            connection_methods = [
+                # Method 1: Standard connection with SSL disabled
+                {
+                    'ssl': False,
+                    'serverSelectionTimeoutMS': 30000,
+                    'socketTimeoutMS': 30000,
+                    'connectTimeoutMS': 30000
+                },
+                # Method 2: SSL with relaxed security (for Render)
+                {
+                    'ssl': True,
+                    'ssl_cert_reqs': 'CERT_NONE',
+                    'tlsAllowInvalidCertificates': True,
+                    'tlsAllowInvalidHostnames': True,
+                    'serverSelectionTimeoutMS': 30000,
+                    'socketTimeoutMS': 30000,
+                    'connectTimeoutMS': 30000
+                },
+                # Method 3: Default connection
+                {}
+            ]
+            
+            client = None
+            last_error = None
+            
+            for method in connection_methods:
+                try:
+                    print(f"Trying MongoDB connection method: {method}")
+                    client = MongoClient(mongo_uri, **method)
+                    # Test the connection
+                    client.admin.command('ping')
+                    print("✅ MongoDB connection successful!")
+                    break
+                except Exception as e:
+                    print(f"❌ Connection method failed: {e}")
+                    last_error = e
+                    if client:
+                        client.close()
+                    client = None
+            
+            if not client:
+                raise last_error or Exception("All MongoDB connection methods failed")
+                
+            self.client = client
             
             # Test connection
             self.client.admin.command('ping')
