@@ -3,7 +3,7 @@ from flask_cors import CORS
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-from database import db_service
+from supabase_database import db_service
 from models import validate_client_data, validate_payment_data, validate_user_data, CLIENT_STATUS_OPTIONS, UserModel
 
 # Load environment variables
@@ -17,7 +17,7 @@ CORS(app, origins=[
     "https://cashflow-crm.vercel.app/crm"
 ], supports_credentials=True)  # Allow requests from React frontend
 
-print(f"✅ Connected to MongoDB Atlas successfully!")
+print(f"✅ Connected to Supabase successfully!")
 print(f"🚀 Starting Cashflow CRM API...")
 print(f"📊 Database: {os.getenv('DB_NAME', 'cashflowloans')}")
 print(f"📦 Collection: clients, payments, documents, notes")
