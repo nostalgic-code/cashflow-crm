@@ -1,68 +1,36 @@
 """
 Database service layer for Cashflow CRM
-Handles all MongoDB operations with proper error handling
+Uses MongoDB Atlas Data API to bypass SSL issues on Render
 """
 
-from pymongo import MongoClient
-from pymongo.errors import PyMongoError
-from bson import ObjectId
 from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
 import os
 from dotenv import load_dotenv
 from models import ClientModel, PaymentModel, DocumentModel, NoteModel, UserModel
+from mongodb_api_wrapper import mongo_api
 
 # Load environment variables
 load_dotenv()
 
 class DatabaseService:
-    """Database service for MongoDB operations"""
+    """Database service using MongoDB Atlas Data API"""
     
     def __init__(self):
-        self.client = None
-        self.db = None
-        self.clients_collection = None
-        self.payments_collection = None
-        self.documents_collection = None
-        self.notes_collection = None
-        self.users_collection = None
-        self._connect()
+        print(f"🔌 Initializing MongoDB Data API service...")
+        if not mongo_api.api_key:
+            print("⚠️ Warning: MONGODB_API_KEY not found. Please set it in your environment.")
+        else:
+            print(f"✅ MongoDB Data API service initialized")
     
-    def _connect(self):
-        """Connect to MongoDB Atlas"""
+    def is_connected(self) -> bool:
+        """Check if database is connected"""
         try:
-            mongo_uri = os.getenv('MONGODB_URI') or os.getenv('MONGO_URI')
-            if not mongo_uri:
-                raise ValueError("MONGODB_URI environment variable not found")
-            
-            print(f"🔌 Connecting to MongoDB...")
-            
-            # Super simple connection - just basic options
-            self.client = MongoClient(
-                mongo_uri,
-                serverSelectionTimeoutMS=30000,
-                connectTimeoutMS=30000,
-                socketTimeoutMS=30000
-            )
-            
-            # Test connection
-            self.client.admin.command('ping')
-            
-            # Get database and collections
-            db_name = os.getenv('DB_NAME', 'cashflowloans')
-            self.db = self.client[db_name]
-            
-            self.clients_collection = self.db['clients']
-            self.payments_collection = self.db['payments']
-            self.documents_collection = self.db['documents']
-            self.notes_collection = self.db['notes']
-            self.users_collection = self.db['users']
-            
-            print(f"✅ Connected to MongoDB database: {db_name}")
-            
-        except Exception as e:
-            print(f"❌ Failed to connect to MongoDB: {e}")
-            raise
+            # Test by getting one client
+            result = mongo_api.find_one('clients', {})
+            return True
+        except:
+            return False
     
     def is_connected(self) -> bool:
         """Check if database is connected"""
@@ -79,22 +47,17 @@ class DatabaseService:
         """Create a new client"""
         try:
             client = ClientModel(client_data)
+            client_dict = client.to_dict()
             
-            # Insert into database
-            result = self.clients_collection.insert_one(client.to_dict())
+            # Insert into database using API
+            inserted_id = mongo_api.insert_one('clients', client_dict)
             
-            # Get the inserted document
-            inserted_client = self.clients_collection.find_one({"_id": result.inserted_id})
+            if inserted_id:
+                client_dict['_id'] = inserted_id
+                return client_dict
             
-            # Convert ObjectId to string for JSON serialization
-            if inserted_client:
-                inserted_client['_id'] = str(inserted_client['_id'])
+            return None
             
-            return inserted_client
-            
-        except PyMongoError as e:
-            print(f"❌ Database error creating client: {e}")
-            raise
         except Exception as e:
             print(f"❌ Error creating client: {e}")
             raise
@@ -102,43 +65,25 @@ class DatabaseService:
     def get_all_clients(self) -> List[Dict[str, Any]]:
         """Get all clients"""
         try:
-            cursor = self.clients_collection.find({}).sort("createdAt", -1)
-            clients = []
+            clients = mongo_api.find_all('clients')
+            return clients or []
             
-            for doc in cursor:
-                doc['_id'] = str(doc['_id'])
-                clients.append(doc)
-            
-            return clients
-            
-        except PyMongoError as e:
-            print(f"❌ Database error getting clients: {e}")
-            raise
         except Exception as e:
             print(f"❌ Error getting clients: {e}")
             raise
     
     def get_client_by_id(self, client_id: str) -> Optional[Dict[str, Any]]:
-        """Get a client by ID (either MongoDB _id or custom id)"""
+        """Get a client by ID"""
         try:
             # Try to find by custom id first
-            client = self.clients_collection.find_one({"id": client_id})
+            client = mongo_api.find_one('clients', {"id": client_id})
             
-            # If not found, try MongoDB _id
-            if not client:
-                try:
-                    client = self.clients_collection.find_one({"_id": ObjectId(client_id)})
-                except:
-                    pass
-            
-            if client:
-                client['_id'] = str(client['_id'])
+            # If not found and looks like MongoDB ObjectId, try that
+            if not client and len(client_id) == 24:
+                client = mongo_api.find_one('clients', {"_id": client_id})
             
             return client
             
-        except PyMongoError as e:
-            print(f"❌ Database error getting client: {e}")
-            raise
         except Exception as e:
             print(f"❌ Error getting client: {e}")
             raise
@@ -150,29 +95,17 @@ class DatabaseService:
             update_data['updatedAt'] = datetime.now(timezone.utc).isoformat()
             
             # Try to update by custom id first
-            result = self.clients_collection.update_one(
-                {"id": client_id},
-                {"$set": update_data}
-            )
+            success = mongo_api.update_one('clients', {"id": client_id}, {"$set": update_data})
             
-            # If not found, try MongoDB _id
-            if result.matched_count == 0:
-                try:
-                    result = self.clients_collection.update_one(
-                        {"_id": ObjectId(client_id)},
-                        {"$set": update_data}
-                    )
-                except:
-                    pass
+            # If not found and looks like MongoDB ObjectId, try that
+            if not success and len(client_id) == 24:
+                success = mongo_api.update_one('clients', {"_id": client_id}, {"$set": update_data})
             
-            if result.matched_count > 0:
+            if success:
                 return self.get_client_by_id(client_id)
             
             return None
             
-        except PyMongoError as e:
-            print(f"❌ Database error updating client: {e}")
-            raise
         except Exception as e:
             print(f"❌ Error updating client: {e}")
             raise
@@ -181,20 +114,14 @@ class DatabaseService:
         """Delete a client"""
         try:
             # Try to delete by custom id first
-            result = self.clients_collection.delete_one({"id": client_id})
+            success = mongo_api.delete_one('clients', {"id": client_id})
             
-            # If not found, try MongoDB _id
-            if result.deleted_count == 0:
-                try:
-                    result = self.clients_collection.delete_one({"_id": ObjectId(client_id)})
-                except:
-                    pass
+            # If not found and looks like MongoDB ObjectId, try that
+            if not success and len(client_id) == 24:
+                success = mongo_api.delete_one('clients', {"_id": client_id})
             
-            return result.deleted_count > 0
+            return success
             
-        except PyMongoError as e:
-            print(f"❌ Database error deleting client: {e}")
-            raise
         except Exception as e:
             print(f"❌ Error deleting client: {e}")
             raise
@@ -222,8 +149,8 @@ class DatabaseService:
             payment_data['clientId'] = client_id
             payment = PaymentModel(payment_data)
             
-            # Insert payment
-            self.payments_collection.insert_one(payment.to_dict())
+            # Insert payment using API
+            mongo_api.insert_one('payments', payment.to_dict())
             
             # Update client's amount paid
             client = self.get_client_by_id(client_id)
@@ -257,14 +184,10 @@ class DatabaseService:
     def get_client_payments(self, client_id: str) -> List[Dict[str, Any]]:
         """Get all payments for a client"""
         try:
-            cursor = self.payments_collection.find({"clientId": client_id}).sort("createdAt", -1)
-            payments = []
-            
-            for doc in cursor:
-                doc['_id'] = str(doc['_id'])
-                payments.append(doc)
-            
-            return payments
+            payments = mongo_api.find_all('payments')
+            # Filter by client ID
+            client_payments = [p for p in payments if p.get('clientId') == client_id]
+            return client_payments
             
         except Exception as e:
             print(f"❌ Error getting payments: {e}")
@@ -276,83 +199,73 @@ class DatabaseService:
         try:
             note_data['clientId'] = client_id
             note = NoteModel(note_data)
+            note_dict = note.to_dict()
             
-            # Insert note
-            result = self.notes_collection.insert_one(note.to_dict())
+            # Insert note using API
+            inserted_id = mongo_api.insert_one('notes', note_dict)
             
             # Add to client's notes array
             client = self.get_client_by_id(client_id)
             if client:
                 notes = client.get('notes', [])
-                notes.append(note.to_dict())
+                notes.append(note_dict)
                 self.update_client(client_id, {'notes': notes})
             
-            note_dict = note.to_dict()
-            note_dict['_id'] = str(result.inserted_id)
+            if inserted_id:
+                note_dict['_id'] = inserted_id
+            
             return note_dict
             
         except Exception as e:
             print(f"❌ Error adding note: {e}")
             raise
     
-    # Analytics operations
+    # Analytics operations (simplified for API)
     def get_analytics_data(self) -> Dict[str, Any]:
         """Get analytics data for dashboard"""
         try:
-            pipeline = [
-                {
-                    "$group": {
-                        "_id": None,
-                        "totalClients": {"$sum": 1},
-                        "totalLoanAmount": {"$sum": "$loanAmount"},
-                        "totalAmountPaid": {"$sum": "$amountPaid"},
-                        "activeLoans": {
-                            "$sum": {
-                                "$cond": [
-                                    {"$in": ["$status", ["active", "repayment-due", "overdue"]]},
-                                    1,
-                                    0
-                                ]
-                            }
-                        },
-                        "overdueCount": {
-                            "$sum": {
-                                "$cond": [{"$eq": ["$status", "overdue"]}, 1, 0]
-                            }
-                        },
-                        "paidCount": {
-                            "$sum": {
-                                "$cond": [{"$eq": ["$status", "paid"]}, 1, 0]
-                            }
-                        }
-                    }
+            clients = mongo_api.find_all('clients')
+            
+            if not clients:
+                return {
+                    'totalClients': 0,
+                    'totalLoanAmount': 0,
+                    'totalAmountPaid': 0,
+                    'totalAmountDue': 0,
+                    'totalOutstanding': 0,
+                    'activeLoans': 0,
+                    'overdueCount': 0,
+                    'paidCount': 0,
+                    'repaymentRate': 0,
+                    'avgLoanAmount': 0
                 }
-            ]
             
-            result = list(self.clients_collection.aggregate(pipeline))
+            # Calculate metrics
+            total_clients = len(clients)
+            total_loan_amount = sum(c.get('loanAmount', 0) for c in clients)
+            total_amount_paid = sum(c.get('amountPaid', 0) for c in clients)
+            total_due = total_loan_amount * 1.5
+            total_outstanding = max(0, total_due - total_amount_paid)
             
-            if result:
-                data = result[0]
-                # Calculate additional metrics
-                total_due = data['totalLoanAmount'] * 1.5 if data['totalLoanAmount'] else 0
-                data['totalAmountDue'] = total_due
-                data['totalOutstanding'] = max(0, total_due - data['totalAmountPaid'])
-                data['repaymentRate'] = (data['totalAmountPaid'] / total_due * 100) if total_due > 0 else 0
-                data['avgLoanAmount'] = data['totalLoanAmount'] / data['totalClients'] if data['totalClients'] > 0 else 0
-                
-                return data
+            active_statuses = ['active', 'repayment-due', 'overdue']
+            active_loans = len([c for c in clients if c.get('status') in active_statuses])
+            overdue_count = len([c for c in clients if c.get('status') == 'overdue'])
+            paid_count = len([c for c in clients if c.get('status') == 'paid'])
+            
+            repayment_rate = (total_amount_paid / total_due * 100) if total_due > 0 else 0
+            avg_loan_amount = total_loan_amount / total_clients if total_clients > 0 else 0
             
             return {
-                'totalClients': 0,
-                'totalLoanAmount': 0,
-                'totalAmountPaid': 0,
-                'totalAmountDue': 0,
-                'totalOutstanding': 0,
-                'activeLoans': 0,
-                'overdueCount': 0,
-                'paidCount': 0,
-                'repaymentRate': 0,
-                'avgLoanAmount': 0
+                'totalClients': total_clients,
+                'totalLoanAmount': total_loan_amount,
+                'totalAmountPaid': total_amount_paid,
+                'totalAmountDue': total_due,
+                'totalOutstanding': total_outstanding,
+                'activeLoans': active_loans,
+                'overdueCount': overdue_count,
+                'paidCount': paid_count,
+                'repaymentRate': repayment_rate,
+                'avgLoanAmount': avg_loan_amount
             }
             
         except Exception as e:
@@ -362,17 +275,14 @@ class DatabaseService:
     def get_status_breakdown(self) -> List[Dict[str, Any]]:
         """Get client count by status"""
         try:
-            pipeline = [
-                {
-                    "$group": {
-                        "_id": "$status",
-                        "count": {"$sum": 1}
-                    }
-                }
-            ]
+            clients = mongo_api.find_all('clients')
+            status_counts = {}
             
-            result = list(self.clients_collection.aggregate(pipeline))
-            return [{"status": doc["_id"], "count": doc["count"]} for doc in result]
+            for client in clients:
+                status = client.get('status', 'unknown')
+                status_counts[status] = status_counts.get(status, 0) + 1
+            
+            return [{"status": status, "count": count} for status, count in status_counts.items()]
             
         except Exception as e:
             print(f"❌ Error getting status breakdown: {e}")
@@ -381,44 +291,52 @@ class DatabaseService:
     def get_loan_type_breakdown(self) -> List[Dict[str, Any]]:
         """Get loan amount by loan type"""
         try:
-            pipeline = [
-                {
-                    "$group": {
-                        "_id": "$loanType",
-                        "count": {"$sum": 1},
-                        "totalAmount": {"$sum": "$loanAmount"},
-                        "totalDue": {"$sum": {"$multiply": ["$loanAmount", 1.5]}},
-                        "totalPaid": {"$sum": "$amountPaid"}
+            clients = mongo_api.find_all('clients')
+            type_data = {}
+            
+            for client in clients:
+                loan_type = client.get('loanType', 'unknown')
+                loan_amount = client.get('loanAmount', 0)
+                amount_paid = client.get('amountPaid', 0)
+                
+                if loan_type not in type_data:
+                    type_data[loan_type] = {
+                        'count': 0,
+                        'totalAmount': 0,
+                        'totalPaid': 0
                     }
-                }
-            ]
+                
+                type_data[loan_type]['count'] += 1
+                type_data[loan_type]['totalAmount'] += loan_amount
+                type_data[loan_type]['totalPaid'] += amount_paid
             
-            result = list(self.clients_collection.aggregate(pipeline))
-            formatted_result = []
-            
-            for doc in result:
-                formatted_result.append({
-                    "type": doc["_id"],
-                    "count": doc["count"],
-                    "amount": doc["totalAmount"],
-                    "totalDue": doc["totalDue"],
-                    "outstanding": max(0, doc["totalDue"] - doc["totalPaid"])
+            result = []
+            for loan_type, data in type_data.items():
+                total_due = data['totalAmount'] * 1.5
+                outstanding = max(0, total_due - data['totalPaid'])
+                
+                result.append({
+                    "type": loan_type,
+                    "count": data['count'],
+                    "amount": data['totalAmount'],
+                    "totalDue": total_due,
+                    "outstanding": outstanding
                 })
             
-            return formatted_result
+            return result
             
         except Exception as e:
             print(f"❌ Error getting loan type breakdown: {e}")
             raise
 
-    # User Management Methods
+    # User Management Methods (simplified for API)
     def create_user(self, user_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Create a new user"""
         try:
-            result = self.users_collection.insert_one(user_data)
+            inserted_id = mongo_api.insert_one('users', user_data)
             
-            if result.inserted_id:
-                user_data['_id'] = str(result.inserted_id)
+            if inserted_id:
+                user_data['_id'] = inserted_id
                 return user_data
             
             return None
@@ -430,12 +348,7 @@ class DatabaseService:
     def get_user_by_id(self, user_id: str) -> Optional[Dict[str, Any]]:
         """Get user by ID"""
         try:
-            user = self.users_collection.find_one({"id": user_id})
-            
-            if user:
-                user['_id'] = str(user['_id'])
-            
-            return user
+            return mongo_api.find_one('users', {"id": user_id})
             
         except Exception as e:
             print(f"❌ Error getting user by ID: {e}")
@@ -444,12 +357,7 @@ class DatabaseService:
     def get_user_by_supabase_id(self, supabase_id: str) -> Optional[Dict[str, Any]]:
         """Get user by Supabase ID"""
         try:
-            user = self.users_collection.find_one({"supabaseId": supabase_id})
-            
-            if user:
-                user['_id'] = str(user['_id'])
-            
-            return user
+            return mongo_api.find_one('users', {"supabaseId": supabase_id})
             
         except Exception as e:
             print(f"❌ Error getting user by Supabase ID: {e}")
@@ -461,12 +369,9 @@ class DatabaseService:
             # Remove MongoDB ID if present
             update_data.pop('_id', None)
             
-            result = self.users_collection.update_one(
-                {"id": user_id},
-                {"$set": update_data}
-            )
+            success = mongo_api.update_one('users', {"id": user_id}, {"$set": update_data})
             
-            if result.modified_count > 0:
+            if success:
                 return self.get_user_by_id(user_id)
             
             return None
@@ -478,12 +383,7 @@ class DatabaseService:
     def get_all_users(self) -> List[Dict[str, Any]]:
         """Get all users"""
         try:
-            users = list(self.users_collection.find({}))
-            
-            for user in users:
-                user['_id'] = str(user['_id'])
-            
-            return users
+            return mongo_api.find_all('users') or []
             
         except Exception as e:
             print(f"❌ Error getting all users: {e}")
