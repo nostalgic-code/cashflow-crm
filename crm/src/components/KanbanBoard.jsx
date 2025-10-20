@@ -166,8 +166,8 @@ const KanbanColumn = ({ column, clients, onClientClick, onAddClient, onDelete })
   
   return (
     <div className={`
-      flex flex-col w-full md:w-80 md:min-w-80 md:max-w-80 h-full rounded-lg border-2 ${column.borderColor} ${column.bgColor} 
-      shadow-sm mx-0 md:mx-1
+      flex flex-col w-full md:w-80 md:min-w-80 md:max-w-80 rounded-lg border-2 ${column.borderColor} ${column.bgColor} 
+      shadow-sm mx-0 md:mx-1 max-h-full
     `}>
       {/* Column Header */}
       <div className={`${column.color} p-4 rounded-t-lg`}>
@@ -208,12 +208,12 @@ const KanbanColumn = ({ column, clients, onClientClick, onAddClient, onDelete })
             ref={provided.innerRef}
             {...provided.droppableProps}
             className={`
-              flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400
+              flex-1 p-4 overflow-y-auto scrollbar-thin
               ${snapshot.isDraggingOver ? 'bg-opacity-75' : ''}
             `}
             style={{ 
-              height: 'calc(100vh - 280px)',
-              minHeight: '400px'
+              maxHeight: 'calc(100vh - 320px)',
+              minHeight: '300px'
             }}
           >
             {clients.length > 0 ? (
@@ -356,9 +356,9 @@ const KanbanBoard = ({
   }, [clients, onClientsUpdate, onDeleteClient]);
 
   return (
-    <div className="h-full bg-gray-50 flex flex-col">
+    <div className="h-full bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-monday-gray-200 p-4 flex-shrink-0">
+      <div className="bg-white border-b border-monday-gray-200 p-4">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-monday-gray-900">Client Pipeline</h2>
@@ -402,10 +402,10 @@ const KanbanBoard = ({
       </div>
 
       {/* Kanban Board with Responsive Layout */}
-      <div className="p-2 md:p-4 flex-1 overflow-hidden">
+      <div className="p-2 md:p-4 h-full overflow-hidden">
         <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           {/* Mobile: Stack columns vertically */}
-          <div className="md:hidden space-y-4 h-full overflow-y-auto">
+          <div className="md:hidden space-y-4">
             {COLUMNS.map((column) => (
               <div key={column.id} className="w-full">
                 <KanbanColumn
@@ -420,7 +420,7 @@ const KanbanBoard = ({
           </div>
           
           {/* Desktop: Horizontal layout */}
-          <div className="hidden md:flex flex-row gap-2 h-full overflow-x-auto pb-4">
+          <div className="hidden md:flex flex-row gap-2 overflow-x-auto pb-4" style={{ height: 'calc(100vh - 200px)' }}>
             {COLUMNS.map((column) => (
               <KanbanColumn
                 key={column.id}
