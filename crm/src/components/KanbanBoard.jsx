@@ -166,7 +166,7 @@ const KanbanColumn = ({ column, clients, onClientClick, onAddClient, onDelete })
   
   return (
     <div className={`
-      flex flex-col w-full md:w-80 md:min-w-80 md:max-w-80 rounded-lg border-2 ${column.borderColor} ${column.bgColor} 
+      flex flex-col w-full md:w-80 md:min-w-80 md:max-w-80 h-full rounded-lg border-2 ${column.borderColor} ${column.bgColor} 
       shadow-sm mx-0 md:mx-1
     `}>
       {/* Column Header */}
@@ -208,21 +208,28 @@ const KanbanColumn = ({ column, clients, onClientClick, onAddClient, onDelete })
             ref={provided.innerRef}
             {...provided.droppableProps}
             className={`
-              flex-1 p-4 overflow-y-auto min-h-96
+              flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400
               ${snapshot.isDraggingOver ? 'bg-opacity-75' : ''}
             `}
-            style={{ maxHeight: 'calc(100vh - 300px)' }}
+            style={{ 
+              height: 'calc(100vh - 280px)',
+              minHeight: '400px'
+            }}
           >
             {clients.length > 0 ? (
-              clients.map((client, index) => (
-                <SimpleClientCard
-                  key={client.id}
-                  client={client}
-                  index={index}
-                  onClientClick={onClientClick}
-                  onDelete={onDelete}
-                />
-              ))
+              <>
+                {clients.map((client, index) => (
+                  <SimpleClientCard
+                    key={client.id}
+                    client={client}
+                    index={index}
+                    onClientClick={onClientClick}
+                    onDelete={onDelete}
+                  />
+                ))}
+                {/* Extra padding at the bottom to ensure last card is fully visible */}
+                <div className="h-4"></div>
+              </>
             ) : (
               <div className="flex flex-col items-center justify-center py-8 text-monday-gray-500">
                 <div className="w-12 h-12 mb-3 rounded-full bg-monday-gray-200 flex items-center justify-center">
@@ -349,9 +356,9 @@ const KanbanBoard = ({
   }, [clients, onClientsUpdate, onDeleteClient]);
 
   return (
-    <div className="h-full bg-gray-50">
+    <div className="h-full bg-gray-50 flex flex-col">
       {/* Header */}
-      <div className="bg-white border-b border-monday-gray-200 p-4">
+      <div className="bg-white border-b border-monday-gray-200 p-4 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-monday-gray-900">Client Pipeline</h2>
@@ -395,10 +402,10 @@ const KanbanBoard = ({
       </div>
 
       {/* Kanban Board with Responsive Layout */}
-      <div className="p-2 md:p-4 h-full overflow-hidden">
+      <div className="p-2 md:p-4 flex-1 overflow-hidden">
         <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           {/* Mobile: Stack columns vertically */}
-          <div className="md:hidden space-y-4">
+          <div className="md:hidden space-y-4 h-full overflow-y-auto">
             {COLUMNS.map((column) => (
               <div key={column.id} className="w-full">
                 <KanbanColumn
@@ -413,7 +420,7 @@ const KanbanBoard = ({
           </div>
           
           {/* Desktop: Horizontal layout */}
-          <div className="hidden md:flex flex-row gap-2 h-full overflow-x-auto">
+          <div className="hidden md:flex flex-row gap-2 h-full overflow-x-auto pb-4">
             {COLUMNS.map((column) => (
               <KanbanColumn
                 key={column.id}
