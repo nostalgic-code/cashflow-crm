@@ -53,6 +53,11 @@ class SupabaseService:
             # Handle field mapping between frontend and database
             mapped_data = client_data.copy()
             
+            # Handle the frontend UUID - store it as client_uuid but don't use it as primary key
+            if 'id' in mapped_data:
+                mapped_data['client_uuid'] = mapped_data['id']
+                del mapped_data['id']  # Remove frontend id, let database auto-generate primary key
+            
             # Split name into first_name and last_name if needed
             if 'name' in mapped_data and 'first_name' not in mapped_data:
                 name_parts = mapped_data['name'].split(' ', 1)
@@ -109,6 +114,12 @@ class SupabaseService:
                 if 'first_name' in client and 'last_name' in client:
                     client['name'] = f"{client['first_name']} {client['last_name']}".strip()
                 
+                # Use client_uuid as frontend id if available, otherwise use database id
+                if 'client_uuid' in client and client['client_uuid']:
+                    client['id'] = client['client_uuid']
+                elif 'id' in client:
+                    client['id'] = str(client['id'])  # Convert database id to string
+                
                 # Map snake_case to camelCase fields
                 field_mappings = {
                     'loan_amount': 'loanAmount',
@@ -137,18 +148,18 @@ class SupabaseService:
     def get_client_by_id(self, client_id: str) -> Optional[Dict[str, Any]]:
         """Get a client by ID"""
         try:
-            # Try numeric ID first
+            # Try UUID first (client_uuid field)
+            result = self.client.table('clients').select("*").eq('client_uuid', client_id).execute()
+            if result.data and len(result.data) > 0:
+                return result.data[0]
+            
+            # Try numeric ID 
             try:
                 result = self.client.table('clients').select("*").eq('id', int(client_id)).execute()
                 if result.data and len(result.data) > 0:
                     return result.data[0]
             except ValueError:
                 pass
-            
-            # Try string ID
-            result = self.client.table('clients').select("*").eq('custom_id', client_id).execute()
-            if result.data and len(result.data) > 0:
-                return result.data[0]
             
             return None
             
@@ -162,18 +173,18 @@ class SupabaseService:
             # Add updated timestamp
             update_data['updated_at'] = datetime.now(timezone.utc).isoformat()
             
-            # Try numeric ID first
+            # Try UUID first (client_uuid field)
+            result = self.client.table('clients').update(update_data).eq('client_uuid', client_id).execute()
+            if result.data and len(result.data) > 0:
+                return result.data[0]
+            
+            # Try numeric ID
             try:
                 result = self.client.table('clients').update(update_data).eq('id', int(client_id)).execute()
                 if result.data and len(result.data) > 0:
                     return result.data[0]
             except ValueError:
                 pass
-            
-            # Try string ID
-            result = self.client.table('clients').update(update_data).eq('custom_id', client_id).execute()
-            if result.data and len(result.data) > 0:
-                return result.data[0]
             
             return None
             
@@ -184,7 +195,12 @@ class SupabaseService:
     def delete_client(self, client_id: str) -> bool:
         """Delete a client"""
         try:
-            # Try numeric ID first
+            # Try UUID first (client_uuid field)
+            result = self.client.table('clients').delete().eq('client_uuid', client_id).execute()
+            if result.data and len(result.data) > 0:
+                return True
+            
+            # Try numeric ID
             try:
                 result = self.client.table('clients').delete().eq('id', int(client_id)).execute()
                 if result.data and len(result.data) > 0:
@@ -192,9 +208,7 @@ class SupabaseService:
             except ValueError:
                 pass
             
-            # Try string ID
-            result = self.client.table('clients').delete().eq('custom_id', client_id).execute()
-            return result.data and len(result.data) > 0
+            return False
             
         except Exception as e:
             print(f"❌ Error deleting client: {e}")
