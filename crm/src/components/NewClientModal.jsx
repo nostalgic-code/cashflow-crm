@@ -114,6 +114,14 @@ const NewClientModal = ({ isOpen, onClose, onAddClient }) => {
     const startDate = today.toISOString().split('T')[0]; // YYYY-MM-DD format
     const dueDate = getEndOfCurrentMonth();
     
+    // Sanitize uploaded files: strip the actual File object to avoid sending non-serializable data
+    const sanitizedFiles = uploadedFiles.map(f => ({
+      id: f.id,
+      name: f.name,
+      size: f.size,
+      type: f.type
+    }));
+
     const newClient = {
       id: uuidv4(),
       name: `${formData.name} ${formData.surname}`,
@@ -130,7 +138,7 @@ const NewClientModal = ({ isOpen, onClose, onAddClient }) => {
       status: 'new-lead',
       applicationDate: new Date().toISOString(),
       lastStatusUpdate: new Date().toISOString(),
-      documents: uploadedFiles, // Include uploaded documents
+      documents: sanitizedFiles, // Include uploaded documents metadata only
       paymentHistory: [],
       notes: []
     };
