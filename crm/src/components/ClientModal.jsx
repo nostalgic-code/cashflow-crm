@@ -40,24 +40,43 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
   const normalizedClient = {
     ...client,
     id: client.id || client.client_uuid,
-    name: client.name || client.client_name,
+    name: client.name || `${client.first_name || ''} ${client.last_name || ''}`.trim() || client.client_name,
     loanAmount: client.loanAmount || client.loan_amount || 0,
     amountPaid: client.amountPaid || client.amount_paid || 0,
     email: client.email || client.client_email || '',
     phone: client.phone || client.client_phone || '',
     loanType: client.loanType || client.loan_type || '',
     startDate: client.startDate || client.start_date || client.created_at,
-    status: client.status || 'active'
+    status: client.status || 'active',
+    idNumber: client.idNumber || client.id_number || '',
+    interestRate: client.interestRate || client.interest_rate || 50,
+    monthlyPayment: client.monthlyPayment || client.monthly_payment || 0,
+    lastPaymentDate: client.lastPaymentDate || client.last_payment_date,
+    dueDate: client.dueDate || client.due_date,
+    applicationDate: client.applicationDate || client.application_date,
+    lastStatusUpdate: client.lastStatusUpdate || client.last_status_update,
+    documents: client.documents || [],
+    paymentHistory: client.paymentHistory || client.payment_history || [],
+    notes: client.notes || [],
+    archived: client.archived || false,
+    createdAt: client.createdAt || client.created_at,
+    updatedAt: client.updatedAt || client.updated_at
   };
 
   // Validate client data more thoroughly
+  console.log('ClientModal: Original client data:', client);
+  console.log('ClientModal: Normalized client data:', normalizedClient);
+  
   if (!normalizedClient.name || !normalizedClient.id) {
     console.error('ClientModal: Invalid client data', client);
     console.log('ClientModal: Missing fields:', {
       hasClient: !!client,
       hasName: normalizedClient.name,
       hasId: normalizedClient.id,
-      clientKeys: client ? Object.keys(client) : 'no client'
+      clientKeys: client ? Object.keys(client) : 'no client',
+      rawFirstName: client?.first_name,
+      rawLastName: client?.last_name,
+      combinedName: `${client?.first_name || ''} ${client?.last_name || ''}`.trim()
     });
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -71,6 +90,18 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
           <p className="text-gray-600 mb-4">
             Client data is incomplete. Please refresh and try again.
           </p>
+          <details className="mb-4">
+            <summary className="cursor-pointer text-sm text-gray-500">Debug Info</summary>
+            <pre className="text-xs bg-gray-100 p-2 mt-2 rounded overflow-auto max-h-32">
+              {JSON.stringify({
+                hasName: normalizedClient.name,
+                hasId: normalizedClient.id,
+                firstName: client?.first_name,
+                lastName: client?.last_name,
+                keys: client ? Object.keys(client) : []
+              }, null, 2)}
+            </pre>
+          </details>
           <div className="flex justify-end">
             <button
               onClick={onClose}
@@ -509,9 +540,9 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
                 Notes & Comments
               </h3>
               
-              {client.notes && (
+              {normalizedClient.notes && (
                 <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                  <p className="text-gray-700">{client.notes}</p>
+                  <p className="text-gray-700">{normalizedClient.notes}</p>
                 </div>
               )}
               
@@ -549,9 +580,9 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
               </h3>
               
               {/* Show existing documents */}
-              {client.documents && client.documents.length > 0 ? (
+              {normalizedClient.documents && normalizedClient.documents.length > 0 ? (
                 <div className="space-y-2 mb-4">
-                  {client.documents.map((doc, index) => (
+                  {normalizedClient.documents.map((doc, index) => (
                     <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
                       <div className="flex items-center">
                         <FileText className="w-5 h-5 text-blue-600 mr-3" />
