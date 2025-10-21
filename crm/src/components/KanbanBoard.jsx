@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { RefreshCw, Plus, Trash2 } from 'lucide-react';
 import { updateClientStatus } from '../services/backendApi';
-import { formatCurrency, getStatusColor, getStatusBadgeClasses, calculateTotalAmountDue, calculateRemainingBalance } from '../utils/loanCalculations';
+import { formatCurrency, getStatusColor, getStatusBadgeClasses, calculateCurrentAmountDue, calculateRemainingBalance } from '../utils/loanCalculations';
 
 const COLUMNS = [
   { 
@@ -60,9 +60,9 @@ const COLUMNS = [
 
 // Simple Client Card Component (essential info only)
 const SimpleClientCard = ({ client, index, onClientClick, onDelete }) => {
-  const totalAmountDue = calculateTotalAmountDue(client.loanAmount);
-  const remainingAmount = calculateRemainingBalance(client.loanAmount, client.amountPaid);
-  const paymentProgress = totalAmountDue > 0 ? (client.amountPaid / totalAmountDue) * 100 : 0;
+  const currentAmountDue = calculateCurrentAmountDue(client);
+  const remainingAmount = currentAmountDue - (client.amountPaid || 0);
+  const paymentProgress = currentAmountDue > 0 ? ((client.amountPaid || 0) / currentAmountDue) * 100 : 100;
   
   return (
     <Draggable draggableId={client.id} index={index}>
@@ -124,9 +124,9 @@ const SimpleClientCard = ({ client, index, onClientClick, onDelete }) => {
               </div>
             </div>
             <div className="text-right">
-              <span className="text-xs text-monday-gray-500">Total Due</span>
+              <span className="text-xs text-monday-gray-500">Current Due</span>
               <div className="text-sm font-semibold text-monday-red">
-                {formatCurrency(totalAmountDue)}
+                {formatCurrency(currentAmountDue)}
               </div>
             </div>
           </div>
@@ -150,7 +150,7 @@ const SimpleClientCard = ({ client, index, onClientClick, onDelete }) => {
             <div className="flex justify-between items-center text-xs">
               <span className="text-monday-gray-600 font-medium">Remaining</span>
               <span className="font-semibold text-monday-red">
-                {formatCurrency(remainingAmount)}
+                {formatCurrency(Math.max(0, remainingAmount))}
               </span>
             </div>
           )}

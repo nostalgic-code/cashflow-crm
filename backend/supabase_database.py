@@ -4,7 +4,7 @@ Uses PostgreSQL instead of MongoDB for better compatibility
 """
 
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import List, Dict, Any, Optional
 from supabase import create_client, Client
 from dotenv import load_dotenv
@@ -338,12 +338,23 @@ class SupabaseService:
     
     # Payment operations
     def add_payment(self, client_id: str, payment_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """Add a payment for a client"""
+        """Add a payment for a client with compound interest logic"""
         try:
             # Get client first to ensure it exists and get current data
             client = self.get_client_by_id(client_id)
             if not client:
                 raise Exception(f"Client with ID {client_id} not found")
+            
+            # Calculate compound interest if applicable
+            loan_amount = client.get('loanAmount', client.get('loan_amount', 0))
+            current_amount_paid = client.get('amountPaid', client.get('amount_paid', 0))
+            start_date = client.get('startDate', client.get('start_date'))
+            last_payment_date = client.get('lastPaymentDate', client.get('last_payment_date'))
+            
+            # Calculate current amount due with compound interest
+            current_amount_due = self._calculate_compound_interest_amount_due(
+                loan_amount, current_amount_paid, start_date, last_payment_date
+            )
             
             # Prepare payment data for database
             payment_record = {
@@ -361,7 +372,6 @@ class SupabaseService:
             print(f"✅ Payment record created: {payment_result.data}")
             
             # Update client's amount paid
-            current_amount_paid = client.get('amountPaid', client.get('amount_paid', 0))
             new_amount_paid = current_amount_paid + payment_data.get('amount', 0)
             
             update_data = {
@@ -369,12 +379,23 @@ class SupabaseService:
                 'last_payment_date': payment_data.get('payment_date', datetime.now(timezone.utc).date().isoformat())
             }
             
-            # Auto-update status if needed
-            loan_amount = client.get('loanAmount', client.get('loan_amount', 0))
-            total_due = loan_amount * 1.5
-            if new_amount_paid >= total_due:
+            # If compound interest was applied, update the loan amount
+            if current_amount_due > (loan_amount * 1.5):
+                # The amount due has grown due to compound interest
+                # Update the effective loan amount to reflect this
+                new_principal = current_amount_due / 1.5
+                update_data['loan_amount'] = new_principal
+                print(f"🔄 Compound interest applied - new principal: {new_principal}")
+            
+            # Auto-update status based on payment
+            remaining_balance = current_amount_due - new_amount_paid
+            if remaining_balance <= 0:
                 update_data['status'] = 'paid'
                 print(f"🎉 Client fully paid! Moving to paid status")
+            elif remaining_balance < current_amount_due * 0.5:
+                update_data['status'] = 'active'
+            else:
+                update_data['status'] = 'repayment-due'
             
             print(f"🔍 Updating client with: {update_data}")
             updated_client = self.update_client(client_id, update_data)
@@ -387,6 +408,60 @@ class SupabaseService:
             import traceback
             print(f"📍 Payment error traceback: {traceback.format_exc()}")
             raise
+    
+    def _calculate_compound_interest_amount_due(self, loan_amount: float, amount_paid: float, start_date: str, last_payment_date: str = None) -> float:
+        """Calculate current amount due with compound interest logic"""
+        if not start_date:
+            return loan_amount * 1.5
+        
+        # Initial amount due
+        current_amount_due = loan_amount * 1.5
+        
+        # If no payments made, return initial amount
+        if amount_paid == 0:
+            return current_amount_due
+        
+        # Calculate remaining balance after payments
+        remaining_balance = current_amount_due - amount_paid
+        
+        # If fully paid or overpaid, return current calculation
+        if remaining_balance <= 0:
+            return current_amount_due
+        
+        # Check if we've passed month-end and need to apply compound interest
+        from datetime import datetime
+        loan_start_date = datetime.fromisoformat(start_date.replace('Z', '+00:00')) if 'T' in start_date else datetime.fromisoformat(start_date)
+        last_payment = datetime.fromisoformat(last_payment_date.replace('Z', '+00:00')) if last_payment_date and 'T' in last_payment_date else datetime.fromisoformat(last_payment_date) if last_payment_date else loan_start_date
+        now = datetime.now(timezone.utc)
+        
+        # Calculate how many month-ends have passed since loan start
+        months_passed = 0
+        check_date = loan_start_date
+        
+        while check_date < now:
+            # Move to end of current month
+            if check_date.month == 12:
+                month_end = datetime(check_date.year + 1, 1, 1, tzinfo=timezone.utc) - timedelta(days=1)
+            else:
+                month_end = datetime(check_date.year, check_date.month + 1, 1, tzinfo=timezone.utc) - timedelta(days=1)
+            
+            # If month-end has passed and we still have remaining balance
+            if month_end < now and remaining_balance > 0:
+                # Apply 50% interest to remaining balance for each unpaid month
+                remaining_balance = remaining_balance * 1.5
+                months_passed += 1
+            
+            # Move to next month
+            if check_date.month == 12:
+                check_date = datetime(check_date.year + 1, 1, 1, tzinfo=timezone.utc)
+            else:
+                check_date = datetime(check_date.year, check_date.month + 1, 1, tzinfo=timezone.utc)
+        
+        # Return the new amount due (original amount paid + compounded remaining balance)
+        if months_passed > 0:
+            return amount_paid + remaining_balance
+        
+        return current_amount_due
     
     def get_client_payments(self, client_id: str) -> List[Dict[str, Any]]:
         """Get all payments for a client"""

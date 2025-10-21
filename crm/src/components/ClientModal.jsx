@@ -18,7 +18,7 @@ import {
   TrendingUp,
   MessageSquare
 } from 'lucide-react';
-import { formatCurrency, formatDate, getStatusColor, getStatusText, calculateTotalAmountDue, calculateRemainingBalance, calculatePaymentDueDate } from '../utils/loanCalculations';
+import { formatCurrency, formatDate, getStatusColor, getStatusText, calculateCurrentAmountDue, calculateRemainingBalance, calculatePaymentDueDate } from '../utils/loanCalculations';
 import { addPayment, updateClient } from '../services/backendApi';
 
 const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
@@ -33,9 +33,9 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
 
   if (!isOpen || !client) return null;
 
-  const totalAmountDue = calculateTotalAmountDue(client.loanAmount);
-  const remainingAmount = calculateRemainingBalance(client.loanAmount, client.amountPaid);
-  const paymentProgress = totalAmountDue > 0 ? (client.amountPaid / totalAmountDue) * 100 : 0;
+  const currentAmountDue = calculateCurrentAmountDue(client);
+  const remainingAmount = Math.max(0, currentAmountDue - (client.amountPaid || 0));
+  const paymentProgress = currentAmountDue > 0 ? ((client.amountPaid || 0) / currentAmountDue) * 100 : 100;
 
   const handleSaveEdit = async () => {
     setIsSaving(true);
@@ -228,7 +228,7 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Total Amount Due:</span>
-                    <span className="font-medium text-red-600">{formatCurrency(totalAmountDue)}</span>
+                    <span className="font-medium text-red-600">{formatCurrency(currentAmountDue)}</span>
                   </div>
                   <div className="flex justify-between border-t pt-2">
                     <span className="text-gray-600">Amount Paid:</span>

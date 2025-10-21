@@ -1,20 +1,72 @@
-// Loan calculation utilities for 50% monthly interest
+// Loan calculation utilities for 50% monthly interest with compound interest
 
 // Calculate total amount due (principal + 50% interest)
 export const calculateTotalAmountDue = (principal) => {
   return Math.round(principal * 1.5 * 100) / 100;
 };
 
+// Calculate current amount due with compound interest
+export const calculateCurrentAmountDue = (client) => {
+  const { loanAmount, amountPaid = 0, startDate, lastPaymentDate } = client;
+  
+  // Initial amount due
+  let currentAmountDue = calculateTotalAmountDue(loanAmount);
+  
+  // If no payments made, return initial amount
+  if (amountPaid === 0) {
+    return currentAmountDue;
+  }
+  
+  // Calculate remaining balance after payments
+  let remainingBalance = currentAmountDue - amountPaid;
+  
+  // If fully paid or overpaid, return 0
+  if (remainingBalance <= 0) {
+    return 0;
+  }
+  
+  // Check if we've passed month-end and need to apply compound interest
+  const loanStartDate = new Date(startDate);
+  const lastPayment = lastPaymentDate ? new Date(lastPaymentDate) : loanStartDate;
+  const now = new Date();
+  
+  // Calculate how many month-ends have passed since last payment
+  let monthsWithoutFullPayment = 0;
+  let checkDate = new Date(loanStartDate);
+  
+  while (checkDate < now) {
+    // Move to end of current month
+    const monthEnd = new Date(checkDate.getFullYear(), checkDate.getMonth() + 1, 0);
+    
+    // If month-end has passed and we still have remaining balance
+    if (monthEnd < now && remainingBalance > 0) {
+      // Check if payment was made before this month-end
+      const paymentBeforeMonthEnd = lastPayment && lastPayment <= monthEnd;
+      
+      if (!paymentBeforeMonthEnd || remainingBalance > 0) {
+        // Apply 50% interest to remaining balance
+        remainingBalance = Math.round(remainingBalance * 1.5 * 100) / 100;
+        monthsWithoutFullPayment++;
+      }
+    }
+    
+    // Move to next month
+    checkDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + 1, 1);
+  }
+  
+  return remainingBalance;
+};
+
+// Calculate remaining balance based on payments made (legacy function for backward compatibility)
+export const calculateRemainingBalance = (principal, totalAmountPaid) => {
+  const totalAmountDue = calculateTotalAmountDue(principal);
+  return Math.max(0, Math.round((totalAmountDue - totalAmountPaid) * 100) / 100);
+};
+
 // For display purposes - this is the total amount due, not a monthly payment
 export const calculateMonthlyPayment = (principal, monthlyInterestRate = 0.5, termInMonths = 1) => {
   // Total amount due at month end = principal * 1.5
   return calculateTotalAmountDue(principal);
-};
-
-// Calculate remaining balance based on payments made
-export const calculateRemainingBalance = (principal, totalAmountPaid) => {
-  const totalAmountDue = calculateTotalAmountDue(principal);
-  return Math.max(0, Math.round((totalAmountDue - totalAmountPaid) * 100) / 100);
 };
 
 export const calculateDaysOverdue = (dueDate) => {
