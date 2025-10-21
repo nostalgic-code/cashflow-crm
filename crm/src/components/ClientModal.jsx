@@ -36,9 +36,29 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
 
   if (!isOpen || !client) return null;
 
+  // Normalize client data to handle both camelCase and snake_case
+  const normalizedClient = {
+    ...client,
+    id: client.id || client.client_uuid,
+    name: client.name || client.client_name,
+    loanAmount: client.loanAmount || client.loan_amount || 0,
+    amountPaid: client.amountPaid || client.amount_paid || 0,
+    email: client.email || client.client_email || '',
+    phone: client.phone || client.client_phone || '',
+    loanType: client.loanType || client.loan_type || '',
+    startDate: client.startDate || client.start_date || client.created_at,
+    status: client.status || 'active'
+  };
+
   // Validate client data more thoroughly
-  if (!client.name || !client.id) {
+  if (!normalizedClient.name || !normalizedClient.id) {
     console.error('ClientModal: Invalid client data', client);
+    console.log('ClientModal: Missing fields:', {
+      hasClient: !!client,
+      hasName: normalizedClient.name,
+      hasId: normalizedClient.id,
+      clientKeys: client ? Object.keys(client) : 'no client'
+    });
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
@@ -67,25 +87,25 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
   // Safely calculate amounts with error handling
   const safeCalculateCurrentAmountDue = () => {
     try {
-      if (!client?.loanAmount || isNaN(client.loanAmount)) {
-        console.warn('Invalid loan amount:', client?.loanAmount);
+      if (!normalizedClient?.loanAmount || isNaN(normalizedClient.loanAmount)) {
+        console.warn('Invalid loan amount:', normalizedClient?.loanAmount);
         return 0;
       }
-      return calculateCurrentAmountDue(client);
+      return calculateCurrentAmountDue(normalizedClient);
     } catch (error) {
       console.error('Error calculating current amount due:', error);
-      return (client.loanAmount || 0) * 1.5; // Fallback to simple calculation
+      return (normalizedClient.loanAmount || 0) * 1.5; // Fallback to simple calculation
     }
   };
 
   const safeCalculateRemainingBalance = () => {
     try {
       const currentAmountDue = safeCalculateCurrentAmountDue();
-      const amountPaid = client.amountPaid || 0;
+      const amountPaid = normalizedClient.amountPaid || 0;
       return Math.max(0, currentAmountDue - amountPaid);
     } catch (error) {
       console.error('Error calculating remaining balance:', error);
-      return Math.max(0, (client.loanAmount || 0) - (client.amountPaid || 0));
+      return Math.max(0, (normalizedClient.loanAmount || 0) - (normalizedClient.amountPaid || 0));
     }
   };
 
@@ -124,7 +144,30 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
       };
       
       const updatedClient = await addLoanToClient(client.id, loanData);
-      onUpdate(updatedClient);
+      console.log('Loan added, received updated client:', updatedClient);
+      
+      // Validate the updated client data before calling onUpdate
+      if (updatedClient && updatedClient.id && updatedClient.name) {
+        onUpdate(updatedClient);
+      } else if (updatedClient && (updatedClient.client_uuid || updatedClient.id) && (updatedClient.name || updatedClient.client_name)) {
+        // Handle snake_case data from backend
+        console.log('Received snake_case data, converting...');
+        const convertedClient = {
+          ...client, // Keep existing client data as base
+          id: updatedClient.client_uuid || updatedClient.id,
+          name: updatedClient.name || updatedClient.client_name,
+          loanAmount: updatedClient.loan_amount || updatedClient.loanAmount || client.loanAmount,
+          amountPaid: updatedClient.amount_paid || updatedClient.amountPaid || client.amountPaid,
+          // Add other fields as needed
+        };
+        onUpdate(convertedClient);
+      } else {
+        console.error('Invalid updated client data received:', updatedClient);
+        // Keep the modal open but show success - data will update on next refresh
+        alert(`Additional loan of ${formatCurrency(amount)} added successfully! Please refresh to see updated totals.`);
+        return; // Don't continue to the second alert
+      }
+      
       setAdditionalLoanAmount('');
       // loadClientLoans(); // Refresh loans list - temporarily disabled
       
@@ -137,7 +180,7 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
     }
   };
 
-  const paymentProgress = currentAmountDue > 0 ? Math.min(100, ((client.amountPaid || 0) / currentAmountDue) * 100) : 100;
+  const paymentProgress = currentAmountDue > 0 ? Math.min(100, ((normalizedClient.amountPaid || 0) / currentAmountDue) * 100) : 100;
 
   // Add error logging for debugging
   console.log('ClientModal - Rendering for client:', client?.name, client?.id);
