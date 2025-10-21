@@ -93,19 +93,22 @@ export const calculateCurrentAmountDue = (client) => {
 };
 
 // Calculate remaining balance based on current amount due (with compound interest)
-export const calculateRemainingBalance = (client) => {
+export const calculateRemainingBalance = (clientOrPrincipal, totalAmountPaid) => {
   // If client object is passed, calculate with compound interest
-  if (typeof client === 'object' && client.loanAmount) {
-    const currentAmountDue = calculateCurrentAmountDue(client);
-    const amountPaid = client.amountPaid || 0;
+  if (typeof clientOrPrincipal === 'object' && clientOrPrincipal && clientOrPrincipal.loanAmount) {
+    const currentAmountDue = calculateCurrentAmountDue(clientOrPrincipal);
+    const amountPaid = clientOrPrincipal.amountPaid || 0;
     return Math.max(0, Math.round((currentAmountDue - amountPaid) * 100) / 100);
   }
   
   // Legacy support: if called with (principal, totalAmountPaid)
-  const principal = arguments[0];
-  const totalAmountPaid = arguments[1] || 0;
-  const totalAmountDue = calculateTotalAmountDue(principal);
-  return Math.max(0, Math.round((totalAmountDue - totalAmountPaid) * 100) / 100);
+  if (typeof clientOrPrincipal === 'number' && typeof totalAmountPaid === 'number') {
+    const totalAmountDue = calculateTotalAmountDue(clientOrPrincipal);
+    return Math.max(0, Math.round((totalAmountDue - totalAmountPaid) * 100) / 100);
+  }
+  
+  // Fallback
+  return 0;
 };
 
 // For display purposes - this is the total amount due, not a monthly payment
