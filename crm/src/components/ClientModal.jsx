@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   X,
   User,
@@ -36,30 +36,63 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
 
   if (!isOpen || !client) return null;
 
+  // Validate client data more thoroughly
+  if (!client.name || !client.id) {
+    console.error('ClientModal: Invalid client data', client);
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-red-600">Invalid Client Data</h3>
+            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <p className="text-gray-600 mb-4">
+            Client data is incomplete. Please refresh and try again.
+          </p>
+          <div className="flex justify-end">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Safely calculate amounts with error handling
   const safeCalculateCurrentAmountDue = () => {
     try {
+      if (!client?.loanAmount || isNaN(client.loanAmount)) {
+        console.warn('Invalid loan amount:', client?.loanAmount);
+        return 0;
+      }
       return calculateCurrentAmountDue(client);
     } catch (error) {
       console.error('Error calculating current amount due:', error);
-      return client.loanAmount * 1.5; // Fallback to simple calculation
+      return (client.loanAmount || 0) * 1.5; // Fallback to simple calculation
     }
   };
 
   const safeCalculateRemainingBalance = () => {
     try {
       const currentAmountDue = safeCalculateCurrentAmountDue();
-      return Math.max(0, currentAmountDue - (client.amountPaid || 0));
+      const amountPaid = client.amountPaid || 0;
+      return Math.max(0, currentAmountDue - amountPaid);
     } catch (error) {
       console.error('Error calculating remaining balance:', error);
-      return client.loanAmount - (client.amountPaid || 0);
+      return Math.max(0, (client.loanAmount || 0) - (client.amountPaid || 0));
     }
   };
 
   const currentAmountDue = safeCalculateCurrentAmountDue();
   const remainingAmount = safeCalculateRemainingBalance();
 
-  const loadClientLoans = async () => {
+  const loadClientLoans = useCallback(async () => {
     try {
       const loans = await getClientLoans(client.id);
       setClientLoans(loans);
@@ -67,14 +100,16 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
       console.error('Failed to load client loans:', error);
       setClientLoans([]);
     }
-  };
+  }, [client.id]);
 
   // Load client loans on component mount
   useEffect(() => {
-    if (client.id) {
-      loadClientLoans();
+    if (client?.id) {
+      // Temporarily disable loan loading to debug modal
+      // loadClientLoans();
+      setClientLoans([]); // Set empty array for now
     }
-  }, [client.id]);
+  }, [client?.id]); // Simplified dependencies
 
   const handleAddLoan = async () => {
     if (!additionalLoanAmount || parseFloat(additionalLoanAmount) <= 0) return;
