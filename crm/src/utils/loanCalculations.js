@@ -9,6 +9,10 @@ export const calculateTotalAmountDue = (principal) => {
 export const calculateCurrentAmountDue = (client) => {
   const { loanAmount, amountPaid = 0, startDate, lastPaymentDate } = client;
   
+  // Validate inputs
+  if (!loanAmount || loanAmount <= 0) return 0;
+  if (!startDate) return calculateTotalAmountDue(loanAmount);
+  
   // Initial amount due
   let currentAmountDue = calculateTotalAmountDue(loanAmount);
   
@@ -30,11 +34,17 @@ export const calculateCurrentAmountDue = (client) => {
   const lastPayment = lastPaymentDate ? new Date(lastPaymentDate) : loanStartDate;
   const now = new Date();
   
+  // Prevent infinite loop and runaway calculations
+  if (loanStartDate > now) return currentAmountDue;
+  
   // Calculate how many month-ends have passed since last payment
   let monthsWithoutFullPayment = 0;
   let checkDate = new Date(loanStartDate);
   
-  while (checkDate < now) {
+  // Maximum of 24 months to prevent runaway calculations
+  const maxMonths = 24;
+  
+  while (checkDate < now && monthsWithoutFullPayment < maxMonths) {
     // Move to end of current month
     const monthEnd = new Date(checkDate.getFullYear(), checkDate.getMonth() + 1, 0);
     
@@ -44,8 +54,14 @@ export const calculateCurrentAmountDue = (client) => {
       const paymentBeforeMonthEnd = lastPayment && lastPayment <= monthEnd;
       
       if (!paymentBeforeMonthEnd || remainingBalance > 0) {
-        // Apply 50% interest to remaining balance
-        remainingBalance = Math.round(remainingBalance * 1.5 * 100) / 100;
+        // Apply 50% interest to remaining balance, but cap at reasonable amount
+        const newBalance = remainingBalance * 1.5;
+        
+        // Cap maximum balance to prevent runaway calculations
+        const maxReasonableBalance = loanAmount * 10; // Maximum 10x original loan
+        remainingBalance = Math.min(newBalance, maxReasonableBalance);
+        remainingBalance = Math.round(remainingBalance * 100) / 100;
+        
         monthsWithoutFullPayment++;
       }
     }
@@ -112,12 +128,20 @@ export const calculateNextPaymentDate = (lastPaymentDate, frequency = 'monthly')
 };
 
 export const formatCurrency = (amount) => {
+  // Handle invalid or extremely large numbers
+  if (!amount || isNaN(amount) || !isFinite(amount)) {
+    return 'R0';
+  }
+  
+  // Cap extremely large numbers
+  const cappedAmount = Math.min(amount, 999999999999); // 999 billion max
+  
   return new Intl.NumberFormat('en-ZA', {
     style: 'currency',
     currency: 'ZAR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(amount);
+  }).format(Math.round(cappedAmount));
 };
 
 export const formatDate = (dateString) => {

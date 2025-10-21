@@ -74,13 +74,18 @@ const SimpleClientCard = ({ client, index, onClientClick, onDelete }) => {
           className={`
             bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-3 
             cursor-grab transition-all duration-200 hover:shadow-md hover:border-gray-300
+            break-words overflow-hidden max-w-sm
             ${snapshot.isDragging ? 'shadow-xl border-blue-400 rotate-1 z-50 cursor-grabbing' : ''}
           `}
           style={{
             ...provided.draggableProps.style,
             userSelect: 'none'
           }}
-          onDoubleClick={() => onClientClick(client)}
+          onDoubleClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onClientClick(client);
+          }}
         >
           {/* Client Name, Status & Actions */}
           <div className="flex items-start justify-between mb-2">
@@ -113,19 +118,19 @@ const SimpleClientCard = ({ client, index, onClientClick, onDelete }) => {
           </div>
           
           {/* Loan Type */}
-          <p className="text-xs text-monday-gray-600 mb-2">{client.loanType}</p>
+          <p className="text-xs text-monday-gray-600 mb-2 truncate">{client.loanType}</p>
           
           {/* Loan Amount & Total Due */}
-          <div className="flex justify-between items-center mb-3">
-            <div className="text-left">
+          <div className="flex justify-between items-center mb-3 gap-2">
+            <div className="text-left flex-1 min-w-0">
               <span className="text-xs text-monday-gray-500">Principal</span>
-              <div className="text-sm font-semibold text-monday-gray-900">
+              <div className="text-sm font-semibold text-monday-gray-900 truncate">
                 {formatCurrency(client.loanAmount)}
               </div>
             </div>
-            <div className="text-right">
+            <div className="text-right flex-1 min-w-0">
               <span className="text-xs text-monday-gray-500">Current Due</span>
-              <div className="text-sm font-semibold text-monday-red">
+              <div className="text-sm font-semibold text-monday-red truncate">
                 {formatCurrency(currentAmountDue)}
               </div>
             </div>
@@ -147,9 +152,9 @@ const SimpleClientCard = ({ client, index, onClientClick, onDelete }) => {
           
           {/* Remaining Amount (if not paid) */}
           {remainingAmount > 0 && (
-            <div className="flex justify-between items-center text-xs">
+            <div className="flex justify-between items-center text-xs gap-2">
               <span className="text-monday-gray-600 font-medium">Remaining</span>
-              <span className="font-semibold text-monday-red">
+              <span className="font-semibold text-monday-red truncate">
                 {formatCurrency(Math.max(0, remainingAmount))}
               </span>
             </div>

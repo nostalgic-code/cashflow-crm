@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   X,
   User,
@@ -35,6 +35,29 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
   const fileInputRef = useRef(null);
 
   if (!isOpen || !client) return null;
+
+  // Safely calculate amounts with error handling
+  const safeCalculateCurrentAmountDue = () => {
+    try {
+      return calculateCurrentAmountDue(client);
+    } catch (error) {
+      console.error('Error calculating current amount due:', error);
+      return client.loanAmount * 1.5; // Fallback to simple calculation
+    }
+  };
+
+  const safeCalculateRemainingBalance = () => {
+    try {
+      const currentAmountDue = safeCalculateCurrentAmountDue();
+      return Math.max(0, currentAmountDue - (client.amountPaid || 0));
+    } catch (error) {
+      console.error('Error calculating remaining balance:', error);
+      return client.loanAmount - (client.amountPaid || 0);
+    }
+  };
+
+  const currentAmountDue = safeCalculateCurrentAmountDue();
+  const remainingAmount = safeCalculateRemainingBalance();
 
   // Load client loans on component mount
   useEffect(() => {
@@ -86,8 +109,6 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
     }
   };
 
-  const currentAmountDue = calculateCurrentAmountDue(client);
-  const remainingAmount = Math.max(0, currentAmountDue - (client.amountPaid || 0));
   const paymentProgress = currentAmountDue > 0 ? Math.min(100, ((client.amountPaid || 0) / currentAmountDue) * 100) : 100;
 
   const handleSaveEdit = async () => {
