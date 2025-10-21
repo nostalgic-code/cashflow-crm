@@ -59,21 +59,22 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
   const currentAmountDue = safeCalculateCurrentAmountDue();
   const remainingAmount = safeCalculateRemainingBalance();
 
-  // Load client loans on component mount
-  useEffect(() => {
-    if (client.id) {
-      loadClientLoans();
-    }
-  }, [client.id]);
-
   const loadClientLoans = async () => {
     try {
       const loans = await getClientLoans(client.id);
       setClientLoans(loans);
     } catch (error) {
       console.error('Failed to load client loans:', error);
+      setClientLoans([]);
     }
   };
+
+  // Load client loans on component mount
+  useEffect(() => {
+    if (client.id) {
+      loadClientLoans();
+    }
+  }, [client.id]);
 
   const handleAddLoan = async () => {
     if (!additionalLoanAmount || parseFloat(additionalLoanAmount) <= 0) return;
@@ -110,6 +111,13 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
   };
 
   const paymentProgress = currentAmountDue > 0 ? Math.min(100, ((client.amountPaid || 0) / currentAmountDue) * 100) : 100;
+
+  // Add error logging for debugging
+  console.log('ClientModal - Rendering for client:', client?.name, client?.id);
+  console.log('ClientModal - Current amounts:', { currentAmountDue, remainingAmount, paymentProgress });
+
+  // Error boundary for modal content
+  try {
 
   const handleSaveEdit = async () => {
     setIsSaving(true);
@@ -651,6 +659,32 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
       </div>
     </div>
   );
+  } catch (error) {
+    console.error('ClientModal rendering error:', error);
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-red-600">Error Loading Client Details</h3>
+            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <p className="text-gray-600 mb-4">
+            There was an error loading the client details. Please try again.
+          </p>
+          <div className="flex justify-end">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 };
 
 export default ClientModal;
