@@ -11,70 +11,99 @@ export const calculateCurrentAmountDue = (client) => {
   
   // Validate inputs
   if (!loanAmount || loanAmount <= 0) return 0;
-  if (!startDate) return calculateTotalAmountDue(loanAmount);
   
-  // Initial amount due
-  let currentAmountDue = calculateTotalAmountDue(loanAmount);
+  // Initial amount due (principal + 50% interest)
+  const initialAmountDue = loanAmount * 1.5;
   
   // If no payments made, return initial amount
   if (amountPaid === 0) {
-    return currentAmountDue;
+    return Math.round(initialAmountDue * 100) / 100;
   }
   
   // Calculate remaining balance after payments
-  let remainingBalance = currentAmountDue - amountPaid;
+  let remainingBalance = initialAmountDue - amountPaid;
   
   // If fully paid or overpaid, return 0
   if (remainingBalance <= 0) {
     return 0;
   }
   
-  // Check if we've passed month-end and need to apply compound interest
+  // If no start date or payment date, return simple remaining balance
+  if (!startDate) {
+    console.log('📊 No start date, returning simple remaining balance:', remainingBalance);
+    return Math.round(remainingBalance * 100) / 100;
+  }
+  
+  // Calculate compound interest based on month-ends passed since last payment
   const loanStartDate = new Date(startDate);
-  const lastPayment = lastPaymentDate ? new Date(lastPaymentDate) : loanStartDate;
+  const referenceDate = lastPaymentDate ? new Date(lastPaymentDate) : loanStartDate;
   const now = new Date();
   
-  // Prevent infinite loop and runaway calculations
-  if (loanStartDate > now) return currentAmountDue;
+  console.log('📊 Compound Interest Calculation:', {
+    loanAmount,
+    amountPaid,
+    initialAmountDue,
+    remainingBalance,
+    startDate,
+    lastPaymentDate,
+    referenceDate: referenceDate.toISOString(),
+    now: now.toISOString()
+  });
   
-  // Calculate how many month-ends have passed since last payment
-  let monthsWithoutFullPayment = 0;
-  let checkDate = new Date(loanStartDate);
+  // Count complete months that have passed since the reference date
+  let monthsElapsed = 0;
+  let checkDate = new Date(referenceDate);
   
   // Maximum of 24 months to prevent runaway calculations
   const maxMonths = 24;
   
-  while (checkDate < now && monthsWithoutFullPayment < maxMonths) {
+  while (monthsElapsed < maxMonths) {
     // Move to end of current month
     const monthEnd = new Date(checkDate.getFullYear(), checkDate.getMonth() + 1, 0);
     
-    // If month-end has passed and we still have remaining balance
-    if (monthEnd < now && remainingBalance > 0) {
-      // Check if payment was made before this month-end
-      const paymentBeforeMonthEnd = lastPayment && lastPayment <= monthEnd;
+    // If this month-end has passed, apply compound interest
+    if (monthEnd < now) {
+      const oldBalance = remainingBalance;
+      // Apply 50% interest to remaining balance
+      remainingBalance = remainingBalance * 1.5;
+      monthsElapsed++;
       
-      if (!paymentBeforeMonthEnd || remainingBalance > 0) {
-        // Apply 50% interest to remaining balance, but cap at reasonable amount
-        const newBalance = remainingBalance * 1.5;
-        
-        // Cap maximum balance to prevent runaway calculations
-        const maxReasonableBalance = loanAmount * 10; // Maximum 10x original loan
-        remainingBalance = Math.min(newBalance, maxReasonableBalance);
-        remainingBalance = Math.round(remainingBalance * 100) / 100;
-        
-        monthsWithoutFullPayment++;
+      console.log(`📊 Month ${monthsElapsed}: ${formatCurrency(oldBalance)} → ${formatCurrency(remainingBalance)} (50% interest applied)`);
+      
+      // Cap maximum balance to prevent runaway calculations (10x original loan)
+      const maxReasonableBalance = loanAmount * 10;
+      if (remainingBalance > maxReasonableBalance) {
+        remainingBalance = maxReasonableBalance;
+        console.log('📊 Capped at maximum reasonable balance:', formatCurrency(remainingBalance));
+        break;
       }
+      
+      // Move to next month
+      checkDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + 1, 1);
+    } else {
+      // Current month hasn't ended yet
+      console.log('📊 Current month hasn\'t ended yet, no compound interest applied');
+      break;
     }
-    
-    // Move to next month
-    checkDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + 1, 1);
   }
   
-  return remainingBalance;
+  const finalAmount = Math.round(remainingBalance * 100) / 100;
+  console.log('📊 Final current amount due:', formatCurrency(finalAmount));
+  return finalAmount;
 };
 
-// Calculate remaining balance based on payments made (legacy function for backward compatibility)
-export const calculateRemainingBalance = (principal, totalAmountPaid) => {
+// Calculate remaining balance based on current amount due (with compound interest)
+export const calculateRemainingBalance = (client) => {
+  // If client object is passed, calculate with compound interest
+  if (typeof client === 'object' && client.loanAmount) {
+    const currentAmountDue = calculateCurrentAmountDue(client);
+    const amountPaid = client.amountPaid || 0;
+    return Math.max(0, Math.round((currentAmountDue - amountPaid) * 100) / 100);
+  }
+  
+  // Legacy support: if called with (principal, totalAmountPaid)
+  const principal = arguments[0];
+  const totalAmountPaid = arguments[1] || 0;
   const totalAmountDue = calculateTotalAmountDue(principal);
   return Math.max(0, Math.round((totalAmountDue - totalAmountPaid) * 100) / 100);
 };

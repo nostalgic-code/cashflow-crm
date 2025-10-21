@@ -414,11 +414,11 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
                 <div className="bg-gray-50 rounded-lg p-4 space-y-3">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Loan Type:</span>
-                    <span className="font-medium">{client.loanType}</span>
+                    <span className="font-medium">{normalizedClient.loanType}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Principal:</span>
-                    <span className="font-medium">{formatCurrency(client.loanAmount)}</span>
+                    <span className="font-medium">{formatCurrency(normalizedClient.loanAmount)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Interest Rate:</span>
@@ -431,7 +431,7 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
                   <div className="flex justify-between border-t pt-2">
                     <span className="text-gray-600">Amount Paid:</span>
                     <span className="font-medium text-green-600">
-                      {formatCurrency(client.amountPaid)}
+                      {formatCurrency(normalizedClient.amountPaid)}
                     </span>
                   </div>
                   <div className="flex justify-between">
