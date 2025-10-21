@@ -90,8 +90,15 @@ class SupabaseService:
             mapped_data['created_at'] = now
             mapped_data['updated_at'] = now
             
+            # Debug logging: print the data being inserted
+            print(f"🔍 DEBUG: About to insert client data:")
+            print(f"📝 Mapped data keys: {list(mapped_data.keys())}")
+            print(f"📝 Mapped data: {mapped_data}")
+            
             # Insert into Supabase
+            print(f"🔍 DEBUG: Calling Supabase insert...")
             result = self.client.table('clients').insert(mapped_data).execute()
+            print(f"✅ DEBUG: Insert successful, result: {result.data}")
             
             if result.data and len(result.data) > 0:
                 created_client = result.data[0]
