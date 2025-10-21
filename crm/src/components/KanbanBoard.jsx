@@ -62,7 +62,7 @@ const COLUMNS = [
 const SimpleClientCard = ({ client, index, onClientClick, onDelete }) => {
   const currentAmountDue = calculateCurrentAmountDue(client);
   const remainingAmount = currentAmountDue - (client.amountPaid || 0);
-  const paymentProgress = currentAmountDue > 0 ? ((client.amountPaid || 0) / currentAmountDue) * 100 : 100;
+  const paymentProgress = currentAmountDue > 0 ? Math.min(100, ((client.amountPaid || 0) / currentAmountDue) * 100) : 100;
   
   return (
     <Draggable draggableId={client.id} index={index}>

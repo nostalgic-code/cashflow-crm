@@ -35,7 +35,7 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
 
   const currentAmountDue = calculateCurrentAmountDue(client);
   const remainingAmount = Math.max(0, currentAmountDue - (client.amountPaid || 0));
-  const paymentProgress = currentAmountDue > 0 ? ((client.amountPaid || 0) / currentAmountDue) * 100 : 100;
+  const paymentProgress = currentAmountDue > 0 ? Math.min(100, ((client.amountPaid || 0) / currentAmountDue) * 100) : 100;
 
   const handleSaveEdit = async () => {
     setIsSaving(true);
@@ -53,9 +53,22 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
   const handleAddPayment = async () => {
     if (!paymentAmount || parseFloat(paymentAmount) <= 0) return;
     
+    const amount = parseFloat(paymentAmount);
+    
+    // Check for overpayment
+    if (amount > remainingAmount) {
+      const confirmOverpayment = window.confirm(
+        `Payment amount (${formatCurrency(amount)}) exceeds remaining balance (${formatCurrency(remainingAmount)}). ` +
+        `Do you want to proceed with a payment of ${formatCurrency(remainingAmount)} to settle the loan?`
+      );
+      
+      if (!confirmOverpayment) {
+        return;
+      }
+    }
+    
     setIsProcessingPayment(true);
     try {
-      const amount = parseFloat(paymentAmount);
       const paymentData = {
         amount: amount,
         payment_date: paymentDate,
@@ -65,6 +78,11 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
       onUpdate(updatedClient);
       setPaymentAmount('');
       setPaymentDate(new Date().toISOString().split('T')[0]);
+      
+      // Show success message
+      if (amount > remainingAmount) {
+        alert(`Payment processed successfully. Loan has been settled with ${formatCurrency(Math.min(amount, remainingAmount))}.`);
+      }
     } catch (error) {
       console.error('Failed to add payment:', error);
       alert('Failed to record payment. Please try again.');

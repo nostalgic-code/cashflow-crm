@@ -345,6 +345,10 @@ class SupabaseService:
             if not client:
                 raise Exception(f"Client with ID {client_id} not found")
             
+            payment_amount = payment_data.get('amount', 0)
+            if payment_amount <= 0:
+                raise Exception("Payment amount must be greater than 0")
+            
             # Calculate compound interest if applicable
             loan_amount = client.get('loanAmount', client.get('loan_amount', 0))
             current_amount_paid = client.get('amountPaid', client.get('amount_paid', 0))
@@ -356,13 +360,20 @@ class SupabaseService:
                 loan_amount, current_amount_paid, start_date, last_payment_date
             )
             
+            # Check if payment would result in overpayment
+            remaining_balance = current_amount_due - current_amount_paid
+            if payment_amount > remaining_balance:
+                # Adjust payment to not exceed remaining balance
+                payment_amount = remaining_balance
+                print(f"⚠️ Payment amount adjusted to prevent overpayment: {payment_amount}")
+            
             # Prepare payment data for database
             payment_record = {
                 'client_id': client_id,  # This should be the UUID from frontend
-                'amount': payment_data.get('amount'),
+                'amount': payment_amount,
                 'payment_date': payment_data.get('payment_date', datetime.now(timezone.utc).date().isoformat()),
                 'created_at': datetime.now(timezone.utc).isoformat(),
-                'notes': payment_data.get('notes', '')
+                'notes': payment_data.get('notes', f'Payment of {payment_amount}')
             }
             
             print(f"🔍 Inserting payment record: {payment_record}")
@@ -372,7 +383,7 @@ class SupabaseService:
             print(f"✅ Payment record created: {payment_result.data}")
             
             # Update client's amount paid
-            new_amount_paid = current_amount_paid + payment_data.get('amount', 0)
+            new_amount_paid = current_amount_paid + payment_amount
             
             update_data = {
                 'amount_paid': new_amount_paid,
@@ -388,11 +399,11 @@ class SupabaseService:
                 print(f"🔄 Compound interest applied - new principal: {new_principal}")
             
             # Auto-update status based on payment
-            remaining_balance = current_amount_due - new_amount_paid
-            if remaining_balance <= 0:
+            remaining_after_payment = current_amount_due - new_amount_paid
+            if remaining_after_payment <= 0:
                 update_data['status'] = 'paid'
                 print(f"🎉 Client fully paid! Moving to paid status")
-            elif remaining_balance < current_amount_due * 0.5:
+            elif remaining_after_payment < current_amount_due * 0.3:
                 update_data['status'] = 'active'
             else:
                 update_data['status'] = 'repayment-due'
