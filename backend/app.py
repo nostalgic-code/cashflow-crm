@@ -526,6 +526,116 @@ def update_user_login(user_id):
     except Exception as e:
         return error_response(f"Failed to update login: {str(e)}", 500)
 
+# =============================================================================
+# NOTIFICATION ENDPOINTS
+# =============================================================================
+
+@app.route('/api/notifications/test', methods=['POST'])
+def test_notification():
+    """Test the notification system"""
+    try:
+        from notification_scheduler import notification_scheduler
+        
+        print("🧪 Testing notification system...")
+        success = notification_scheduler.test_notification()
+        
+        if success:
+            return success_response({
+                'message': 'Test notification sent successfully',
+                'email': 'info@cashflowloans.co.za'
+            }, "Test notification completed")
+        else:
+            return error_response("Failed to send test notification", 500)
+            
+    except Exception as e:
+        print(f"❌ Test notification error: {e}")
+        return error_response(f"Failed to test notification: {str(e)}", 500)
+
+@app.route('/api/notifications/check-due', methods=['GET'])
+def check_payments_due():
+    """Check for clients with payments due and return the list"""
+    try:
+        from notification_scheduler import notification_scheduler
+        
+        clients_due = notification_scheduler.get_clients_with_payments_due()
+        
+        return success_response({
+            'clients': clients_due,
+            'count': len(clients_due),
+            'total_amount_due': sum(client.get('current_amount_due', 0) for client in clients_due)
+        }, f"Found {len(clients_due)} clients with payments due")
+        
+    except Exception as e:
+        print(f"❌ Check payments due error: {e}")
+        return error_response(f"Failed to check payments due: {str(e)}", 500)
+
+@app.route('/api/notifications/send-due', methods=['POST'])
+def send_payment_due_notifications():
+    """Send payment due notifications immediately"""
+    try:
+        from notification_scheduler import notification_scheduler
+        from email_service import email_service
+        
+        # Get clients with payments due
+        clients_due = notification_scheduler.get_clients_with_payments_due()
+        
+        if not clients_due:
+            return success_response({
+                'message': 'No clients with payments due',
+                'count': 0
+            }, "No notifications sent")
+        
+        # Send notification
+        success = email_service.send_payment_due_notification(clients_due)
+        
+        if success:
+            return success_response({
+                'message': 'Payment due notifications sent successfully',
+                'clients_notified': len(clients_due),
+                'total_amount_due': sum(client.get('current_amount_due', 0) for client in clients_due),
+                'email': 'info@cashflowloans.co.za'
+            }, "Notifications sent successfully")
+        else:
+            return error_response("Failed to send notifications", 500)
+            
+    except Exception as e:
+        print(f"❌ Send notifications error: {e}")
+        return error_response(f"Failed to send notifications: {str(e)}", 500)
+
+@app.route('/api/notifications/schedule-start', methods=['POST'])
+def start_notification_scheduler():
+    """Start the background notification scheduler"""
+    try:
+        from notification_scheduler import notification_scheduler
+        
+        notification_scheduler.start_background_scheduler()
+        
+        return success_response({
+            'message': 'Notification scheduler started',
+            'schedule': 'Daily at 9:00 AM and 5:00 PM',
+            'trigger': 'Day before month-end'
+        }, "Scheduler started successfully")
+        
+    except Exception as e:
+        print(f"❌ Start scheduler error: {e}")
+        return error_response(f"Failed to start scheduler: {str(e)}", 500)
+
+@app.route('/api/notifications/schedule-stop', methods=['POST'])
+def stop_notification_scheduler():
+    """Stop the background notification scheduler"""
+    try:
+        from notification_scheduler import notification_scheduler
+        
+        notification_scheduler.stop_scheduler()
+        
+        return success_response({
+            'message': 'Notification scheduler stopped'
+        }, "Scheduler stopped successfully")
+        
+    except Exception as e:
+        print(f"❌ Stop scheduler error: {e}")
+        return error_response(f"Failed to stop scheduler: {str(e)}", 500)
+
 # For development only
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

@@ -14,6 +14,7 @@ import KanbanBoard from './KanbanBoard';
 import Dashboard from './Dashboard';
 import ClientModal from './ClientModal';
 import NewClientModal from './NewClientModal';
+import NotificationManager from './NotificationManager';
 import { useAuth } from '../contexts/AuthContext';
 import { getClients, addClient, updateClient, deleteClient, updateClientStatus } from '../services/backendApi';
 import { automationService } from '../services/simpleAutomation';
@@ -124,6 +125,7 @@ function CRMDashboard() {
   const navItems = [
     { id: 'kanban', label: 'Pipeline', icon: Users },
     { id: 'dashboard', label: 'Analytics', icon: LayoutDashboard },
+    { id: 'notifications', label: 'Notifications', icon: Bell },
   ];
 
   if (loading) {
@@ -260,11 +262,14 @@ function CRMDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold text-monday-gray-900">
-                {activeTab === 'kanban' ? 'Client Pipeline' : 'Analytics Dashboard'}
+                {activeTab === 'kanban' ? 'Client Pipeline' : 
+                 activeTab === 'notifications' ? 'Email Notifications' : 'Analytics Dashboard'}
               </h2>
               <p className="text-sm text-monday-gray-600 mt-1 font-medium">
                 {activeTab === 'kanban' 
                   ? `Managing ${clients.length} clients across different loan stages`
+                  : activeTab === 'notifications'
+                  ? 'Manage payment due notifications and email alerts'
                   : 'Overview of your loan portfolio performance and metrics'
                 }
               </p>
@@ -306,6 +311,8 @@ function CRMDashboard() {
               onAddClient={handleAddNewClient}
               onDeleteClient={handleDeleteClient}
             />
+          ) : activeTab === 'notifications' ? (
+            <NotificationManager />
           ) : (
             <Dashboard clients={clients} />
           )}
