@@ -143,6 +143,18 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
   const currentAmountDue = safeCalculateCurrentAmountDue();
   const remainingAmount = safeCalculateRemainingBalance();
 
+  // Debug logging for compound interest
+  console.log('📊 ClientModal Debug - Raw client data:', client);
+  console.log('📊 ClientModal Debug - Normalized client data:', normalizedClient);
+  console.log('📊 ClientModal Debug - Calculated amounts:', {
+    currentAmountDue,
+    remainingAmount,
+    startDate: normalizedClient.startDate,
+    lastPaymentDate: normalizedClient.lastPaymentDate,
+    loanAmount: normalizedClient.loanAmount,
+    amountPaid: normalizedClient.amountPaid
+  });
+
   const loadClientLoans = async () => {
     if (!client?.id) return;
     try {

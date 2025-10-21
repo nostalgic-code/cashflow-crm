@@ -502,10 +502,13 @@ class SupabaseService:
             start_date = client.get('startDate', client.get('start_date'))
             last_payment_date = client.get('lastPaymentDate', client.get('last_payment_date'))
             
-            # Calculate current amount due with compound interest
-            current_amount_due = self._calculate_compound_interest_amount_due(
-                loan_amount, current_amount_paid, start_date, last_payment_date
-            )
+            # Calculate current amount due with compound interest - DISABLED: Let frontend handle this
+            # current_amount_due = self._calculate_compound_interest_amount_due(
+            #     loan_amount, current_amount_paid, start_date, last_payment_date
+            # )
+            
+            # Use simple calculation for now - frontend will handle compound interest display
+            current_amount_due = loan_amount * 1.5
             
             # Check if payment would result in overpayment
             remaining_balance = current_amount_due - current_amount_paid
