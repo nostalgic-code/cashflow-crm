@@ -146,10 +146,120 @@ class SupabaseService:
             print(f"❌ Error creating client: {e}")
             raise
     
-    def get_all_clients(self) -> List[Dict[str, Any]]:
-        """Get all clients"""
+    # Loan Management Methods (Multiple Loans per Client)
+    def add_loan_to_client(self, client_id: str, loan_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Add an additional loan to an existing client"""
         try:
-            result = self.client.table('clients').select("*").order('created_at', desc=True).execute()
+            # Get existing client
+            client = self.get_client_by_id(client_id)
+            if not client:
+                raise Exception(f"Client with ID {client_id} not found")
+            
+            loan_amount = loan_data.get('amount', 0)
+            if loan_amount <= 0:
+                raise Exception("Loan amount must be greater than 0")
+            
+            # Create individual loan record
+            loan_record = {
+                'client_id': client_id,
+                'loan_amount': loan_amount,
+                'interest_rate': loan_data.get('interest_rate', 50.0),
+                'loan_date': loan_data.get('loan_date', datetime.now(timezone.utc).date().isoformat()),
+                'due_date': loan_data.get('due_date'),
+                'status': 'active',
+                'created_at': datetime.now(timezone.utc).isoformat(),
+                'notes': loan_data.get('notes', f'Additional loan of {loan_amount}')
+            }
+            
+            print(f"🔍 Adding new loan: {loan_record}")
+            
+            # Insert loan record
+            loan_result = self.client.table('loans').insert(loan_record).execute()
+            print(f"✅ Loan record created: {loan_result.data}")
+            
+            # Update client's total loan amount
+            current_loan_amount = client.get('loanAmount', client.get('loan_amount', 0))
+            new_total_loan_amount = current_loan_amount + loan_amount
+            
+            # Calculate new total amount due (each loan gets 50% interest)
+            new_total_due = new_total_loan_amount * 1.5
+            
+            update_data = {
+                'loan_amount': new_total_loan_amount,
+                'monthly_payment': new_total_due,  # This is actually total due, not monthly
+                'status': 'active',  # Reactivate if was paid
+                'archived': False,  # Unarchive if was archived
+                'last_status_update': datetime.now(timezone.utc).isoformat(),
+                'updated_at': datetime.now(timezone.utc).isoformat()
+            }
+            
+            print(f"🔍 Updating client total loan amount from {current_loan_amount} to {new_total_loan_amount}")
+            updated_client = self.update_client(client_id, update_data)
+            print(f"✅ Client updated with new loan: {updated_client}")
+            
+            return updated_client
+            
+        except Exception as e:
+            print(f"❌ Error adding loan: {e}")
+            import traceback
+            print(f"📍 Add loan error traceback: {traceback.format_exc()}")
+            raise
+    
+    def get_client_loans(self, client_id: str) -> List[Dict[str, Any]]:
+        """Get all individual loans for a client"""
+        try:
+            result = self.client.table('loans').select("*").eq('client_id', client_id).order('created_at', desc=False).execute()
+            return result.data or []
+            
+        except Exception as e:
+            print(f"❌ Error getting client loans: {e}")
+            raise
+    
+    def archive_client(self, client_id: str) -> Optional[Dict[str, Any]]:
+        """Archive a paid client (hide from main view but keep records)"""
+        try:
+            update_data = {
+                'archived': True,
+                'status': 'archived',
+                'updated_at': datetime.now(timezone.utc).isoformat()
+            }
+            
+            updated_client = self.update_client(client_id, update_data)
+            print(f"📦 Client archived: {client_id}")
+            
+            return updated_client
+            
+        except Exception as e:
+            print(f"❌ Error archiving client: {e}")
+            raise
+    
+    def unarchive_client(self, client_id: str) -> Optional[Dict[str, Any]]:
+        """Unarchive a client for new loans"""
+        try:
+            update_data = {
+                'archived': False,
+                'status': 'active',
+                'updated_at': datetime.now(timezone.utc).isoformat()
+            }
+            
+            updated_client = self.update_client(client_id, update_data)
+            print(f"📤 Client unarchived: {client_id}")
+            
+            return updated_client
+            
+        except Exception as e:
+            print(f"❌ Error unarchiving client: {e}")
+            raise
+    
+    def get_all_clients(self, include_archived: bool = False) -> List[Dict[str, Any]]:
+        """Get all clients (optionally include archived)"""
+        try:
+            if include_archived:
+                result = self.client.table('clients').select("*").order('created_at', desc=True).execute()
+            else:
+                # Only get non-archived clients for main CRM view
+                result = self.client.table('clients').select("*").eq('archived', False).order('created_at', desc=True).execute()
+            
             clients = result.data or []
             
             # Map fields back to frontend format
@@ -402,7 +512,9 @@ class SupabaseService:
             remaining_after_payment = current_amount_due - new_amount_paid
             if remaining_after_payment <= 0:
                 update_data['status'] = 'paid'
-                print(f"🎉 Client fully paid! Moving to paid status")
+                # Auto-archive fully paid clients
+                update_data['archived'] = True
+                print(f"🎉 Client fully paid! Moving to paid status and archiving")
             elif remaining_after_payment < current_amount_due * 0.3:
                 update_data['status'] = 'active'
             else:

@@ -140,6 +140,57 @@ export const addPayment = async (clientId, paymentData) => {
   }
 };
 
+// Add an additional loan to existing client
+export const addLoanToClient = async (clientId, loanData) => {
+  try {
+    const data = await apiCall(`/clients/${clientId}/loans`, {
+      method: 'POST',
+      body: JSON.stringify(loanData)
+    });
+    return data.client || data;
+  } catch (error) {
+    console.error('Error adding loan to client:', error);
+    throw error;
+  }
+};
+
+// Get all individual loans for a client
+export const getClientLoans = async (clientId) => {
+  try {
+    const data = await apiCall(`/clients/${clientId}/loans`);
+    return data;
+  } catch (error) {
+    console.error('Error getting client loans:', error);
+    throw error;
+  }
+};
+
+// Archive a paid client
+export const archiveClient = async (clientId) => {
+  try {
+    const data = await apiCall(`/clients/${clientId}/archive`, {
+      method: 'POST'
+    });
+    return data.client || data;
+  } catch (error) {
+    console.error('Error archiving client:', error);
+    throw error;
+  }
+};
+
+// Unarchive a client for new loans
+export const unarchiveClient = async (clientId) => {
+  try {
+    const data = await apiCall(`/clients/${clientId}/unarchive`, {
+      method: 'POST'
+    });
+    return data.client || data;
+  } catch (error) {
+    console.error('Error unarchiving client:', error);
+    throw error;
+  }
+};
+
 // Health check
 export const checkHealth = async () => {
   try {
@@ -160,5 +211,9 @@ export default {
   updateClient,
   deleteClient,
   addPayment,
+  addLoanToClient,
+  getClientLoans,
+  archiveClient,
+  unarchiveClient,
   checkHealth
 };

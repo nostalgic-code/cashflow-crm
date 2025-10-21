@@ -90,10 +90,14 @@ def health_check():
 # Client management endpoints
 @app.route('/api/clients', methods=['GET'])
 def get_clients():
-    """Get all clients"""
+    """Get all clients with optional archived parameter"""
     try:
         print(f"🔍 GET /api/clients - Fetching all clients")
-        clients = db_service.get_all_clients()
+        
+        # Check for include_archived parameter
+        include_archived = request.args.get('include_archived', 'false').lower() == 'true'
+        
+        clients = db_service.get_all_clients(include_archived=include_archived)
         print(f"✅ Found {len(clients)} clients: {[c.get('name', 'No name') for c in clients]}")
         return jsonify(clients)
     except Exception as e:
@@ -220,6 +224,88 @@ def delete_client(client_id):
             
     except Exception as e:
         return error_response(f"Failed to delete client: {str(e)}", 500)
+
+# Additional Loan endpoints
+@app.route('/api/clients/<client_id>/loans', methods=['POST'])
+def add_loan_to_client(client_id):
+    """Add an additional loan to an existing client"""
+    try:
+        print(f"🔍 POST /api/clients/{client_id}/loans - Adding additional loan")
+        data = request.get_json()
+        print(f"📝 Loan data: {data}")
+        
+        if not data:
+            return error_response("No data provided")
+        
+        # Validate loan amount
+        if not data.get('amount') or float(data.get('amount', 0)) <= 0:
+            return error_response("Valid loan amount is required")
+        
+        # Add loan to client
+        print(f"🔍 Adding additional loan to client...")
+        updated_client = db_service.add_loan_to_client(client_id, data)
+        print(f"✅ Additional loan added successfully: {updated_client}")
+        
+        if updated_client:
+            return jsonify({
+                'success': True,
+                'message': 'Additional loan added successfully',
+                'client': updated_client
+            }), 201
+        else:
+            return error_response('Client not found', 404)
+            
+    except Exception as e:
+        print(f"❌ Error adding additional loan: {str(e)}")
+        import traceback
+        print(f"📍 Full traceback: {traceback.format_exc()}")
+        return error_response(f"Failed to add additional loan: {str(e)}", 500)
+
+@app.route('/api/clients/<client_id>/loans', methods=['GET'])
+def get_client_loans(client_id):
+    """Get all individual loans for a client"""
+    try:
+        loans = db_service.get_client_loans(client_id)
+        return jsonify(loans)
+        
+    except Exception as e:
+        return error_response(f"Failed to fetch client loans: {str(e)}", 500)
+
+@app.route('/api/clients/<client_id>/archive', methods=['POST'])
+def archive_client(client_id):
+    """Archive a paid client"""
+    try:
+        updated_client = db_service.archive_client(client_id)
+        
+        if updated_client:
+            return jsonify({
+                'success': True,
+                'message': 'Client archived successfully',
+                'client': updated_client
+            })
+        else:
+            return error_response('Client not found', 404)
+            
+    except Exception as e:
+        return error_response(f"Failed to archive client: {str(e)}", 500)
+
+@app.route('/api/clients/<client_id>/unarchive', methods=['POST'])
+def unarchive_client(client_id):
+    """Unarchive a client for new loans"""
+    try:
+        updated_client = db_service.unarchive_client(client_id)
+        
+        if updated_client:
+            return jsonify({
+                'success': True,
+                'message': 'Client unarchived successfully',
+                'client': updated_client
+            })
+        else:
+            return error_response('Client not found', 404)
+            
+    except Exception as e:
+        return error_response(f"Failed to unarchive client: {str(e)}", 500)
 
 # Payment endpoints
 @app.route('/api/clients/<client_id>/payments', methods=['POST'])

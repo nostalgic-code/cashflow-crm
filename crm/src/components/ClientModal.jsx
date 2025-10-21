@@ -19,7 +19,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { formatCurrency, formatDate, getStatusColor, getStatusText, calculateCurrentAmountDue, calculateRemainingBalance, calculatePaymentDueDate } from '../utils/loanCalculations';
-import { addPayment, updateClient } from '../services/backendApi';
+import { addPayment, updateClient, addLoanToClient, getClientLoans } from '../services/backendApi';
 
 const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -28,10 +28,63 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
   const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
   const [newNote, setNewNote] = useState('');
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [isProcessingLoan, setIsProcessingLoan] = useState(false);
+  const [additionalLoanAmount, setAdditionalLoanAmount] = useState('');
+  const [clientLoans, setClientLoans] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef(null);
 
   if (!isOpen || !client) return null;
+
+  // Load client loans on component mount
+  useEffect(() => {
+    if (client.id) {
+      loadClientLoans();
+    }
+  }, [client.id]);
+
+  const loadClientLoans = async () => {
+    try {
+      const loans = await getClientLoans(client.id);
+      setClientLoans(loans);
+    } catch (error) {
+      console.error('Failed to load client loans:', error);
+    }
+  };
+
+  const handleAddLoan = async () => {
+    if (!additionalLoanAmount || parseFloat(additionalLoanAmount) <= 0) return;
+    
+    const amount = parseFloat(additionalLoanAmount);
+    
+    const confirmLoan = window.confirm(
+      `Add additional loan of ${formatCurrency(amount)} to ${client.name}? ` +
+      `This will increase their total amount due by ${formatCurrency(amount * 1.5)} (including 50% interest).`
+    );
+    
+    if (!confirmLoan) return;
+    
+    setIsProcessingLoan(true);
+    try {
+      const loanData = {
+        amount: amount,
+        loan_date: new Date().toISOString().split('T')[0],
+        notes: `Additional loan of ${formatCurrency(amount)}`
+      };
+      
+      const updatedClient = await addLoanToClient(client.id, loanData);
+      onUpdate(updatedClient);
+      setAdditionalLoanAmount('');
+      loadClientLoans(); // Refresh loans list
+      
+      alert(`Additional loan of ${formatCurrency(amount)} added successfully!`);
+    } catch (error) {
+      console.error('Failed to add additional loan:', error);
+      alert('Failed to add additional loan. Please try again.');
+    } finally {
+      setIsProcessingLoan(false);
+    }
+  };
 
   const currentAmountDue = calculateCurrentAmountDue(client);
   const remainingAmount = Math.max(0, currentAmountDue - (client.amountPaid || 0));
@@ -489,6 +542,53 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
                 >
                   {isProcessingPayment ? 'Processing...' : 'Record Payment'}
                 </button>
+              </div>
+            </div>
+
+            {/* Additional Loan Section */}
+            <div className="mb-6 border-t pt-6">
+              <h4 className="font-medium text-gray-900 mb-3">Add Additional Loan</h4>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Additional Loan Amount
+                  </label>
+                  <div className="flex space-x-2">
+                    <input
+                      type="number"
+                      value={additionalLoanAmount}
+                      onChange={(e) => setAdditionalLoanAmount(e.target.value)}
+                      placeholder="0.00"
+                      className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+                      disabled={isProcessingLoan}
+                    />
+                    <button
+                      onClick={handleAddLoan}
+                      disabled={!additionalLoanAmount || parseFloat(additionalLoanAmount) <= 0 || isProcessingLoan}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                    >
+                      {isProcessingLoan ? 'Adding...' : 'Add Loan'}
+                    </button>
+                  </div>
+                  <p className="mt-1 text-xs text-gray-500">
+                    This will add {additionalLoanAmount ? formatCurrency(parseFloat(additionalLoanAmount) * 1.5) : formatCurrency(0)} to total amount due (including 50% interest)
+                  </p>
+                </div>
+
+                {/* Loan History */}
+                {clientLoans.length > 0 && (
+                  <div className="mt-4">
+                    <h5 className="text-sm font-medium text-gray-700 mb-2">Loan History</h5>
+                    <div className="max-h-32 overflow-y-auto space-y-1">
+                      {clientLoans.map((loan, index) => (
+                        <div key={loan.id || index} className="flex justify-between items-center p-2 bg-gray-50 rounded text-sm">
+                          <span>{formatCurrency(loan.loan_amount)}</span>
+                          <span className="text-gray-500">{formatDate(loan.loan_date)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
