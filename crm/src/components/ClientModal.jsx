@@ -56,12 +56,18 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
     setIsProcessingPayment(true);
     try {
       const amount = parseFloat(paymentAmount);
-      const updatedClient = await addPayment(client.id, amount, paymentDate);
+      const paymentData = {
+        amount: amount,
+        payment_date: paymentDate,
+        clientId: client.id
+      };
+      const updatedClient = await addPayment(client.id, paymentData);
       onUpdate(updatedClient);
       setPaymentAmount('');
       setPaymentDate(new Date().toISOString().split('T')[0]);
     } catch (error) {
       console.error('Failed to add payment:', error);
+      alert('Failed to record payment. Please try again.');
     } finally {
       setIsProcessingPayment(false);
     }

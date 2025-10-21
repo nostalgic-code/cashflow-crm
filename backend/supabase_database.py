@@ -298,34 +298,52 @@ class SupabaseService:
     def add_payment(self, client_id: str, payment_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Add a payment for a client"""
         try:
-            # Add payment record
-            payment_data['client_id'] = client_id
-            payment_data['created_at'] = datetime.now(timezone.utc).isoformat()
+            # Get client first to ensure it exists and get current data
+            client = self.get_client_by_id(client_id)
+            if not client:
+                raise Exception(f"Client with ID {client_id} not found")
+            
+            # Prepare payment data for database
+            payment_record = {
+                'client_id': client_id,  # This should be the UUID from frontend
+                'amount': payment_data.get('amount'),
+                'payment_date': payment_data.get('payment_date', datetime.now(timezone.utc).date().isoformat()),
+                'created_at': datetime.now(timezone.utc).isoformat(),
+                'notes': payment_data.get('notes', '')
+            }
+            
+            print(f"🔍 Inserting payment record: {payment_record}")
             
             # Insert payment
-            payment_result = self.client.table('payments').insert(payment_data).execute()
+            payment_result = self.client.table('payments').insert(payment_record).execute()
+            print(f"✅ Payment record created: {payment_result.data}")
             
             # Update client's amount paid
-            client = self.get_client_by_id(client_id)
-            if client:
-                new_amount_paid = client.get('amount_paid', 0) + payment_data.get('amount', 0)
-                
-                update_data = {
-                    'amount_paid': new_amount_paid,
-                    'last_payment_date': payment_data.get('payment_date', datetime.now(timezone.utc).isoformat())
-                }
-                
-                # Auto-update status if needed
-                total_due = client.get('loan_amount', 0) * 1.5
-                if new_amount_paid >= total_due:
-                    update_data['status'] = 'paid'
-                
-                return self.update_client(client_id, update_data)
+            current_amount_paid = client.get('amountPaid', client.get('amount_paid', 0))
+            new_amount_paid = current_amount_paid + payment_data.get('amount', 0)
             
-            return None
+            update_data = {
+                'amount_paid': new_amount_paid,
+                'last_payment_date': payment_data.get('payment_date', datetime.now(timezone.utc).date().isoformat())
+            }
+            
+            # Auto-update status if needed
+            loan_amount = client.get('loanAmount', client.get('loan_amount', 0))
+            total_due = loan_amount * 1.5
+            if new_amount_paid >= total_due:
+                update_data['status'] = 'paid'
+                print(f"🎉 Client fully paid! Moving to paid status")
+            
+            print(f"🔍 Updating client with: {update_data}")
+            updated_client = self.update_client(client_id, update_data)
+            print(f"✅ Client updated: {updated_client}")
+            
+            return updated_client
             
         except Exception as e:
             print(f"❌ Error adding payment: {e}")
+            import traceback
+            print(f"📍 Payment error traceback: {traceback.format_exc()}")
             raise
     
     def get_client_payments(self, client_id: str) -> List[Dict[str, Any]]:

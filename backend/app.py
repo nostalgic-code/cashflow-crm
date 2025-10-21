@@ -226,18 +226,24 @@ def delete_client(client_id):
 def add_payment(client_id):
     """Add a payment for a client"""
     try:
+        print(f"🔍 POST /api/clients/{client_id}/payments - Adding payment")
         data = request.get_json()
+        print(f"📝 Payment data: {data}")
         
         if not data:
             return error_response("No data provided")
         
         # Validate payment data
         is_valid, errors = validate_payment_data({**data, 'clientId': client_id})
+        print(f"✅ Validation result: valid={is_valid}, errors={errors}")
+        
         if not is_valid:
             return error_response(f"Validation errors: {', '.join(errors)}")
         
         # Add payment
+        print(f"🔍 Adding payment to database...")
         updated_client = db_service.add_payment(client_id, data)
+        print(f"✅ Payment added successfully: {updated_client}")
         
         if updated_client:
             return jsonify({
@@ -249,6 +255,9 @@ def add_payment(client_id):
             return error_response('Client not found', 404)
             
     except Exception as e:
+        print(f"❌ Error adding payment: {str(e)}")
+        import traceback
+        print(f"📍 Full traceback: {traceback.format_exc()}")
         return error_response(f"Failed to add payment: {str(e)}", 500)
 
 @app.route('/api/clients/<client_id>/payments', methods=['GET'])
