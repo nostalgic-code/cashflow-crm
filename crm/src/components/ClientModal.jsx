@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   X,
   User,
@@ -103,13 +103,6 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
     }
   };
 
-  // Load client loans on component mount
-  useEffect(() => {
-    // Temporarily disable loan loading to debug modal
-    // loadClientLoans();
-    setClientLoans([]); // Set empty array for now
-  }, []); // Empty dependency array to run only once
-
   const handleAddLoan = async () => {
     if (!additionalLoanAmount || parseFloat(additionalLoanAmount) <= 0) return;
     
@@ -133,7 +126,7 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
       const updatedClient = await addLoanToClient(client.id, loanData);
       onUpdate(updatedClient);
       setAdditionalLoanAmount('');
-      loadClientLoans(); // Refresh loans list
+      // loadClientLoans(); // Refresh loans list - temporarily disabled
       
       alert(`Additional loan of ${formatCurrency(amount)} added successfully!`);
     } catch (error) {
@@ -635,8 +628,8 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
                   </p>
                 </div>
 
-                {/* Loan History */}
-                {clientLoans.length > 0 && (
+                {/* Loan History - Temporarily disabled for debugging */}
+                {/*clientLoans.length > 0 && (
                   <div className="mt-4">
                     <h5 className="text-sm font-medium text-gray-700 mb-2">Loan History</h5>
                     <div className="max-h-32 overflow-y-auto space-y-1">
@@ -648,7 +641,7 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
                       ))}
                     </div>
                   </div>
-                )}
+                )*/}
               </div>
             </div>
 
