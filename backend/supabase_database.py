@@ -65,6 +65,27 @@ class SupabaseService:
                 mapped_data['last_name'] = name_parts[1] if len(name_parts) > 1 else ''
                 del mapped_data['name']  # Remove the original name field
             
+            # Handle date fields - convert ISO timestamps to date strings where needed
+            if 'dueDate' in mapped_data and mapped_data['dueDate']:
+                # Convert ISO timestamp to date string (YYYY-MM-DD)
+                try:
+                    if 'T' in str(mapped_data['dueDate']):
+                        from datetime import datetime
+                        dt = datetime.fromisoformat(mapped_data['dueDate'].replace('Z', '+00:00'))
+                        mapped_data['dueDate'] = dt.date().isoformat()
+                except Exception as e:
+                    print(f"⚠️ Warning: Could not parse dueDate {mapped_data['dueDate']}: {e}")
+            
+            if 'startDate' in mapped_data and mapped_data['startDate']:
+                # Ensure startDate is in YYYY-MM-DD format
+                if 'T' in str(mapped_data['startDate']):
+                    try:
+                        from datetime import datetime
+                        dt = datetime.fromisoformat(mapped_data['startDate'].replace('Z', '+00:00'))
+                        mapped_data['startDate'] = dt.date().isoformat()
+                    except Exception as e:
+                        print(f"⚠️ Warning: Could not parse startDate {mapped_data['startDate']}: {e}")
+
             # Map camelCase to snake_case fields
             field_mappings = {
                 'loanAmount': 'loan_amount',
@@ -97,8 +118,17 @@ class SupabaseService:
             
             # Insert into Supabase
             print(f"🔍 DEBUG: Calling Supabase insert...")
-            result = self.client.table('clients').insert(mapped_data).execute()
-            print(f"✅ DEBUG: Insert successful, result: {result.data}")
+            try:
+                result = self.client.table('clients').insert(mapped_data).execute()
+                print(f"✅ DEBUG: Insert successful, result: {result.data}")
+            except Exception as insert_error:
+                print(f"❌ DEBUG: Supabase insert failed!")
+                print(f"❌ Error type: {type(insert_error).__name__}")
+                print(f"❌ Error message: {str(insert_error)}")
+                print(f"❌ Data that failed to insert: {mapped_data}")
+                import traceback
+                print(f"❌ Full traceback: {traceback.format_exc()}")
+                raise Exception(f"Database insert failed: {str(insert_error)}")
             
             if result.data and len(result.data) > 0:
                 created_client = result.data[0]
