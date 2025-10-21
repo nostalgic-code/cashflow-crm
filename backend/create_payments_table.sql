@@ -1,10 +1,13 @@
 -- Create payments table for payment tracking
 -- Run this in your Supabase SQL Editor
 
+-- Drop payments table if it exists (to recreate with correct structure)
+DROP TABLE IF EXISTS payments;
+
 -- Create payments table
-CREATE TABLE IF NOT EXISTS payments (
+CREATE TABLE payments (
     id SERIAL PRIMARY KEY,
-    client_id VARCHAR(50) REFERENCES clients(client_uuid),
+    client_id VARCHAR(50) NOT NULL,
     amount DECIMAL(12,2) NOT NULL,
     payment_date DATE DEFAULT CURRENT_DATE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

@@ -97,21 +97,27 @@ class SupabaseService:
                 created_client = result.data[0]
                 
                 # Apply field mapping to returned client data
+                mapped_client = {}
+                
+                # Handle ID mapping
+                if 'client_uuid' in created_client and created_client['client_uuid']:
+                    mapped_client['id'] = created_client['client_uuid']
+                else:
+                    mapped_client['id'] = str(created_client['id']) if 'id' in created_client else None
+                
                 # Combine first_name and last_name into name
                 if 'first_name' in created_client and 'last_name' in created_client:
-                    created_client['name'] = f"{created_client['first_name']} {created_client['last_name']}".strip()
+                    mapped_client['name'] = f"{created_client['first_name']} {created_client['last_name']}".strip()
                 
-                # Use client_uuid as frontend id if available, otherwise use database id
-                if 'client_uuid' in created_client and created_client['client_uuid']:
-                    created_client['id'] = created_client['client_uuid']
-                elif 'id' in created_client:
-                    created_client['id'] = str(created_client['id'])  # Convert database id to string
-                
-                # Map snake_case to camelCase fields for frontend
+                # Map all fields to frontend format (camelCase)
                 field_mappings = {
+                    'email': 'email',
+                    'phone': 'phone', 
+                    'address': 'address',
                     'loan_amount': 'loanAmount',
                     'loan_type': 'loanType', 
                     'amount_paid': 'amountPaid',
+                    'status': 'status',
                     'application_date': 'applicationDate',
                     'last_status_update': 'lastStatusUpdate',
                     'id_number': 'idNumber',
@@ -119,14 +125,20 @@ class SupabaseService:
                     'start_date': 'startDate',
                     'due_date': 'dueDate',
                     'monthly_payment': 'monthlyPayment',
-                    'payment_history': 'paymentHistory'
+                    'payment_history': 'paymentHistory',
+                    'documents': 'documents',
+                    'notes': 'notes',
+                    'created_at': 'createdAt',
+                    'updated_at': 'updatedAt',
+                    'last_payment_date': 'lastPaymentDate',
+                    'repayment_due_date': 'repaymentDueDate'
                 }
                 
                 for db_field, frontend_field in field_mappings.items():
                     if db_field in created_client:
-                        created_client[frontend_field] = created_client[db_field]
+                        mapped_client[frontend_field] = created_client[db_field]
                 
-                return created_client
+                return mapped_client
             
             raise Exception("Failed to create client")
             
@@ -141,22 +153,30 @@ class SupabaseService:
             clients = result.data or []
             
             # Map fields back to frontend format
+            mapped_clients = []
             for client in clients:
+                # Create a clean mapped client object
+                mapped_client = {}
+                
+                # Handle ID mapping
+                if 'client_uuid' in client and client['client_uuid']:
+                    mapped_client['id'] = client['client_uuid']
+                else:
+                    mapped_client['id'] = str(client['id']) if 'id' in client else None
+                
                 # Combine first_name and last_name into name
                 if 'first_name' in client and 'last_name' in client:
-                    client['name'] = f"{client['first_name']} {client['last_name']}".strip()
+                    mapped_client['name'] = f"{client['first_name']} {client['last_name']}".strip()
                 
-                # Use client_uuid as frontend id if available, otherwise use database id
-                if 'client_uuid' in client and client['client_uuid']:
-                    client['id'] = client['client_uuid']
-                elif 'id' in client:
-                    client['id'] = str(client['id'])  # Convert database id to string
-                
-                # Map snake_case to camelCase fields
+                # Map all fields to frontend format (camelCase)
                 field_mappings = {
+                    'email': 'email',
+                    'phone': 'phone', 
+                    'address': 'address',
                     'loan_amount': 'loanAmount',
                     'loan_type': 'loanType', 
                     'amount_paid': 'amountPaid',
+                    'status': 'status',
                     'application_date': 'applicationDate',
                     'last_status_update': 'lastStatusUpdate',
                     'id_number': 'idNumber',
@@ -164,14 +184,22 @@ class SupabaseService:
                     'start_date': 'startDate',
                     'due_date': 'dueDate',
                     'monthly_payment': 'monthlyPayment',
-                    'payment_history': 'paymentHistory'
+                    'payment_history': 'paymentHistory',
+                    'documents': 'documents',
+                    'notes': 'notes',
+                    'created_at': 'createdAt',
+                    'updated_at': 'updatedAt',
+                    'last_payment_date': 'lastPaymentDate',
+                    'repayment_due_date': 'repaymentDueDate'
                 }
                 
                 for db_field, frontend_field in field_mappings.items():
                     if db_field in client:
-                        client[frontend_field] = client[db_field]
+                        mapped_client[frontend_field] = client[db_field]
+                
+                mapped_clients.append(mapped_client)
             
-            return clients
+            return mapped_clients
             
         except Exception as e:
             print(f"❌ Error getting clients: {e}")
@@ -198,21 +226,27 @@ class SupabaseService:
             
             if client:
                 # Apply field mapping to single client
+                mapped_client = {}
+                
+                # Handle ID mapping
+                if 'client_uuid' in client and client['client_uuid']:
+                    mapped_client['id'] = client['client_uuid']
+                else:
+                    mapped_client['id'] = str(client['id']) if 'id' in client else None
+                
                 # Combine first_name and last_name into name
                 if 'first_name' in client and 'last_name' in client:
-                    client['name'] = f"{client['first_name']} {client['last_name']}".strip()
+                    mapped_client['name'] = f"{client['first_name']} {client['last_name']}".strip()
                 
-                # Use client_uuid as frontend id if available, otherwise use database id
-                if 'client_uuid' in client and client['client_uuid']:
-                    client['id'] = client['client_uuid']
-                elif 'id' in client:
-                    client['id'] = str(client['id'])  # Convert database id to string
-                
-                # Map snake_case to camelCase fields
+                # Map all fields to frontend format (camelCase)
                 field_mappings = {
+                    'email': 'email',
+                    'phone': 'phone', 
+                    'address': 'address',
                     'loan_amount': 'loanAmount',
                     'loan_type': 'loanType', 
                     'amount_paid': 'amountPaid',
+                    'status': 'status',
                     'application_date': 'applicationDate',
                     'last_status_update': 'lastStatusUpdate',
                     'id_number': 'idNumber',
@@ -220,14 +254,22 @@ class SupabaseService:
                     'start_date': 'startDate',
                     'due_date': 'dueDate',
                     'monthly_payment': 'monthlyPayment',
-                    'payment_history': 'paymentHistory'
+                    'payment_history': 'paymentHistory',
+                    'documents': 'documents',
+                    'notes': 'notes',
+                    'created_at': 'createdAt',
+                    'updated_at': 'updatedAt',
+                    'last_payment_date': 'lastPaymentDate',
+                    'repayment_due_date': 'repaymentDueDate'
                 }
                 
                 for db_field, frontend_field in field_mappings.items():
                     if db_field in client:
-                        client[frontend_field] = client[db_field]
+                        mapped_client[frontend_field] = client[db_field]
+                
+                return mapped_client
             
-            return client
+            return None
             
         except Exception as e:
             print(f"❌ Error getting client: {e}")
