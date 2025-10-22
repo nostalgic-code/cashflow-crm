@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Upload, File } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -19,7 +19,8 @@ const NewClientModal = ({ isOpen, onClose, onAddClient }) => {
     email: '',
     phone: '',
     amount: '',
-    loanType: 'Secured Loan'
+    loanType: 'Secured Loan',
+    dueDate: '' // Custom due date when client gets paid - will be set on modal open
   });
   
   const [errors, setErrors] = useState({});
@@ -29,6 +30,18 @@ const NewClientModal = ({ isOpen, onClose, onAddClient }) => {
     'Secured Loan',
     'Unsecured Loan'
   ];
+
+  // Set default due date when modal opens (end of current month)
+  useEffect(() => {
+    if (isOpen && !formData.dueDate) {
+      const defaultDueDate = getEndOfCurrentMonth();
+      const dueDateOnly = defaultDueDate.split('T')[0]; // Get YYYY-MM-DD format
+      setFormData(prev => ({
+        ...prev,
+        dueDate: dueDateOnly
+      }));
+    }
+  }, [isOpen, formData.dueDate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -95,6 +108,18 @@ const NewClientModal = ({ isOpen, onClose, onAddClient }) => {
       newErrors.amount = 'Please enter a valid loan amount';
     }
     
+    if (!formData.dueDate.trim()) {
+      newErrors.dueDate = 'Payment due date is required';
+    } else {
+      const selectedDate = new Date(formData.dueDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Reset time to compare only dates
+      
+      if (selectedDate < today) {
+        newErrors.dueDate = 'Due date cannot be in the past';
+      }
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -109,10 +134,10 @@ const NewClientModal = ({ isOpen, onClose, onAddClient }) => {
     const loanAmount = parseFloat(formData.amount);
     const totalAmountDue = loanAmount * 1.5; // 50% interest
     
-    // Set start date to today and due date to end of current month
+    // Set start date to today and use custom due date from form
     const today = new Date();
     const startDate = today.toISOString().split('T')[0]; // YYYY-MM-DD format
-    const dueDate = getEndOfCurrentMonth();
+    const dueDate = new Date(formData.dueDate).toISOString(); // Use custom due date
     
     // Sanitize uploaded files: strip the actual File object to avoid sending non-serializable data
     const sanitizedFiles = uploadedFiles.map(f => ({
@@ -336,6 +361,30 @@ const NewClientModal = ({ isOpen, onClose, onAddClient }) => {
                   ))}
                 </select>
               </div>
+            </div>
+            
+            {/* Payment Due Date */}
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Payment Due Date *
+              </label>
+              <input
+                type="date"
+                name="dueDate"
+                value={formData.dueDate}
+                onChange={handleInputChange}
+                min={new Date().toISOString().split('T')[0]} // Today or later
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.dueDate ? 'border-red-500' : 'border-gray-300'
+                }`}
+              />
+              {errors.dueDate && (
+                <p className="text-red-500 text-xs mt-1">{errors.dueDate}</p>
+              )}
+              <p className="text-sm text-gray-600 mt-1">
+                Select the date when this client gets paid and should repay the loan. 
+                A notification will be sent one day before this date.
+              </p>
             </div>
           </div>
 

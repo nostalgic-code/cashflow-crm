@@ -582,7 +582,7 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
                     <div>
                       <p className="text-sm text-gray-600">Due Date (End of Month)</p>
                       <p className="font-medium">
-                        {client.startDate ? formatDate(calculatePaymentDueDate(client.startDate)) : formatDate(client.dueDate)}
+                        {client.dueDate ? formatDate(client.dueDate) : (client.startDate ? formatDate(calculatePaymentDueDate(client.startDate)) : 'Not set')}
                       </p>
                     </div>
                   </div>

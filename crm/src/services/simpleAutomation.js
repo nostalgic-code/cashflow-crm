@@ -28,7 +28,7 @@ export class SimpleAutomationService {
     this.notifications = [];
   }
 
-  // Minimal automation - only check for completed loans
+  // Minimal automation - check for completed loans and due dates
   runAutomation(clients) {
     // Throttle automation to prevent excessive runs
     const now = Date.now();
@@ -43,9 +43,11 @@ export class SimpleAutomationService {
     
     this.lastRun = now;
     let hasChanges = false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to compare only dates
     
-    // Only auto-update status for clearly completed loans
     const updatedClients = clients.map(client => {
+      // Check for completed loans
       if (client.amountPaid >= client.loanAmount && client.status !== 'paid') {
         this.addNotification({
           type: 'success',
@@ -56,6 +58,51 @@ export class SimpleAutomationService {
         hasChanges = true;
         return { ...client, status: 'paid' };
       }
+      
+      // Check for due dates - move active loans to repayment-due on due date
+      if (client.status === 'active' && client.dueDate) {
+        try {
+          const dueDate = new Date(client.dueDate);
+          dueDate.setHours(0, 0, 0, 0); // Reset time to compare only dates
+          
+          // If due date is today or has passed, move to repayment-due
+          if (dueDate <= today) {
+            this.addNotification({
+              type: 'warning',
+              clientId: client.id,
+              message: `${client.name}'s payment is now due!`,
+              timestamp: new Date().toISOString()
+            });
+            hasChanges = true;
+            return { ...client, status: 'repayment-due' };
+          }
+        } catch (error) {
+          console.error('Error checking due date for client:', client.name, error);
+        }
+      }
+      
+      // Check for overdue payments - move repayment-due to overdue after due date
+      if (client.status === 'repayment-due' && client.dueDate) {
+        try {
+          const dueDate = new Date(client.dueDate);
+          dueDate.setHours(23, 59, 59, 999); // End of due date
+          
+          // If due date has fully passed (next day), move to overdue
+          if (dueDate < today) {
+            this.addNotification({
+              type: 'error',
+              clientId: client.id,
+              message: `${client.name}'s payment is now overdue!`,
+              timestamp: new Date().toISOString()
+            });
+            hasChanges = true;
+            return { ...client, status: 'overdue' };
+          }
+        } catch (error) {
+          console.error('Error checking overdue date for client:', client.name, error);
+        }
+      }
+      
       return client;
     });
     

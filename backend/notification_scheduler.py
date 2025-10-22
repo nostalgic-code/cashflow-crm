@@ -17,24 +17,17 @@ class NotificationScheduler:
         self.is_running = False
         
     def get_clients_with_payments_due(self) -> List[Dict[str, Any]]:
-        """Get clients whose payments are due tomorrow (last day of month)"""
+        """Get clients whose custom due dates are tomorrow"""
         try:
             # Get all active clients
             clients = self.db.get_all_clients(include_archived=False)
             
             # Get current date info
             today = datetime.now()
-            
-            # Check if tomorrow is the last day of the month
             tomorrow = today + timedelta(days=1)
-            month_end = self._get_month_end_date(today)
+            tomorrow_date = tomorrow.date()
             
-            # Only check if tomorrow is the last day of the month
-            if tomorrow.date() != month_end.date():
-                print(f"📅 Not month-end tomorrow ({tomorrow.date()}), skipping notification check")
-                return []
-            
-            print(f"📅 Tomorrow is month-end ({month_end.date()}), checking for due payments...")
+            print(f"📅 Checking for custom due dates on {tomorrow_date}...")
             
             clients_due = []
             
@@ -43,11 +36,35 @@ class NotificationScheduler:
                 if client.get('archived', False):
                     continue
                 
+                # Get the client's custom due date
+                due_date_str = client.get('due_date') or client.get('dueDate')
+                if not due_date_str:
+                    # Fallback to month-end calculation for older clients without custom due dates
+                    month_end = self._get_month_end_date(today)
+                    if tomorrow_date != month_end.date():
+                        continue
+                    print(f"📅 Client {client.get('name', 'Unknown')} using month-end fallback")
+                else:
+                    # Parse the custom due date
+                    try:
+                        due_date = datetime.fromisoformat(due_date_str.replace('Z', '+00:00')).date()
+                        if due_date != tomorrow_date:
+                            continue
+                        print(f"📅 Client {client.get('name', 'Unknown')} has custom due date {due_date}")
+                    except Exception as e:
+                        print(f"⚠️ Could not parse due date for {client.get('name', 'Unknown')}: {e}")
+                        continue
+                
                 # Calculate current amount due
                 try:
-                    from utils.loanCalculations import calculateCurrentAmountDue
-                    current_due = calculateCurrentAmountDue(client)
-                except:
+                    # Note: This import might fail in backend context
+                    # from utils.loanCalculations import calculateCurrentAmountDue
+                    # current_due = calculateCurrentAmountDue(client)
+                    # Using fallback calculation for now
+                    loan_amount = client.get('loan_amount', client.get('loanAmount', 0))
+                    amount_paid = client.get('amount_paid', client.get('amountPaid', 0))
+                    current_due = max(0, (loan_amount * 1.5) - amount_paid)
+                except Exception as e:
                     # Fallback calculation
                     loan_amount = client.get('loan_amount', client.get('loanAmount', 0))
                     amount_paid = client.get('amount_paid', client.get('amountPaid', 0))
@@ -65,13 +82,14 @@ class NotificationScheduler:
                         'current_amount_due': current_due,
                         'status': client.get('status', 'active'),
                         'start_date': client.get('start_date') or client.get('startDate'),
+                        'due_date': due_date_str,
                     }
                     clients_due.append(client_info)
             
             # Sort by amount due (highest first)
             clients_due.sort(key=lambda x: x['current_amount_due'], reverse=True)
             
-            print(f"📊 Found {len(clients_due)} clients with payments due")
+            print(f"📊 Found {len(clients_due)} clients with payments due tomorrow")
             
             return clients_due
             
