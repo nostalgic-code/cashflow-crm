@@ -19,7 +19,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { formatCurrency, formatDate, getStatusColor, getStatusText, calculateCurrentAmountDue, calculateRemainingBalance, calculatePaymentDueDate } from '../utils/loanCalculations';
-import { addPayment, updateClient, addLoanToClient, getClientLoans } from '../services/backendApi';
+import { addPayment, updateClient, addLoanToClient, getClientLoans, updateClientStatus, deleteClient } from '../services/backendApi';
 
 const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -32,6 +32,8 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
   const [additionalLoanAmount, setAdditionalLoanAmount] = useState('');
   const [clientLoans, setClientLoans] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [isApprovingLoan, setIsApprovingLoan] = useState(false);
+  const [isDecliningLoan, setIsDecliningLoan] = useState(false);
   const fileInputRef = useRef(null);
 
   if (!isOpen || !client) return null;
@@ -242,6 +244,73 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
     }
   };
 
+  const handleApproveLoan = async () => {
+    if (!confirm('Are you sure you want to approve this loan application? This will move the client to Active Loans.')) {
+      return;
+    }
+
+    setIsApprovingLoan(true);
+    try {
+      console.log('🔍 Approving loan for client:', client.id);
+      
+      // Update client status to 'active'
+      const updatedClient = await updateClientStatus(client.id, 'active');
+      console.log('✅ Loan approved, client updated:', updatedClient);
+      
+      // Update the parent component with the new status
+      if (updatedClient && onUpdate) {
+        const normalizedUpdatedClient = {
+          ...client,
+          status: 'active',
+          lastStatusUpdate: new Date().toISOString()
+        };
+        onUpdate(normalizedUpdatedClient);
+      }
+      
+      alert('Loan application approved successfully! Client moved to Active Loans.');
+      
+      // Close the modal after approval
+      onClose();
+      
+    } catch (error) {
+      console.error('❌ Failed to approve loan:', error);
+      alert('Failed to approve loan application. Please try again.');
+    } finally {
+      setIsApprovingLoan(false);
+    }
+  };
+
+  const handleDeclineLoan = async () => {
+    if (!confirm('Are you sure you want to decline this loan application? This will permanently delete the client and cannot be undone.')) {
+      return;
+    }
+
+    setIsDecliningLoan(true);
+    try {
+      console.log('🔍 Declining loan for client:', client.id);
+      
+      // Delete the client completely
+      await deleteClient(client.id);
+      console.log('✅ Client deleted successfully');
+      
+      alert('Loan application declined. Client has been removed from the system.');
+      
+      // Close the modal and trigger parent refresh
+      onClose();
+      
+      // Trigger a refresh of the client list
+      if (onUpdate) {
+        onUpdate(null, 'delete'); // Signal that this was a deletion
+      }
+      
+    } catch (error) {
+      console.error('❌ Failed to decline loan:', error);
+      alert('Failed to decline loan application. Please try again.');
+    } finally {
+      setIsDecliningLoan(false);
+    }
+  };
+
   const handleAddPayment = async () => {
     if (!paymentAmount || parseFloat(paymentAmount) <= 0) return;
     
@@ -334,6 +403,30 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
             </div>
             
             <div className="flex items-center gap-2">
+              {/* Show Approve and Decline buttons for new leads */}
+              {normalizedClient.status === 'new-lead' && (
+                <>
+                  <button
+                    onClick={handleApproveLoan}
+                    disabled={isApprovingLoan || isDecliningLoan}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50 font-semibold flex items-center gap-2"
+                    title="Approve Loan Application"
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                    {isApprovingLoan ? 'Approving...' : 'Approve Loan'}
+                  </button>
+                  <button
+                    onClick={handleDeclineLoan}
+                    disabled={isApprovingLoan || isDecliningLoan}
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors disabled:opacity-50 font-semibold flex items-center gap-2"
+                    title="Decline Loan Application"
+                  >
+                    <X className="w-4 h-4" />
+                    {isDecliningLoan ? 'Declining...' : 'Decline Loan'}
+                  </button>
+                </>
+              )}
+              
               {!isEditing ? (
                 <button
                   onClick={() => setIsEditing(true)}
@@ -646,8 +739,40 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
               Quick Actions
             </h3>
             
-            {/* Add Payment */}
-            <div className="mb-6">
+            {/* Approval Notice for New Leads */}
+            {normalizedClient.status === 'new-lead' && (
+              <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <AlertTriangle className="w-5 h-5 text-yellow-600" />
+                  <h4 className="font-medium text-yellow-800">Pending Approval</h4>
+                </div>
+                <p className="text-sm text-yellow-700 mb-3">
+                  This loan application is awaiting approval. Please review the client information and decide to approve or decline the application.
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleApproveLoan}
+                    disabled={isApprovingLoan || isDecliningLoan}
+                    className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50 font-semibold flex items-center justify-center gap-2"
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                    {isApprovingLoan ? 'Approving...' : 'Approve'}
+                  </button>
+                  <button
+                    onClick={handleDeclineLoan}
+                    disabled={isApprovingLoan || isDecliningLoan}
+                    className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors disabled:opacity-50 font-semibold flex items-center justify-center gap-2"
+                  >
+                    <X className="w-4 h-4" />
+                    {isDecliningLoan ? 'Declining...' : 'Decline'}
+                  </button>
+                </div>
+              </div>
+            )}
+            
+            {/* Add Payment - Only show for active loans */}
+            {normalizedClient.status !== 'new-lead' && (
+              <div className="mb-6">
               <h4 className="font-medium text-gray-900 mb-3">Record Payment</h4>
               <div className="space-y-3">
                 <div>
@@ -683,8 +808,10 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
                 </button>
               </div>
             </div>
+            )}
 
-            {/* Additional Loan Section */}
+            {/* Additional Loan Section - Only show for active loans */}
+            {normalizedClient.status !== 'new-lead' && (
             <div className="mb-6 border-t pt-6">
               <h4 className="font-medium text-gray-900 mb-3">Add Additional Loan</h4>
               <div className="space-y-3">
@@ -730,6 +857,7 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
                 )*/}
               </div>
             </div>
+            )}
 
             {/* Quick Payment Amounts */}
             <div className="mb-6">

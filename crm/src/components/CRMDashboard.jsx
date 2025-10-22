@@ -62,13 +62,20 @@ function CRMDashboard() {
     setIsClientModalOpen(true);
   };
 
-  const handleClientUpdate = (updatedClient) => {
-    setClients(prev => 
-      prev.map(client => 
-        client.id === updatedClient.id ? updatedClient : client
-      )
-    );
-    setSelectedClient(updatedClient);
+  const handleClientUpdate = (updatedClient, action) => {
+    if (action === 'delete') {
+      // Remove the client from the list
+      setClients(prev => prev.filter(client => client.id !== selectedClient.id));
+      setSelectedClient(null);
+    } else {
+      // Update the client in the list
+      setClients(prev => 
+        prev.map(client => 
+          client.id === updatedClient.id ? updatedClient : client
+        )
+      );
+      setSelectedClient(updatedClient);
+    }
   };
 
   const handleClientsUpdate = React.useCallback((updatedClients) => {
