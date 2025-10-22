@@ -7,7 +7,8 @@ import {
   Settings, 
   Menu,
   X,
-  LogOut
+  LogOut,
+  BarChart3
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import KanbanBoard from './KanbanBoard';
@@ -15,6 +16,8 @@ import Dashboard from './Dashboard';
 import ClientModal from './ClientModal';
 import NewClientModal from './NewClientModal';
 import NotificationManager from './NotificationManager';
+import ClientsTable from './ClientsTable';
+import StatsBoard from './StatsBoard';
 import { useAuth } from '../contexts/AuthContext';
 import { getClients, addClient, updateClient, deleteClient, updateClientStatus, archiveClient } from '../services/backendApi';
 import { automationService } from '../services/simpleAutomation';
@@ -162,7 +165,9 @@ function CRMDashboard() {
 
   const navItems = [
     { id: 'kanban', label: 'Pipeline', icon: Users },
-    { id: 'dashboard', label: 'Analytics', icon: LayoutDashboard },
+    { id: 'clients', label: 'All Clients', icon: Users },
+    { id: 'stats', label: 'Analytics', icon: BarChart3 },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'notifications', label: 'Notifications', icon: Bell },
   ];
 
@@ -301,11 +306,17 @@ function CRMDashboard() {
             <div>
               <h2 className="text-2xl font-bold text-monday-gray-900">
                 {activeTab === 'kanban' ? 'Client Pipeline' : 
+                 activeTab === 'clients' ? 'Clients Database' :
+                 activeTab === 'stats' ? 'Client Analytics' :
                  activeTab === 'notifications' ? 'Email Notifications' : 'Analytics Dashboard'}
               </h2>
               <p className="text-sm text-monday-gray-600 mt-1 font-medium">
                 {activeTab === 'kanban' 
                   ? `Managing ${clients.length} clients across different loan stages`
+                  : activeTab === 'clients'
+                  ? 'Complete client database with search, filtering, and export capabilities'
+                  : activeTab === 'stats'
+                  ? 'Top 20 client analytics and business intelligence for targeting decisions'
                   : activeTab === 'notifications'
                   ? 'Manage payment due notifications and email alerts'
                   : 'Overview of your loan portfolio performance and metrics'
@@ -348,6 +359,15 @@ function CRMDashboard() {
               onClientClick={handleClientClick}
               onAddClient={handleAddNewClient}
               onDeleteClient={handleDeleteClient}
+            />
+          ) : activeTab === 'clients' ? (
+            <ClientsTable 
+              clients={clients}
+              onClientClick={handleClientClick}
+            />
+          ) : activeTab === 'stats' ? (
+            <StatsBoard 
+              clients={clients}
             />
           ) : activeTab === 'notifications' ? (
             <NotificationManager />
