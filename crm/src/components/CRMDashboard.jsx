@@ -16,7 +16,7 @@ import ClientModal from './ClientModal';
 import NewClientModal from './NewClientModal';
 import NotificationManager from './NotificationManager';
 import { useAuth } from '../contexts/AuthContext';
-import { getClients, addClient, updateClient, deleteClient, updateClientStatus } from '../services/backendApi';
+import { getClients, addClient, updateClient, deleteClient, updateClientStatus, archiveClient } from '../services/backendApi';
 import { automationService } from '../services/simpleAutomation';
 import { calculateRemainingBalance } from '../utils/loanCalculations';
 
@@ -115,12 +115,43 @@ function CRMDashboard() {
   };
 
   const handleDeleteClient = async (clientId) => {
+    // Find the client to get their status and name for confirmation
+    const client = clients.find(c => c.id === clientId);
+    if (!client) return;
+
+    const isPaidClient = client.status === 'paid';
+    const confirmMessage = isPaidClient 
+      ? `Are you sure you want to archive ${client.name}? This will hide them from the CRM view but preserve their payment history for records.`
+      : `Are you sure you want to delete ${client.name}? This action cannot be undone.`;
+
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
     try {
-      await deleteClient(clientId);
+      if (isPaidClient) {
+        // Archive paid clients (preserves data, just hides from view)
+        await archiveClient(clientId);
+      } else {
+        // Delete new leads and other statuses completely
+        await deleteClient(clientId);
+      }
+      
+      // Remove from UI in both cases
       setClients(prev => prev.filter(client => client.id !== clientId));
+      
+      // Show success message
+      const successMessage = isPaidClient 
+        ? `${client.name} has been archived and hidden from view. Their payment history is preserved.`
+        : `${client.name} has been deleted.`;
+      alert(successMessage);
+      
     } catch (error) {
-      console.error('Failed to delete client:', error);
-      // Could add a toast notification here
+      console.error('Failed to process client:', error);
+      const errorMessage = isPaidClient 
+        ? 'Failed to archive client. Please try again.'
+        : 'Failed to delete client. Please try again.';
+      alert(errorMessage);
     }
   };
 

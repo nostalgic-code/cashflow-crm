@@ -102,15 +102,15 @@ const SimpleClientCard = ({ client, index, onClientClick, onDelete }) => {
                  client.status.charAt(0).toUpperCase() + client.status.slice(1)}
               </span>
             </div>
-            {/* Delete button - only show for new leads */}
-            {client.status === 'new-lead' && onDelete && (
+            {/* Delete button - show for new leads and paid clients */}
+            {(client.status === 'new-lead' || client.status === 'paid') && onDelete && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onDelete(client.id);
                 }}
                 className="flex-shrink-0 p-1 text-monday-gray-400 hover:text-monday-red hover:bg-monday-red/10 rounded-full transition-colors"
-                title="Delete client"
+                title={client.status === 'paid' ? 'Archive paid client (hide from view)' : 'Delete client'}
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -418,7 +418,7 @@ const KanbanBoard = ({
                   clients={clientsByStatus[column.id] || []}
                   onClientClick={onClientClick}
                   onAddClient={column.id === 'new-lead' ? onAddClient : undefined}
-                  onDelete={handleDeleteClient}
+                  onDelete={onDeleteClient}
                 />
               </div>
             ))}
@@ -433,7 +433,7 @@ const KanbanBoard = ({
                 clients={clientsByStatus[column.id] || []}
                 onClientClick={onClientClick}
                 onAddClient={column.id === 'new-lead' ? onAddClient : undefined}
-                onDelete={handleDeleteClient}
+                onDelete={onDeleteClient}
               />
             ))}
           </div>
