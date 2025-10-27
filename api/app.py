@@ -1,13 +1,24 @@
 import os
+import uuid
+from datetime import datetime, timedelta
 from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_mail import Mail, Message
+from flask_cors import CORS
 
 
 # Use DATABASE_URL from environment (Render sets this for you)
 app = Flask(__name__)
+
+# Enable CORS for your domain
+CORS(app, origins=[
+    'https://www.cashflowloans.co.za',
+    'https://cashflowloans.co.za',
+    'http://localhost:3000',
+    'http://127.0.0.1:5000'
+])
 
 # Flask-Mail configuration
 app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.zoho.com')
@@ -266,6 +277,155 @@ def apply_secured():
         print(f"Failed to send email notification: {e}")
     return jsonify({'message': 'Secured loan application submitted successfully.'}), 201
 
+# CRM API endpoint - matches the format expected by your forms
+@app.route('/api/clients', methods=['POST', 'OPTIONS'])
+def create_crm_client():
+    # Handle preflight CORS request
+    if request.method == 'OPTIONS':
+        return jsonify({'status': 'ok'}), 200
+    
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['name', 'email', 'phone', 'idNumber', 'loanAmount', 'loanType']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+        
+        # Parse dates
+        start_date = datetime.strptime(data.get('startDate'), '%Y-%m-%d').date()
+        due_date = datetime.strptime(data.get('dueDate'), '%Y-%m-%d').date()
+        
+        # Create new CRM client
+        client = CrmClient(
+            id=data.get('id', str(uuid.uuid4())),
+            name=data['name'],
+            email=data['email'],
+            phone=data['phone'],
+            idNumber=data['idNumber'],
+            loanAmount=float(data['loanAmount']),
+            loanType=data['loanType'],
+            interestRate=float(data.get('interestRate', 50.0)),
+            monthlyPayment=float(data.get('monthlyPayment', data['loanAmount'] * 1.5)),
+            startDate=start_date,
+            dueDate=due_date,
+            status=data.get('status', 'new-lead'),
+            applicationDate=datetime.fromisoformat(data.get('applicationDate', datetime.utcnow().isoformat())),
+            lastStatusUpdate=datetime.fromisoformat(data.get('lastStatusUpdate', datetime.utcnow().isoformat())),
+            amountPaid=float(data.get('amountPaid', 0.0)),
+            paymentHistory=str(data.get('paymentHistory', [])),
+            notes=str(data.get('notes', [])),
+            documents=str(data.get('documents', []))
+        )
+        
+        db.session.add(client)
+        db.session.commit()
+        
+        # Send email notification
+        try:
+            msg = Message(
+                subject=f"New {client.loanType} Application - {client.name}",
+                recipients=["info@cashflowloans.co.za"],
+                body=f"""
+New Lead Created in CRM:
+
+Lead ID: {client.id}
+Name: {client.name}
+Email: {client.email}
+Phone: {client.phone}
+ID Number: {client.idNumber}
+Loan Amount: R{client.loanAmount:,.2f}
+Loan Type: {client.loanType}
+Interest Rate: {client.interestRate}%
+Monthly Payment: R{client.monthlyPayment:,.2f}
+Start Date: {client.startDate}
+Due Date: {client.dueDate}
+Status: {client.status}
+Application Date: {client.applicationDate}
+
+Please review this application in the CRM dashboard.
+                """
+            )
+            mail.send(msg)
+        except Exception as e:
+            print(f"Failed to send email notification: {e}")
+        
+        # Return client data in expected format
+        response_data = {
+            'id': client.id,
+            'name': client.name,
+            'email': client.email,
+            'phone': client.phone,
+            'idNumber': client.idNumber,
+            'loanAmount': client.loanAmount,
+            'loanType': client.loanType,
+            'interestRate': client.interestRate,
+            'monthlyPayment': client.monthlyPayment,
+            'startDate': client.startDate.isoformat(),
+            'dueDate': client.dueDate.isoformat(),
+            'status': client.status,
+            'applicationDate': client.applicationDate.isoformat(),
+            'lastStatusUpdate': client.lastStatusUpdate.isoformat(),
+            'amountPaid': client.amountPaid,
+            'paymentHistory': eval(client.paymentHistory) if client.paymentHistory else [],
+            'notes': eval(client.notes) if client.notes else [],
+            'documents': eval(client.documents) if client.documents else []
+        }
+        
+        return jsonify(response_data), 201
+        
+    except ValueError as e:
+        return jsonify({'error': f'Invalid data format: {str(e)}'}), 400
+    except Exception as e:
+        print(f"Error creating CRM client: {e}")
+        return jsonify({'error': 'Internal server error'}), 500
+
+# Get all CRM clients (for dashboard)
+@app.route('/api/clients', methods=['GET'])
+def get_crm_clients():
+    clients = CrmClient.query.all()
+    result = []
+    for client in clients:
+        result.append({
+            'id': client.id,
+            'name': client.name,
+            'email': client.email,
+            'phone': client.phone,
+            'idNumber': client.idNumber,
+            'loanAmount': client.loanAmount,
+            'loanType': client.loanType,
+            'status': client.status,
+            'applicationDate': client.applicationDate.isoformat(),
+            'amountPaid': client.amountPaid
+        })
+    return jsonify(result)
+
+# Get specific CRM client
+@app.route('/api/clients/<client_id>', methods=['GET'])
+def get_crm_client(client_id):
+    client = CrmClient.query.get_or_404(client_id)
+    return jsonify({
+        'id': client.id,
+        'name': client.name,
+        'email': client.email,
+        'phone': client.phone,
+        'idNumber': client.idNumber,
+        'loanAmount': client.loanAmount,
+        'loanType': client.loanType,
+        'interestRate': client.interestRate,
+        'monthlyPayment': client.monthlyPayment,
+        'startDate': client.startDate.isoformat(),
+        'dueDate': client.dueDate.isoformat(),
+        'status': client.status,
+        'applicationDate': client.applicationDate.isoformat(),
+        'lastStatusUpdate': client.lastStatusUpdate.isoformat(),
+        'amountPaid': client.amountPaid,
+        'paymentHistory': eval(client.paymentHistory) if client.paymentHistory else [],
+        'notes': eval(client.notes) if client.notes else [],
+        'documents': eval(client.documents) if client.documents else []
+    })
+
 class UnsecuredLoan(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Float, nullable=False)
@@ -288,6 +448,30 @@ class SecuredLoan(db.Model):
     email = db.Column(db.String(120), nullable=False)
     collateral_images_filenames = db.Column(db.Text, nullable=True)  # Comma-separated filenames
     terms_accepted = db.Column(db.Boolean, default=False)
+
+# CRM-compatible Client model for API integration
+class CrmClient(db.Model):
+    __tablename__ = 'crm_clients'
+    
+    # Use UUID as primary key to match CRM format
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    idNumber = db.Column(db.String(50), nullable=False)
+    loanAmount = db.Column(db.Float, nullable=False)
+    loanType = db.Column(db.String(50), nullable=False)  # "Secured Loan" or "Unsecured Loan"
+    interestRate = db.Column(db.Float, default=50.0)
+    monthlyPayment = db.Column(db.Float, nullable=False)
+    startDate = db.Column(db.Date, nullable=False)
+    dueDate = db.Column(db.Date, nullable=False)
+    status = db.Column(db.String(20), default='new-lead')
+    applicationDate = db.Column(db.DateTime, default=datetime.utcnow)
+    lastStatusUpdate = db.Column(db.DateTime, default=datetime.utcnow)
+    amountPaid = db.Column(db.Float, default=0.0)
+    paymentHistory = db.Column(db.Text, default='[]')  # JSON string
+    notes = db.Column(db.Text, default='[]')  # JSON string
+    documents = db.Column(db.Text, default='[]')  # JSON string
 
 
 # --- Submission viewing endpoints ---
