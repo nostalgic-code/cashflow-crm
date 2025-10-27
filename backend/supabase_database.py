@@ -70,7 +70,6 @@ class SupabaseService:
                 # Convert ISO timestamp to date string (YYYY-MM-DD)
                 try:
                     if 'T' in str(mapped_data['dueDate']):
-                        from datetime import datetime
                         dt = datetime.fromisoformat(mapped_data['dueDate'].replace('Z', '+00:00'))
                         mapped_data['dueDate'] = dt.date().isoformat()
                 except Exception as e:
@@ -80,7 +79,6 @@ class SupabaseService:
                 # Ensure startDate is in YYYY-MM-DD format
                 if 'T' in str(mapped_data['startDate']):
                     try:
-                        from datetime import datetime
                         dt = datetime.fromisoformat(mapped_data['startDate'].replace('Z', '+00:00'))
                         mapped_data['startDate'] = dt.date().isoformat()
                     except Exception as e:
@@ -592,7 +590,6 @@ class SupabaseService:
             return current_amount_due
         
         # Check if we've passed month-end and need to apply compound interest
-        from datetime import datetime
         loan_start_date = datetime.fromisoformat(start_date.replace('Z', '+00:00')) if 'T' in start_date else datetime.fromisoformat(start_date)
         last_payment = datetime.fromisoformat(last_payment_date.replace('Z', '+00:00')) if last_payment_date and 'T' in last_payment_date else datetime.fromisoformat(last_payment_date) if last_payment_date else loan_start_date
         now = datetime.now(timezone.utc)

@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashflow loans</title>
+    
+    <!-- favicon -->
+    <link rel="icon" type="image/jpeg" href="assets/images/logo.jpeg">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="assets/css/jquery-ui.css">
+    <link rel="stylesheet" href="assets/css/flaticon.css">
+    <link rel="stylesheet" href="assets/css/nouislider.min.css">
+    <link rel="stylesheet" href="assets/css/nouislider.pips.css">
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="assets/css/odometer.min.css">
+    <link rel="stylesheet" href="assets/css/swiper.min.css">
+    <link rel="stylesheet" href="assets/css/pylon-icons.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/mobile-nav.css">
+
+    <style>
+        :root {
+            --money-green: #1b4d3e;
+            --light-money-green: #2e8b57;
+            --pale-money-green: #98c9a3;
+        }
+
+        /* General elements */
+        .block-title p {
+            color: var(--money-green) !important;
+        }
+        .thm-btn {
+            background-color: var(--money-green) !important;
+            border-color: var(--money-green) !important;
+        }
+        .thm-btn:hover {
+            background-color: var(--light-money-green) !important;
+            border-color: var(--light-money-green) !important;
+        }
+
+        /* Service Card */
+        .service-one__card:hover {
+            background-color: var(--money-green) !important;
+        }
+        .service-one__card:hover h3 a,
+        .service-one__card:hover p {
+            color: white !important;
+        }
+        .service-one__card:hover .service-icon {
+            background-color: var(--money-green) !important;
+        }
+        .service-one__card:hover .service-icon i {
+            color: white !important;
+        }
+        .service-one__card:hover .pylon-icon-right-arrow {
+            color: white !important;
+        }
+
+        /* Icons */
+        .flaticon-car-loan,
+        .flaticon-property-1,
+        .flaticon-growth-1,
+        .pylon-icon-assets,
+        .pylon-icon-verification,
+        .pylon-icon-finance,
+        .pylon-icon-investment,
+        .feature-four__box-icon i {
+            color: var(--money-green) !important;
+        }
+
+        /* Trust section */
+        .trusted-company__box {
+            background-color: var(--pale-money-green) !important;
+        }
+        .trusted-company__box span {
+            color: white !important;
+            background-color: var(--money-green) !important;
+        }
+
+        /* CTA and Footer */
+        .call-to-action {
+            background-color: var(--money-green) !important;
+        }
+        .site-footer {
+            background-color: var(--money-green) !important;
+            color: white !important;
+        }
+        .site-footer a,
+        .site-footer p,
+        .site-footer .footer-widget__title {
+            color: white !important;
+        }
+
+        /* Sliders */
+        .range-slider-count .noUi-connect,
+        .range-slider-month .noUi-connect,
+        .range-slider-interest .noUi-connect {
+            background-color: var(--money-green) !important;
+        }
+        
+        /* Service Card */
+        .service-one__card:hover {
+            background-color: var(--money-green) !important;
+        }
+        .service-one__card:hover .service-icon i,
+        .service-one__card:hover h3 a,
+        .service-one__card:hover p {
+            color: white !important;
+        }
+        .service-one__card:hover .service-icon {
+            background-color: white !important;
+        }
+        
+        /* Icons */
+        .flaticon-car-loan,
+        .flaticon-property-1,
+        .flaticon-growth-1,
+        .pylon-icon-assets,
+        .pylon-icon-verification,
+        .pylon-icon-finance,
+        .pylon-icon-investment,
+        .feature-four__box-icon i {
+            color: var(--money-green) !important;
+        }
+        
+        /* Trust section */
+        .trusted-company__box {
+            background-color: var(--pale-money-green) !important;
+        }
+        .trusted-company__box span {
+            color: white !important;
+            background-color: var(--money-green) !important;
+        }
+        
+        /* CTA and Footer */
+        .call-to-action {
+            background-color: var(--money-green) !important;
+        }
+        .site-footer {
+            background-color: var(--money-green) !important;
+            color: white !important;
+        }
+        .site-footer a,
+        .site-footer p,
+        .site-footer .footer-widget__title {
+            color: white !important;
+        }
+        
+        /* Navigation and buttons */
+        .service-one__card:hover .pylon-icon-right-arrow {
+            color: var(--money-green) !important;
+            background-color: white !important;
+            border-radius: 50%;
+            padding: 10px;
+            display: inline-block;
+        }
+        
+        /* General elements */
+        .block-title p {
+            color: var(--money-green) !important;
+        }
+        .thm-btn {
+            background-color: var(--money-green) !important;
+            border-color: var(--money-green) !important;
+        }
+        .thm-btn:hover {
+            background-color: var(--light-money-green) !important;
+            border-color: var(--light-money-green) !important;
+        }
+        .range-slider-count .noUi-connect,
+        .range-slider-month .noUi-connect,
+        .range-slider-interest .noUi-connect {
+            background-color: var(--money-green) !important;
+        }
+    </style>
+    <!-- favicons Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicons/favicon-16x16.png">
+    <meta name="description" content="Cashflow loans">
+
+    <!-- Core JavaScript -->
+    <script src="assets/js/jquery-3.5.1.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/jquery-ui.js"></script>
+    <script src="assets/js/jarallax.min.js"></script>
+    <script src="assets/js/jquery.appear.min.js"></script>
+    <script src="assets/js/jquery.circle-progress.min.js"></script>
+    <script src="assets/js/jquery.validate.min.js"></script>
+    <script src="assets/js/nouislider.min.js"></script>
+    <script src="assets/js/odometer.min.js"></script>
+    <script src="assets/js/swiper.min.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/bootstrap-select.min.js"></script>
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="assets/js/mobile-nav.js"></script>
+
+    <!-- template styles -->
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+
+<body>
+    <div class="preloader">
+        <div style="text-align: center;">
+            <img class="preloader__image" src="assets/images/logo.jpeg" alt="" style="width: 100px; border: 3px solid #004aa1; border-radius: 50%;">
+           
+        </div>
+    </div><!-- /.preloader -->
+
+    <div class="page-wrapper">
+        <header class="main-header">
+            <div class="topbar">
+                <div class="container">
+                    <div class="topbar__left">
+                        <div class="topbar__social">
+                            <a href="https://www.facebook.com/share/1Jcb8SKRQd/" class="fab fa-facebook-f"></a>
+                            <a href="https://wa.me/27614011426" aria-label="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                             <a href="https://www.instagram.com/cashflowloans27?igsh=aGdieno5Mmd1NGNn" aria-label="instagram"><i class="fab fa-instagram"></i></a>
+                        </div><!-- /.topbar__social -->
+                        <a href="news.html">Company News</a>
+                        
+                    </div><!-- /.topbar__left -->
+                    <div class="topbar__right">
+                        <a href="#"><i class="pylon-icon-email1"></i>info@cashflowloans.co.za
+                        <a href="#"><i class="pylon-icon-clock2"></i>Mon - Sat 8:00 AM - 17:00 PM</a>
+                    </div><!-- /.topbar__right -->
+                </div><!-- /.container -->
+            </div><!-- /.topbar -->
+            <nav class="main-menu">
+                <div class="container">
+                    <div class="logo-box">
+                        <a href="index.html" aria-label="logo image" style="display: flex; align-items: center; text-decoration: none;">
+                            <img src="assets/images/logo.jpeg" width="100" alt="" style="border-radius: 50%;">
+                            
+                        </a>
+                        <span class="fa fa-bars mobile-nav__toggler"></span>
+                    </div><!-- /.logo-box -->
+                    <ul class="main-menu__list">
+                        <li class="dropdown">
+                            <a href="index.html">Home</a>
+                            
+                        </li>
+                        <li class="dropdown">
+                            <a href="about.html">About Us</a>
+                            
+                      
+                        <li class="dropdown"><a href="https://cashflow-crm.onrender.com/apply-for-loan.html">Apply Now</a>
+                            <ul>
+                                <li><a href="https://cashflow-crm.onrender.com/apply-for-loan.html">Apply For Loan</a></li>
+                                
+                                
+                               
+                            </ul>
+                        </li>
+
+                        <li class="dropdown"><a href="news.html">News</a>
+                        
+                        <li><a href="contact.html">Contact Us</a></li>
+                        
+                    </ul>
+                    <!-- /.main-menu__list -->
+
+                    <div class="main-header__info">
+                        <div class="main-header__info-phone">
+                            <i class="pylon-icon-tech-support"></i>
+                            <div class="main-header__info-phone-content">
+                                <span>Call Anytime</span>
+                                <h3><a href="tel:+27614011426">+27614011426</a></h3>
+                            </div><!-- /.main-header__info-phone-content -->
+                        </div><!-- /.main-header__info-phone -->
+                    </div><!-- /.main-header__info -->
+                </div><!-- /.container -->
+            </nav>
+            <!-- /.main-menu -->
+        </header><!-- /.main-header -->
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content"></div><!-- /.sticky-header__content -->
+        </div><!-- /.stricky-header -->
+
+        <section class="main-slider">
+            <div class="swiper-container thm-swiper__slider" data-swiper-options='{
+        "slidesPerView": 1,
+        "loop": true,
+        "effect": "fade",
+        "autoplay": {
+            "delay": 5000
+        },
+        "navigation": {
+            "nextEl": "#main-slider__swiper-button-next",
+            "prevEl": "#main-slider__swiper-button-prev"
+        }
+    }'>
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="image-layer" style="background-image: url(assets/images/home\ \(1\).jpeg);"></div>
+                        <!-- /.image-layer -->
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6">
+                                    <p>Simple & Secure Payment Process</p>
+                                    <h2>Connecting Your Loan
+                                        Needs</h2>
+                                    <a href="https://cashflow-crm.onrender.com/apply-for-loan.html" class=" thm-btn">Apply For Loan</a>
+                                    <!-- /.thm-btn dynamic-radius -->
+                                </div><!-- /.col-lg-7 text-right -->
+                            </div><!-- /.row -->
+                        </div><!-- /.container -->
+                    </div><!-- /.swiper-slide -->
+                    <div class="swiper-slide">
+                        <div class="image-layer" style="background-image: url(assets/images/home\ \(2\).jpeg);"></div>
+                        <!-- /.image-layer -->
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6">
+                                    <p>Simple & Secure Payment Process</p>
+                                    <h2>Connecting Your Loan
+                                        Needs</h2>
+                                    <a href="https://cashflow-crm.onrender.com/apply-for-loan.html?type=unsecured" class=" thm-btn">Apply For Loan</a>
+                                    <!-- /.thm-btn dynamic-radius -->
+                                </div><!-- /.col-lg-7 text-right -->
+                            </div><!-- /.row -->
+                        </div><!-- /.container -->
+                    </div><!-- /.swiper-slide -->
+                    <div class="swiper-slide">
+                        <div class="image-layer" style="background-image: url(assets/images/home\ \(3\).jpeg);"></div>
+                        <!-- /.image-layer -->
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6">
+                                    <p>Simple & Secure Payment Process</p>
+                                    <h2>Connecting Your Loan
+                                        Needs</h2>
+                                    <a href="https://cashflow-crm.onrender.com/apply-for-loan.html?type=secured" class=" thm-btn">Apply For Loan</a>
+                                    <!-- /.thm-btn dynamic-radius -->
+                                </div><!-- /.col-lg-7 text-right -->
+                            </div><!-- /.row -->
+                        </div><!-- /.container -->
+                    </div><!-- /.swiper-slide -->
+                </div><!-- /.swiper-wrapper -->
+
+                <!-- If we need navigation buttons -->
+                <div class="main-slider__nav">
+                    <div class="swiper-button-prev" id="main-slider__swiper-button-next"><i class="pylon-icon-left-arrow"></i></div>
+                    <div class="swiper-button-next" id="main-slider__swiper-button-prev"><i class="pylon-icon-right-arrow"></i></div>
+                </div><!-- /.main-slider__nav -->
+
+            </div><!-- /.swiper-container thm-swiper__slider -->
+            <div class="feature-two">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="row">
+                            </div>    
+                        </div>    
+                    </div><!-- /.row -->
+                </div><!-- /.container -->
+            </div><!-- /.feature-two -->
+        </section><!-- /.main-slider -->
+
+        <section class="about-one">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-xl-7">
+                        <div class="about-one__content">
+                            <div class="block-title text-left">
+                                <p>Company Introductions</p>
+                                <h2>Our Loans will Fill Your Dreams Come True</h2>
+                            </div><!-- /.block-title -->
+                            <p>At Cashflow Loans, we provide tailored financial solutions designed to meet your unique needs. Whether you're facing urgent expenses or planning for life’s big moments, our secured and unsecured personal loans offer flexibility and fast access to funds. By accepting collateral such as mobile devices, vehicle titles, or property, we ensure loan accessibility for clients from all walks of life. With a strong focus on trust, speed, and care, we’re committed to helping you achieve financial stability. Cashflow Loans — your reliable partner in navigating life’s financial challenges.</p>
+
+                        </div><!-- /.about-one__content -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="feature-four__box text-left"><!-- .feature-four__box -->
+                                    <div class="feature-four__box-inner">
+
+                                    <div ></div>
+                                        
+                                    </div>
+                                </div><!-- /.feature-four__box -->
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-four__box text-left"><!-- .feature-four__box -->
+                                    <div class="feature-four__box-inner">
+                                    <div class="feature-four__box-icon"><i class="flaticon flaticon-growth-1"></i></div>
+                                        <div class="feature-four__box-right">
+                                            <h3>                                        
+                                                Certified Company
+                                            </h3>
+                                            <p>Approved Finance company to provide loans</p>
+                                        </div>
+                                    </div>
+                                </div><!-- /.feature-four__box -->
+                            </div>
+                        </div>
+                    </div><!-- /.col-lg-6 -->
+                    <div class="col-lg-12 col-xl-5">
+                        <form action="#" id="loan-calculator" class="about-one__form wow fadeInUp" data-wow-duration="1500ms" >
+                            <h3 style="background-color: var(--money-green);">How Much You Need</h3>
+                            <div class="about-one__form-content" >
+                                <div class="loan-type-toggle" style="margin-bottom: 20px; text-align: center;">
+                                    <style>
+                                        .toggle-switch {
+                                            display: inline-block;
+                                            position: relative;
+                                        }
+                                        .toggle-label {
+                                            display: flex;
+                                            align-items: center;
+                                            width: 200px;
+                                            height: 40px;
+                                            background: var(--money-green);
+                                            border-radius: 20px;
+                                            cursor: pointer;
+                                            position: relative;
+                                            transition: 0.3s;
+                                        }
+                                        .toggle-handle {
+                                            position: absolute;
+                                            left: 4px;
+                                            width: 96px;
+                                            height: 32px;
+                                            background: white;
+                                            border-radius: 16px;
+                                            transition: transform 0.3s ease;
+                                            margin: 4px;
+                                        }
+                                        #loan-type-switch:checked + .toggle-label .toggle-handle {
+                                            transform: translateX(96px);
+                                            background: white;
+                                        }
+                                        #loan-type-switch:checked + .toggle-label {
+                                            background: var(--money-green);
+                                        }
+                                        #loan-type-switch:checked + .toggle-label .toggle-text.secured {
+                                            color: white;
+                                        }
+                                        #loan-type-switch:checked + .toggle-label .toggle-text.unsecured {
+                                            color: white;
+                                        }
+                                    </style>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="loan-type-switch" style="display: none;">
+                                        <label for="loan-type-switch" class="toggle-label">
+                                            <span class="toggle-text secured" style="position: absolute; left: 20px; color: white; transition: 0.3s;">Secured</span>
+                                            <span class="toggle-text unsecured" style="position: absolute; right: 20px; color: white; transition: 0.3s;">Unsecured</span>
+                                            <span class="toggle-handle"></span>
+                                        </label>
+                                    </div>
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            const toggle = document.getElementById('loan-type-switch');
+                                            const label = toggle.nextElementSibling;
+                                            const minAmount = document.getElementById('min-amount');
+                                            const maxAmount = document.getElementById('max-amount');
+                                            
+                                            function updateLoanAmounts(isUnsecured) {
+                                                if (isUnsecured) {
+                                                    minAmount.textContent = 'R100';
+                                                    maxAmount.textContent = 'R10,000';
+                                                    // Update slider max value if it exists
+                                                    if (typeof noUiSlider !== 'undefined' && document.getElementById('range-slider-count').noUiSlider) {
+                                                        document.getElementById('range-slider-count').noUiSlider.updateOptions({
+                                                            range: {
+                                                                'min': 100,
+                                                                'max': 10000
+                                                            }
+                                                        });
+                                                    }
+                                                } else {
+                                                    minAmount.textContent = 'R100';
+                                                    maxAmount.textContent = 'R100,000';
+                                                    // Update slider max value if it exists
+                                                    if (typeof noUiSlider !== 'undefined' && document.getElementById('range-slider-count').noUiSlider) {
+                                                        document.getElementById('range-slider-count').noUiSlider.updateOptions({
+                                                            range: {
+                                                                'min': 100,
+                                                                'max': 100000
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            }
+
+                                            toggle.addEventListener('change', function() {
+                                                const label = this.nextElementSibling;
+                                                if (this.checked) {
+                                                    // Unsecured mode
+                                                    label.querySelectorAll('.toggle-text')[0].style.color = 'white';
+                                                    label.querySelectorAll('.toggle-text')[1].style.color = 'white';
+                                                    updateLoanAmounts(true);
+                                                } else {
+                                                    // Secured mode
+                                                    label.querySelectorAll('.toggle-text')[0].style.color = 'white';
+                                                    label.querySelectorAll('.toggle-text')[1].style.color = 'white';
+                                                    updateLoanAmounts(false);
+                                                }
+                                            });
+
+                                            // Initialize with secured loan amounts
+                                            updateLoanAmounts(false);
+                                        });
+                                    </script>
+                                </div>
+                                <div class="input-box__top">
+                                    <span id="min-amount">R100</span>
+                                    <span id="max-amount">R100,000</span>
+                                </div><!-- /.input-box__top -->
+                                <div class="input-box">
+                                    <div class="range-slider-count" id="range-slider-count"></div>
+                                    <input type="hidden" value="" id="min-value-rangeslider-count">
+                                    <input type="hidden" value="" id="max-value-rangeslider-count">
+                                    <div style="text-align: center; margin-top: 10px;">
+                                        <span style="font-size: 18px; color: #333;">Selected Amount: R<span id="current-amount">100</span></span>
+                                    </div>
+                                </div><!-- /.input-box -->
+                                <div class="input-box__top">
+                                    <span>Fixed Term:</span>
+                                    <span>1 Month</span>
+                                </div><!-- /.input-box__top -->
+                                <div class="input-box text-only">
+                                    <p style="text-align: center; margin: 10px 0; color: #666;">Fixed term of 1 month applies to all loans</p>
+
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            if (typeof noUiSlider !== 'undefined') {
+                                                var monthSlider = document.getElementById('range-slider-month');
+                                                if (monthSlider.noUiSlider) {
+                                                    monthSlider.noUiSlider.updateOptions({
+                                                        start: 1,
+                                                        range: {
+                                                            'min': 1,
+                                                            'max': 1
+                                                        },
+                                                        step: 1,
+                                                        connect: true
+                                                    });
+                                                    monthSlider.noUiSlider.set(1);
+                                                    monthSlider.setAttribute('disabled', true);
+                                                }
+                                            }
+                                        });
+                                    </script>
+                                </div><!-- /.input-box -->
+                                 <div class="input-box__top">
+                                    <span>Fixed Interest:</span>
+                                    <span>50%</span>
+                                </div><!-- /.input-box__top -->
+                                 <div class="input-box text-only">
+                                    <p style="text-align: center; margin: 10px 0; color: #666;">Fixed interest rate of 50% applies to all loans</p>
+
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            if (typeof noUiSlider !== 'undefined') {
+                                                var interestSlider = document.getElementById('range-slider-interest');
+                                                if (interestSlider.noUiSlider) {
+                                                    interestSlider.noUiSlider.updateOptions({
+                                                        start: 50,
+                                                        range: {
+                                                            'min': 50,
+                                                            'max': 50
+                                                        },
+                                                        step: 1,
+                                                        connect: true
+                                                    });
+                                                    interestSlider.noUiSlider.set(50);
+                                                    interestSlider.setAttribute('disabled', true);
+                                                }
+                                            }
+                                        });
+                                    </script>
+                                </div><!-- /.input-box -->
+                                <p>
+                                    <span>Total Pay Back</span>
+                                    <b>R<i id="loan-total"></i></b>
+                                </p>
+                                <a href="#" id="applyLoanBtn" class="thm-btn">Apply For Loan</a>
+                            </div><!-- /.about-one__from-content -->
+                            <script>
+                                document.getElementById('applyLoanBtn').addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    const isUnsecured = document.getElementById('loan-type-switch').checked;
+                                    const amount = document.querySelector('.range-slider-count').noUiSlider.get();
+                                    const loanType = isUnsecured ? 'unsecured' : 'secured';
+                                    window.location.href = `https://cashflow-crm.onrender.com/apply-for-loan.html?type=${loanType}&amount=${amount}`;
+                                });
+
+                                // Initialize range slider with more granular steps
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    if (typeof noUiSlider !== 'undefined' && document.getElementById('range-slider-count')) {
+                                        const rangeSlider = document.getElementById('range-slider-count');
+                                        const currentAmount = document.getElementById('current-amount');
+                                        if (!rangeSlider.noUiSlider) {
+                                            noUiSlider.create(rangeSlider, {
+                                                start: 100,
+                                                step: 1,  // Changed to allow any amount selection
+                                                range: {
+                                                    'min': 100,
+                                                    'max': 100000
+                                                },
+                                                connect: 'lower',
+                                                tooltips: {
+                                                    to: function(value) {
+                                                        return 'R' + parseInt(value).toLocaleString();
+                                                    }
+                                                },
+                                                format: {
+                                                    to: function (value) {
+                                                        return parseInt(value);
+                                                    },
+                                                    from: function (value) {
+                                                        return parseInt(value);
+                                                    }
+                                                }
+                                            });
+                                            
+                                            // Update the current amount display when slider value changes
+                                            rangeSlider.noUiSlider.on('update', function(values) {
+                                                currentAmount.textContent = parseInt(values[0]).toLocaleString();
+                                            });
+                                        }
+                                    }
+                                });
+
+                                // Add calculation for the total payback amount
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const amountSlider = document.querySelector('.range-slider-count');
+                                    const totalPayback = document.getElementById('loan-total');
+
+                                    function calculateTotalPayback(amount) {
+                                        // Convert amount to number and remove any commas
+                                        amount = parseFloat(amount.toString().replace(/,/g, ''));
+                                        
+                                        // Calculate interest (50% of amount)
+                                        const interest = amount * 50 / 100;
+                                        
+                                        // Calculate total (amount + interest)
+                                        const total = amount + interest;
+                                        
+                                        // Update the total payback display
+                                        totalPayback.textContent = total.toLocaleString();
+                                    }
+
+                                    // Initialize noUiSlider event
+                                    if (amountSlider.noUiSlider) {
+                                        amountSlider.noUiSlider.on('update', function(values) {
+                                            calculateTotalPayback(values[0]);
+                                        });
+                                    }
+                                });
+                            </script>
+                        </form><!-- /.about-one__form -->
+                    </div><!-- /.col-lg-6 -->
+                </div><!-- /.row -->
+            </div><!-- /.container -->
+        </section><!-- /.about-one -->
+
+        <section class="service-one">
+            <div class="container">
+                <div class="block-title text-center">
+                    <p>What We’re Offering</p>
+                    <h2>All Loans Services</h2>
+                </div><!-- /.block-title -->
+                <div class="row justify-content-center">
+                    <div class="col-lg-4">
+                        <div class="service-one__card">
+                            <div class="service-one__image">
+                                <a href="https://cashflow-crm.onrender.com/apply-for-loan.html">
+                                    <div class="post-thumbnail">
+                                        <div style="display: flex; flex-direction: column; align-items: center;">
+                                            <img src="assets/images/logo2.jpeg" alt="">
+                                            
+                                        </div>
+                                    </div>
+                                </a>
+                            </div><!-- /.service-one__image -->
+                            <div class="service-one__content">
+                                <a href="https://cashflow-crm.onrender.com/apply-for-loan.html">
+                                    <div class="service-icon" style="background-color: var(--money-green);">
+                                        <i class="flaticon-car-loan" style="background-color: white"></i>
+                                    </div>
+                                </a>
+                                <h3><a href="https://cashflow-crm.onrender.com/apply-for-loan.html">Personal Loan</a></h3>
+                                <p>Cashflow Loans offers fast, micro, secured, and unsecured loans for those ineligible for bank loans
+                                    using assets as collateral, with transparent terms, rapid approvals, and inclusive financial solutions.
+                                </p>
+                                <a href="https://cashflow-crm.onrender.com/apply-for-loan.html?type=unsecured" class="pylon-icon-right-arrow service-one__link" style="background-color: var(--money-green);"></a><!-- /.service-one__link -->
+                            </div><!-- /.service-one__content -->
+                        </div><!-- /.service-one__card -->
+                    </div><!-- /.col-lg-4 -->
+                </div><!-- /.row -->
+            </div><!-- /.container -->
+        </section><!-- /.service-one -->
+
+        <section class="feature-one">
+            <img src="assets/images/shapes/feature-shape-1-1.png" alt="" class="feature-one__shape-1">
+            <img src="assets/images/shapes/feature-shape-1-2.png" alt="" class="feature-one__shape-2">
+            <img src="assets/images/shapes/feature-shape-1-3.png" alt="" class="feature-one__shape-3">
+            <div class="container">
+            </div><!-- /.container -->
+        </section><!-- /.feature-one -->
+
+      
+
+        
+        <section class="testimonials-one">
+            <div class="container">
+                
+                <div class="thm-swiper__slider swiper-container" data-swiper-options='{
+        "spaceBetween": 0,
+        "slidesPerView": 1,
+        "slidesPerGroup": 1,
+        "loop":true,
+        "autoplay": {
+            "delay": 5000
+        },
+        "pagination": {
+            "el": ".testimonials-one__swiper-pagination",
+            "type": "bullets",
+            "clickable": true
+        },
+        "breakpoints": {
+            "0": {
+                "spaceBetween": 0,
+                "slidesPerView": 1,
+                "slidesPerGroup": 1
+            },
+            "375": {
+                "spaceBetween": 0,
+                "slidesPerView": 1,
+                "slidesPerGroup": 1
+            },
+            "667": {
+                "spaceBetween": 30,
+                "slidesPerView": 1,
+                "slidesPerGroup": 1
+            },
+            "767": {
+                "spaceBetween": 30,
+                "slidesPerView": 1,
+                "slidesPerGroup": 1
+            },
+            "991": {
+                "spaceBetween": 30,
+                "slidesPerView": 2,
+                "slidesPerGroup": 2
+            },
+            "1199": {
+                "spaceBetween": 30,
+                "slidesPerView": 3,
+                "slidesPerGroup": 3
+            }
+        }}'>
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            
+            </div><!-- /.container -->
+        </section><!-- /.testimonials-one -->
+
+        <section class="why-choose">
+            <img src="assets/images/shapes/why-choose-shape-1-1.png" class="why-choose__shape-1" alt="">
+            <img src="assets/images/shapes/why-choose-shape-1-2.png" class="why-choose__shape-2" alt="">
+            <div class="container" >
+                <div class="row" >
+                    <div class="col-lg-6">
+                        <div class="why-choose__image" style= "padding: 20px; display: flex; flex-direction: column; align-items: center;">
+                            <p><i class="pylon-icon-investment"></i></p>
+                            <img src="assets/images/home (4).jpeg" alt="" style="max-width: 100%; height: auto; max-height: 400px; object-fit: contain; border-radius: 8px;">
+                        </div><!-- /.why-choose__image -->
+                    </div><!-- /.col-lg-6 -->
+                    <div class="col-lg-6">
+                        <div class="why-choose__content">
+                            <div class="block-title text-left ">
+                                <p>Our Benefits</p>
+                                <h2>Why Choose Us?</h2>
+                            </div><!-- /.block-title -->
+                            <p>Select Cashflow Loans for customized financial solutions designed for your unique journey. We offer secured and unsecured personal loans, utilizing flexible collateral like mobile devices or vehicle titles to ensure accessibility. With swift, dependable service and unwavering integrity, we empower everyone to achieve financial stability and freedom, supporting your aspirations with trust and confidence, regardless of your background.</p>
+                            <div class="row">
+                                
+                            </div><!-- /.row -->
+                            <div class="why-choose__progress">
+                                <div class="why-choose__progress-top ">
+                                    <h3>Loan Process</h3>
+                                    <span>90%</span>
+                                </div><!-- /.why-choose__progress-top -->
+                                <div class="why-choose__progress-bar">
+                                    <span style="width: 90%; background-color: var(--money-green);" class="wow slideInLeft" data-wow-duration="1500ms"></span>
+                                </div><!-- /.why-choose__progress-bar -->
+                            </div><!-- /.why-choose__progress -->
+                            <div class="why-choose__progress">
+                                <div class="why-choose__progress-top">
+                                    <h3>Consultancy</h3>
+                                    <span>80%</span>
+                                </div><!-- /.why-choose__progress-top -->
+                                <div class="why-choose__progress-bar">
+                                    <span style="width:80%; background-color: var(--money-green);" class="wow slideInLeft" data-wow-duration="1500ms"></span>
+                                </div><!-- /.why-choose__progress-bar -->
+                            </div><!-- /.why-choose__progress -->
+                            <div class="why-choose__progress">
+                                <div class="why-choose__progress-top">
+                                    <h3>Payment Benefits</h3>
+                                    <span>85%</span>
+                                </div><!-- /.why-choose__progress-top -->
+                                <div class="why-choose__progress-bar">
+                                    <span style="width: 85%; background-color: var(--money-green);" class="wow slideInLeft" data-wow-duration="1500ms"></span>
+                                </div><!-- /.why-choose__progress-bar -->
+                            </div><!-- /.why-choose__progress -->
+                        </div><!-- /.why-choose__content -->
+
+                    </div><!-- /.col-lg-6 -->
+                </div><!-- /.row -->
+            </div><!-- /.container -->
+        </section><!-- /.why-choose -->
+
+        
+
+        <section class="blog-home">
+            <div class="container">
+                <div class="block-title text-center">
+                    <p>Directly From the Blog</p>
+                    <h2 class="blog-title__h2">News & Articles</h2>
+                </div><!-- /.block-title -->
+                <div class="row">
+                    <div class="col-lg-4 wow fadeInUp" data-wow-duration="1500ms">
+                        <div class="blog-card">
+                            <div class="blog-card__image">
+                                <span>7 Aug, 2025</span>
+                                <img src="assets/images/img12.jpeg" alt="">
+                            </div><!-- /.blog-card__image -->
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <a href="#"><i class="far fa-user"></i>Admin</a>
+                                    <a href=""><i class="far fa-credit-card"></i>Credit Card</a>
+                                </div><!-- /.blog-card__meta -->
+                                <h3><a href="https://www.ndovu.co/post/the-basics-of-financial-responsibilities">The Basics of financial responsibilities.</a></h3>
+                                <div class="blog-card__bottom">
+                                    <div class="blog-card-bottom-readmore">
+                                        <a href="https://www.ndovu.co/post/the-basics-of-financial-responsibilities" class="readmore-card-link"><i class="pylon-icon-right-arrow"></i>Read More</a>
+                                    </div><!-- /.blog-card-bottom-readmore-->
+                                    <span class="blog_comment">
+                                        <a href="#"><i class="far fa-comments"></i>0 Comments</a>
+                                    </span>
+                                </div><!-- /.blog-card__bottom -->
+                            </div><!-- /.blog-card__content -->
+                        </div><!-- /.blog-card -->
+                    </div><!-- /.col-lg-3 -->
+                    <div class="col-lg-4 wow fadeInUp" data-wow-duration="1500ms">
+                        <div class="blog-card">
+                            <div class="blog-card__image">
+                                <span>7 Aug, 2025</span>
+                                <img src="assets/images/img11.jpeg" alt="">
+                            </div><!-- /.blog-card__image -->
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <a href="#"><i class="far fa-user"></i>Admin</a>
+                                    <a href=""><i class="far fa-credit-card"></i>Credit Card</a>
+                                </div><!-- /.blog-card__meta -->
+                                <h3><a href="blog/debt-consolidation.html">When to take out a debt consolidation loan</a></h3>
+                                <div class="blog-card__bottom">
+                                    <div class="blog-card-bottom-readmore">
+                                        <a href="blog/debt-consolidation.html" class="readmore-card-link"><i class="pylon-icon-right-arrow"></i>Read More</a>
+                                    </div><!-- /.blog-card-bottom-readmore-->
+                                    <span class="blog_comment">
+                                        <a href="#"><i class="far fa-comments"></i>0 Comments</a>
+                                    </span>
+                                </div><!-- /.blog-card__bottom -->
+                            </div><!-- /.blog-card__content -->
+                        </div><!-- /.blog-card -->
+                    </div><!-- /.col-lg-3 -->
+                    <div class="col-lg-4 wow fadeInUp" data-wow-duration="1500ms">
+                        <div class="blog-card">
+                            <div class="blog-card__image">
+                                <span>7 Aug, 2025</span>
+                                <img src="assets/images/img7.jpeg" alt="">
+                            </div><!-- /.blog-card__image -->
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <a href="#"><i class="far fa-user"></i>Admin</a>
+                                    <a href="news-details.html"><i class="far fa-credit-card"></i>Credit Card</a>
+                                </div><!-- /.blog-card__meta -->
+                                <h3><a href="blog/how-to-choose-personal-loan.html">How to choose a personal loan</a></h3>
+                                <div class="blog-card__bottom">
+                                    <div class="blog-card-bottom-readmore">
+                                        <a href="blog/how-to-choose-personal-loan.html" class="readmore-card-link"><i class="pylon-icon-right-arrow"></i>Read More</a>
+                                    </div><!-- /.blog-card-bottom-readmore-->
+                                    <span class="blog_comment">
+                                        <a href="#"><i class="far fa-comments"></i>0 Comments</a>
+                                    </span>
+                                </div><!-- /.blog-card__bottom -->
+                            </div><!-- /.blog-card__content -->
+                        </div><!-- /.blog-card -->
+
+                        
+                    </div><!-- /.col-lg-3 -->
+
+
+                    <div class="col-lg-4 wow fadeInUp" data-wow-duration="1500ms">
+                        <div class="blog-card">
+                            <div class="blog-card__image">
+                                <span>7 Aug, 2025</span>
+                                <img src="assets/images/img9.jpeg" alt="">
+                            </div><!-- /.blog-card__image -->
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <a href="#"><i class="far fa-user"></i>Admin</a>
+                                    <a href="news-details.html"><i class="far fa-credit-card"></i>Credit Card</a>
+                                </div><!-- /.blog-card__meta -->
+                                <h3><a href="blog/personal-vs-payday-loans.html">Personal loans vs Payday loans</a></h3>
+                                <div class="blog-card__bottom">
+                                    <div class="blog-card-bottom-readmore">
+                                        <a href="blog/personal-vs-payday-loans.html" class="readmore-card-link"><i class="pylon-icon-right-arrow"></i>Read More</a>
+                                    </div><!-- /.blog-card-bottom-readmore-->
+                                    <span class="blog_comment">
+                                        <a href="#"><i class="far fa-comments"></i>0 Comments</a>
+                                    </span>
+                                </div><!-- /.blog-card__bottom -->
+                            </div><!-- /.blog-card__content -->
+                        </div><!-- /.blog-card -->
+
+                    </div><!-- /.col-lg-4 -->
+                    
+                    <div class="col-lg-4 wow fadeInUp" data-wow-duration="1500ms">
+                        <div class="blog-card">
+                            <div class="blog-card__image">
+                                <span>7 Aug, 2025</span>
+                                <img src="assets/images/img10.jpeg" alt="">
+                            </div><!-- /.blog-card__image -->
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <a href="#"><i class="far fa-user"></i>Admin</a>
+                                    <a href="news-details.html"><i class="far fa-credit-card"></i>Credit Card</a>
+                                </div><!-- /.blog-card__meta -->
+                                <h3><a href="blog/unsecured-vs-secured-loans.html">Unsecured loans vs Secured loans</a></h3>
+                                <div class="blog-card__bottom">
+                                    <div class="blog-card-bottom-readmore">
+                                        <a href="blog/unsecured-vs-secured-loans.html" class="readmore-card-link"><i class="pylon-icon-right-arrow"></i>Read More</a>
+                                    </div><!-- /.blog-card-bottom-readmore-->
+                                    <span class="blog_comment">
+                                        <a href="#"><i class="far fa-comments"></i>0 Comments</a>
+                                    </span>
+                                </div><!-- /.blog-card__bottom -->
+                            </div><!-- /.blog-card__content -->
+                        </div><!-- /.blog-card -->
+                    </div><!-- /.col-lg-4 -->
+
+                    <div class="col-lg-4 wow fadeInUp" data-wow-duration="1500ms">
+                        <div class="blog-card">
+                            <div class="blog-card__image">
+                                <span>7 Aug, 2025</span>
+                                <img src="assets/images/img13.jpeg" alt="">
+                            </div><!-- /.blog-card__image -->
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <a href="#"><i class="far fa-user"></i>Admin</a>
+                                    <a href="news-details.html"><i class="far fa-credit-card"></i>Credit Card</a>
+                                </div><!-- /.blog-card__meta -->
+                                <h3><a href="blog/personal-vs-credit-cards.html">Personal loans vs Credit cards</a></h3>
+                                <div class="blog-card__bottom">
+                                    <div class="blog-card-bottom-readmore">
+                                        <a href="blog/personal-vs-credit-cards.html" class="readmore-card-link"><i class="pylon-icon-right-arrow"></i>Read More</a>
+                                    </div><!-- /.blog-card-bottom-readmore-->
+                                    <span class="blog_comment">
+                                        <a href="#"><i class="far fa-comments"></i>0 Comments</a>
+                                    </span>
+                                </div><!-- /.blog-card__bottom -->
+                            </div><!-- /.blog-card__content -->
+                        </div><!-- /.blog-card -->
+                    </div><!-- /.col-lg-4 -->
+
+                </div><!-- /.row -->
+
+                
+            </div><!-- /.container -->
+        </section><!-- /.blog-home -->
+
+       
+
+        <section class="call-to-action" style="background-image: url(assets/images/backgrounds/call-to-action-bg-1-1.jpg);">
+            <div class="container">
+                <div class="left-content">
+                    <p><span>Simple</span><span>Transparent</span><span>Secure</span></p>
+                    <h3>Get Personal Loans Quickly</h3>
+                </div><!-- /.left-content -->
+                <div class="right-content">
+                    <a href="https://cashflow-crm.onrender.com/apply-for-loan.html" class="thm-btn">Apply For Loan</a><!-- /.thm-btn -->
+                </div><!-- /.right-content -->
+            </div><!-- /.container -->
+        </section><!-- /.call-to-action -->
+
+        <section class="faq-section pt-120 pb-120">
+            <div class="container">
+                <div class="block-title text-center">
+                    <p>Frequently Asked Questions</p>
+                    <h2>Have Any Questions?</h2>
+                </div><!-- /.block-title -->
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <div class="accrodion-grp" data-grp-name="faq-accrodion">
+                            <style>
+                                .accrodion {
+                                    background-color: #fff;
+                                    border-radius: 8px;
+                                    margin-bottom: 20px;
+                                    padding: 0;
+                                    box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.05);
+                                }
+                                .accrodion.active .accrodion-title h4::before {
+                                    content: "-";
+                                }
+                                .accrodion-title {
+                                    position: relative;
+                                    cursor: pointer;
+                                    padding: 25px 30px;
+                                }
+                                .accrodion-title h4 {
+                                    margin: 0;
+                                    font-size: 18px;
+                                    color: #2f3146;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: space-between;
+                                }
+                                .accrodion-title h4::before {
+                                    content: "+";
+                                    font-size: 24px;
+                                    color: #f94d1c;
+                                    font-weight: 400;
+                                    width: 24px;
+                                    height: 24px;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    transition: all 500ms ease;
+                                }
+                                .accrodion-content {
+                                    display: none;
+                                    padding: 0 30px 25px;
+                                }
+                                .accrodion.active .accrodion-content {
+                                    display: block;
+                                }
+                                .accrodion-content .inner {
+                                    padding: 0;
+                                }
+                                .accrodion-content .inner p {
+                                    margin: 0;
+                                    font-size: 16px;
+                                    line-height: 1.875;
+                                    color: #686a6f;
+                                }
+                                .accrodion-content .inner ul.list-unstyled li {
+                                    position: relative;
+                                    padding-left: 20px;
+                                    margin-bottom: 10px;
+                                    font-size: 16px;
+                                    color: #686a6f;
+                                }
+                                .accrodion-content .inner ul.list-unstyled li:before {
+                                    content: "•";
+                                    position: absolute;
+                                    left: 0;
+                                    color: #f94d1c;
+                                }
+                            </style>
+                            <div class="accrodion">
+                                <div class="accrodion-title">
+                                    <h4>What types of loans does Cashflow Loans offer?</h4>
+                                </div>
+                                <div class="accrodion-content">
+                                    <div class="inner">
+                                        <p>Cashflow Loans provides both <strong>secured</strong> and <strong>unsecured loans</strong> to meet your financial needs. Secured loans require collateral and are available for amounts above R500, while unsecured loans do not require collateral but involve a DebiCheck authorization process.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accrodion">
+                                <div class="accrodion-title">
+                                    <h4>How do I apply for a secured loan?</h4>
+                                </div>
+                                <div class="accrodion-content">
+                                    <div class="inner">
+                                        <ul class="list-unstyled">
+                                            <li>• Submit your application via our website, email, WhatsApp, or phone call</li>
+                                            <li>• Provide the required information and documentation</li>
+                                            <li>• Arrange for your collateral to be collected by our trusted courier partners at no additional cost</li>
+                                            <li>• After careful inspection of the collateral, the approved loan amount will be transferred to your bank account</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accrodion">
+                                <div class="accrodion-title">
+                                    <h4>How does the unsecured loan process work?</h4>
+                                </div>
+                                <div class="accrodion-content">
+                                    <div class="inner">
+                                        <ul class="list-unstyled">
+                                            <li>• Submit your application through our website, WhatsApp, or phone call</li>
+                                            <li>• Provide the necessary information and documentation</li>
+                                            <li>• Upon approval, you will receive an email notification confirming the success of your application</li>
+                                            <li>• Authorize a DebiCheck debit order with your bank</li>
+                                            <li>• Once the DebiCheck is confirmed, the loan amount will be transferred to your bank account within 15 minutes</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accrodion">
+                                <div class="accrodion-title">
+                                    <h4>What is DebiCheck, and why is it required for unsecured loans?</h4>
+                                </div>
+                                <div class="accrodion-content">
+                                    <div class="inner">
+                                        <p>DebiCheck is a secure debit order system designed to protect you from fraudulent or unauthorized transactions. It requires you to electronically confirm debit order details with your bank before any deductions are processed, ensuring you maintain full control over your account.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accrodion">
+                                <div class="accrodion-title">
+                                    <h4>Is my collateral safe with Cashflow Loans?</h4>
+                                </div>
+                                <div class="accrodion-content">
+                                    <div class="inner">
+                                        <p>Yes, your collateral is fully protected. All items held by Cashflow Loans are insured against unforeseen circumstances, and we take every precaution to ensure your property is secure and well-maintained during the loan period.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accrodion">
+                                <div class="accrodion-title">
+                                    <h4>How does Cashflow Loans ensure the security of my personal information?</h4>
+                                </div>
+                                <div class="accrodion-content">
+                                    <div class="inner">
+                                        <p>Cashflow Loans is committed to safeguarding your personal information in compliance with the Protection of Personal Information Act (POPIA). We employ robust security measures to protect your data and ensure confidentiality.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accrodion">
+                                <div class="accrodion-title">
+                                    <h4>Is Cashflow Loans a registered credit provider?</h4>
+                                </div>
+                                <div class="accrodion-content">
+                                    <div class="inner">
+                                        <p>Yes, Cashflow Loans is a licensed credit provider registered with the National Credit Regulator (NCR), ensuring compliance with all applicable regulations and a commitment to responsible lending practices.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accrodion">
+                                <div class="accrodion-title">
+                                    <h4>Are there any additional costs for collateral collection?</h4>
+                                </div>
+                                <div class="accrodion-content">
+                                    <div class="inner">
+                                        <p>No, for secured loans above R500, we partner with trusted courier companies to collect collateral items nationwide at no extra cost to you.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accrodion">
+                                <div class="accrodion-title">
+                                    <h4>How quickly will I receive my loan funds?</h4>
+                                </div>
+                                <div class="accrodion-content">
+                                    <div class="inner">
+                                        <ul class="list-unstyled">
+                                            <li>• For <strong>secured loans</strong>, funds are transferred to your bank account after the collateral is inspected and approved</li>
+                                            <li>• For <strong>unsecured loans</strong>, funds are transferred within 15 minutes of a successful DebiCheck authorization with your bank</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accrodion">
+                                <div class="accrodion-title">
+                                    <h4>How can I contact Cashflow Loans for more information?</h4>
+                                </div>
+                                <div class="accrodion-content">
+                                    <div class="inner">
+                                        <p>You can reach us via our website, email, WhatsApp, or phone. Visit our website or contact our team for personalized assistance with your loan application.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-footer" style="background-color: var(--money-green);">
+            <div class="container" >
+                <div class="row justify-content-between">
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="footer-widget footer-widget__about">
+                            <a href="index.html" style="display: flex; flex-direction: column; align-items: flex-start; text-decoration: none;">
+                                <img src="assets/images/logo.jpeg" width="100" alt="" style="border-radius: 50%;">
+                                <h6 style="margin: 10px 0; color: white;">cashflowloans</h6>
+                            </a>
+                            <p>Welcome to cashflowloans company we  provide loans at a  very reasonable interest get started today.</p>
+                            <div class="footer-widget__about-phone">
+                                <i class="pylon-icon-tech-support"></i>
+                                <div class="footer-widget__about-phone-content">
+                                    <span>Call Anytime</span>
+                                    <h3><a href="tel:+27614011426">+27614011426 </a></h3>
+                                </div><!-- /.footer-widget__about-phone-content -->
+                            </div><!-- /.footer-widget__about-phone -->
+                        </div><!-- /.footer-widget footer-widget__about -->
+                    </div><!-- /.col-lg-3 -->
+                    <div class="col-lg-2 col-sm-6">
+                        <div class="footer-widget footer-widget__link">
+                            <h3 class="footer-widget__title">Explore</h3>
+                            <ul class="list-unstyled footer-widget__link-list">
+                                <li><a href="about.html"><i class="fa fa-arrow-right"></i>About</a></li>
+                                <li><a href="services.html"><i class="fa fa-arrow-right"></i>Our Services</a></li>
+                                <li><a href="news.html"><i class="fa fa-arrow-right"></i>Latest News</a></li>
+                                <li><a href="contact.html"><i class="fa fa-arrow-right"></i>Contact</a></li>
+                                <li><a href="https://cashflow-crm.onrender.com/apply-for-loan.html"><i class="fa fa-arrow-right"></i>Apply for Loan</a></li>
+                            </ul><!-- /.list-unstyled -->
+                        </div><!-- /.footer-widget -->
+                    </div><!-- /.col-lg-2 -->
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="footer-widget footer-widget__post">
+                            <h3 class="footer-widget__title">Latest News</h3>
+                            <ul class="list-unstyled footer-widget__post-list">
+                                <li>
+                                    <img src="assets/images/img5.jpeg" alt="" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+                                    <div class="footer-widget__post-list-content">
+                                        <span>7 Aug, 2025</span>
+                                        <h3><a href="blog/avoid-debt-spiral.html">How to avoid the debt spiral</a></h3>
+                                    </div><!-- /.footer-widget__post-content -->
+                                </li>
+                                <li>
+                                    <img src="assets/images/img6.jpeg" alt="" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+                                    <div class="footer-widget__post-list-content">
+                                        <span>7 Aug, 2025</span>
+                                        <h3><a href="blog/needs-vs-wants.html">Needs vs wants</a></h3>
+                                    </div><!-- /.footer-widget__post-content -->
+                                </li>
+                            </ul><!-- /.list-unstyled -->
+                        </div><!-- /.footer-widget -->
+                    </div><!-- /.col-lg-3 -->
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="footer-widget footer-widget__contact">
+                            <h3>Contact</h3>
+                            <ul class="list-unstyled footer-widget__contact-list">
+                                <li>
+                                    <a href="mailto:info@cashflowloans.co.za"><i class="pylon-icon-email1"></i>info@cashflowloans.co.za</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="pylon-icon-clock2"></i>Mon - Sat 8:00 AM - 17:00 PM</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="pylon-icon-pin1"></i>South Africa</a>
+                                </li>
+                            </ul>
+                        </div><!-- /.footer-widget footer-widget__contact -->
+                    </div><!-- /.col-lg-4 -->
+                </div><!-- /.row -->
+            </div><!-- /.container -->
+        </footer><!-- /.site-footer -->
+        <div class="bottom-footer">
+            <div class="container">
+                <p>© Copyright 2025 by cashflowloans</p>
+                <div class="bottom-footer__social">
+                    <a href="https://www.facebook.com/share/1Jcb8SKRQd/" aria-label="facebook"><i class="fab fa-facebook-square"></i></a>
+                    <a href="https://wa.me/27614011426" aria-label="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.instagram.com/cashflowloans27?igsh=aGdieno5Mmd1NGNn" aria-label="instagram"><i class="fab fa-instagram"></i></a>
+                </div><!-- /.bottom-footer__social -->
+            </div><!-- /.container -->
+        </div><!-- /.bottom-footer -->
+
+    </div><!-- /.page-wrapper -->
+
+
+    <div class="mobile-nav__wrapper">
+        <div class="mobile-nav__overlay mobile-nav__toggler"></div>
+        <!-- /.mobile-nav__overlay -->
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close mobile-nav__toggler"></span>
+            <div class="logo-box">
+                <a href="index.html" aria-label="logo image" style="display: flex; flex-direction: column; align-items: center; text-decoration: none;">
+                    <img src="assets/images/logo.jpeg" width="100" alt="" style="border-radius: 50%;">
+                    
+                </a>
+            </div>
+            <!-- /.logo-box -->
+            <div class="mobile-nav__container">
+                <ul class="main-menu__list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="https://cashflow-crm.onrender.com/apply-for-loan.html" class="thm-btn">Apply For Loan</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- /.mobile-nav__container -->
+
+            <ul class="mobile-nav__contact list-unstyled">
+                <li>
+                    <i class="pylon-icon-email1"></i>
+                    <a href="mailto:info@cashflowloans.co.za">info@cashflowloans.co.za</a>
+                </li>
+                <li>
+                    <i class="pylon-icon-telephone"></i>
+                    <a href="tel:+27614011426">+27614011426</a>
+                </li>
+            </ul><!-- /.mobile-nav__contact -->
+            <div class="mobile-nav__top">
+                <div class="mobile-nav__social">
+                    
+                    <a href="https://www.facebook.com/share/1Jcb8SKRQd/" aria-label="facebook"><i class="fab fa-facebook-square"></i></a>
+                    <a href="https://wa.me/27614011426" aria-label="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.instagram.com/cashflowloans27?igsh=aGdieno5Mmd1NGNn" aria-label="instagram"><i class="fab fa-instagram"></i></a>
+                </div><!-- /.mobile-nav__social -->
+            </div><!-- /.mobile-nav__top -->
+
+
+
+        </div>
+        <!-- /.mobile-nav__content -->
+    </div>
+    <!-- /.mobile-nav__wrapper -->
+
+    <div class="search-popup">
+        <div class="search-popup__overlay search-toggler"></div>
+        <!-- /.search-popup__overlay -->
+        <div class="search-popup__content">
+            <form action="#">
+                <label for="search" class="sr-only">search here</label><!-- /.sr-only -->
+                <input type="text" id="search" placeholder="Search Here..." />
+                <button type="submit" aria-label="search submit" class="thm-btn">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
+        </div>
+        <!-- /.search-popup__content -->
+    </div>
+    <!-- /.search-popup -->
+
+    <a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+
+
+    <script src="assets/js/jquery-3.5.1.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/swiper.min.js"></script>
+    <script src="assets/js/jquery.ajaxchimp.min.js"></script>
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="assets/js/jquery.validate.min.js"></script>
+    <script src="assets/js/bootstrap-select.min.js"></script>
+    <script src="assets/js/wow.js"></script>
+    <script src="assets/js/odometer.min.js"></script>
+    <script src="assets/js/jquery.appear.min.js"></script>
+    <script src="assets/js/wNumb.min.js"></script>
+    <script src="assets/js/nouislider.min.js"></script>
+
+    <!-- template js -->
+    <script src="assets/js/theme.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileNavTogglers = document.querySelectorAll('.mobile-nav__toggler');
+            const mobileNavWrapper = document.querySelector('.mobile-nav__wrapper');
+            
+            mobileNavTogglers.forEach(function(toggler) {
+                toggler.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    mobileNavWrapper.classList.toggle('expanded');
+                    document.body.classList.toggle('active');
+                });
+            });
+
+            // Close menu when clicking overlay
+            const mobileNavOverlay = document.querySelector('.mobile-nav__overlay');
+            if (mobileNavOverlay) {
+                mobileNavOverlay.addEventListener('click', function() {
+                    mobileNavWrapper.classList.remove('expanded');
+                    document.body.classList.remove('active');
+                });
+            }
+
+            // Close menu when clicking close button
+            const mobileNavClose = document.querySelector('.mobile-nav__close');
+            if (mobileNavClose) {
+                mobileNavClose.addEventListener('click', function() {
+                    mobileNavWrapper.classList.remove('expanded');
+                    document.body.classList.remove('active');
+                });
+            }
+        });
+    </script>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery-3.5.1.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/bootstrap-select.min.js"></script>
+    <script src="assets/js/jquery-ui.js"></script>
+    <script src="assets/js/jarallax.min.js"></script>
+    <script src="assets/js/jquery.appear.min.js"></script>
+    <script src="assets/js/jquery.circle-progress.min.js"></script>
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="assets/js/jquery.validate.min.js"></script>
+    <script src="assets/js/nouislider.min.js"></script>
+    <script src="assets/js/odometer.min.js"></script>
+    <script src="assets/js/swiper.min.js"></script>
+    <script src="assets/js/theme.js"></script>
+
+    <script>
+        (function($) {
+            // FAQ Accordion
+            if ($('.accrodion-grp').length) {
+                var accrodionGrp = $('.accrodion-grp');
+                accrodionGrp.each(function () {
+                    var accrodionName = $(this).data('grp-name');
+                    var Self = $(this);
+                    var accordion = Self.find('.accrodion');
+                    Self.addClass(accrodionName);
+                    Self.find('.accrodion .accrodion-content').hide();
+                    Self.find('.accrodion.active').find('.accrodion-content').show();
+                    accordion.each(function() {
+                        $(this).find('.accrodion-title').on('click', function () {
+                            if ($(this).parent().hasClass('active') === false) {
+                                $('.accrodion-grp.' + accrodionName).find('.accrodion').removeClass('active');
+                                $('.accrodion-grp.' + accrodionName).find('.accrodion').find('.accrodion-content').slideUp();
+                                $(this).parent().addClass('active');
+                                $(this).parent().find('.accrodion-content').slideDown();
+                            }
+                        });
+                    });
+                });
+            }
+        })(jQuery);
+    </script>
+</body>
+
+
+
+</html>
