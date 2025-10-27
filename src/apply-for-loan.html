@@ -752,7 +752,8 @@
                                         return { 
                                             success: true, 
                                             data: { 
-                                                id: payload.id, 
+                                                id: payload.id,
+                                                loanAmount: payload.loanAmount, 
                                                 fallback: 'email-notification',
                                                 message: 'Application submitted via email notification'
                                             } 
@@ -788,11 +789,17 @@
                                     
                                     if (crmResult.success) {
                                         msg.style = 'margin-top:20px;color:green;font-weight:bold;';
+                                        
+                                        // Handle both direct CRM response and fallback email notification
+                                        const loanAmount = crmResult.data.loanAmount || parseFloat(formData.get('amount'));
+                                        const isEmailFallback = crmResult.data.fallback === 'email-notification';
+                                        
                                         msg.innerHTML = `
                                             <p>✅ Application submitted successfully!</p>
                                             <p>📋 Lead ID: ${crmResult.data.id}</p>
-                                            <p>� Loan Amount: R${crmResult.data.loanAmount.toLocaleString()}</p>
-                                            <p>�📞 We will contact you within 24 hours for approval.</p>
+                                            <p>💰 Loan Amount: R${loanAmount.toLocaleString()}</p>
+                                            ${isEmailFallback ? '<p>📧 Submitted via email notification</p>' : ''}
+                                            <p>📞 We will contact you within 24 hours for approval.</p>
                                         `;
                                         form.reset();
                                         
