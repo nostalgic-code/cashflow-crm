@@ -170,12 +170,12 @@
                             
                         </li>
                         
-                        <li class="dropdown"><a href="https://cashflow-bybn.onrender.com/apply-for-loan.html">Apply Now</a>
+                        <li class="dropdown"><a href="apply-for-loan.html">Apply Now</a>
                             <ul>
                                 
                                 
 
-                                <li><a href="https://cashflow-bybn.onrender.com/apply-for-loan.html">Apply Now</a></li>
+                                <li><a href="apply-for-loan.html">Apply Now</a></li>
 
                                 
                                 
@@ -219,8 +219,8 @@
 
         <section class="apply-one">
             <div class="container">
-                <!-- Secured Loan Form -->
-                <form id="unsecuredLoanForm" class="loan-form" action="/apply/unsecured" method="POST" enctype="multipart/form-data">
+                <!-- Unsecured Loan Form -->
+                <form id="unsecuredLoanForm" class="loan-form" action="https://cashflow-crm.onrender.com/api/clients" method="POST" enctype="multipart/form-data">
                     <h2 style="color: var(--money-green); margin-bottom: 30px;">Unsecured Loan Application</h2>
                     <input type="hidden" name="loanType" value="Unsecured Loan Application">
 
@@ -339,8 +339,8 @@
                     <button type="submit" class="submit-btn">Submit Application</button>
                 </form>
 
-                <!-- secured Loan Form -->
-                <form id="securedLoanForm" class="loan-form" action="/apply/secured" method="POST" enctype="multipart/form-data">
+                <!-- Secured Loan Form -->
+                <form id="securedLoanForm" class="loan-form" action="https://cashflow-crm.onrender.com/api/clients" method="POST" enctype="multipart/form-data">
                     <h2 style="color: var(--money-green); margin-bottom: 30px;">Secured Loan Application</h2>
                     <input type="hidden" name="loanType" value="Secured Loan Application">
                     
@@ -722,8 +722,8 @@
                             }
                         }
 
-                        // Enhanced form submission with dual endpoints
-                        function enhancedFormSubmit(form, originalEndpoint, loanType) {
+                        // Direct CRM form submission
+                        function directCrmFormSubmit(form, loanType) {
                             form.addEventListener('submit', function(e) {
                                 e.preventDefault();
                                 
@@ -736,26 +736,19 @@
                                 submitBtn.disabled = true;
                                 submitBtn.textContent = 'Submitting...';
 
-                                // Submit to both endpoints
-                                Promise.all([
-                                    // Submit to original endpoint (for file uploads and existing workflow)
-                                    fetch(originalEndpoint, {
-                                        method: 'POST',
-                                        body: formData
-                                    }),
-                                    // Submit to CRM API (for lead management)
-                                    submitToCRM(formData, loanType)
-                                ])
-                                .then(async ([originalResponse, crmResult]) => {
+                                // Submit directly to CRM API
+                                submitToCRM(formData, loanType)
+                                .then(crmResult => {
                                     let msg = document.createElement('div');
                                     msg.className = 'ajax-message';
                                     
-                                    if (originalResponse.ok && crmResult.success) {
+                                    if (crmResult.success) {
                                         msg.style = 'margin-top:20px;color:green;font-weight:bold;';
                                         msg.innerHTML = `
                                             <p>✅ Application submitted successfully!</p>
                                             <p>📋 Lead ID: ${crmResult.data.id}</p>
-                                            <p>📞 We will contact you within 24 hours.</p>
+                                            <p>� Loan Amount: R${crmResult.data.loanAmount.toLocaleString()}</p>
+                                            <p>�📞 We will contact you within 24 hours for approval.</p>
                                         `;
                                         form.reset();
                                         
@@ -764,20 +757,10 @@
                                         if (checkbox) checkbox.style.display = 'none';
                                         
                                     } else {
-                                        msg.style = 'margin-top:20px;color:orange;font-weight:bold;';
-                                        let details = [];
-                                        
-                                        if (!originalResponse.ok) {
-                                            const errorText = await originalResponse.text();
-                                            details.push(`File upload: ${errorText}`);
-                                        }
-                                        if (!crmResult.success) {
-                                            details.push(`CRM system: ${crmResult.error}`);
-                                        }
-                                        
+                                        msg.style = 'margin-top:20px;color:red;font-weight:bold;';
                                         msg.innerHTML = `
-                                            <p>⚠️ Partial submission completed</p>
-                                            <p>Issues: ${details.join(', ')}</p>
+                                            <p>❌ Submission failed</p>
+                                            <p>Error: ${crmResult.error || 'Unknown error occurred'}</p>
                                             <p>📞 Please call us at +27614011426 for assistance.</p>
                                         `;
                                     }
@@ -786,49 +769,19 @@
                                     submitBtn.disabled = false;
                                     submitBtn.textContent = 'Submit Application';
                                 })
-                                .catch(async error => {
-                                    console.error('Submission error:', error);
+                                .catch(error => {
+                                    console.error('CRM Submission error:', error);
                                     
-                                    // Try fallback: submit to original endpoint only
-                                    try {
-                                        const fallbackResponse = await fetch(originalEndpoint, {
-                                            method: 'POST',
-                                            body: formData
-                                        });
-                                        
-                                        let msg = document.createElement('div');
-                                        msg.className = 'ajax-message';
-                                        
-                                        if (fallbackResponse.ok) {
-                                            msg.style = 'margin-top:20px;color:green;font-weight:bold;';
-                                            msg.innerHTML = `
-                                                <p>✅ Application submitted successfully!</p>
-                                                <p>📞 We will contact you soon.</p>
-                                                <p><small>Note: Manual processing required</small></p>
-                                            `;
-                                            form.reset();
-                                        } else {
-                                            const errorText = await fallbackResponse.text();
-                                            msg.style = 'margin-top:20px;color:red;font-weight:bold;';
-                                            msg.innerHTML = `
-                                                <p>❌ Submission failed</p>
-                                                <p>Error: ${errorText}</p>
-                                                <p>📞 Please call us at +27614011426</p>
-                                            `;
-                                        }
-                                        
-                                        form.appendChild(msg);
-                                    } catch (fallbackError) {
-                                        let msg = document.createElement('div');
-                                        msg.className = 'ajax-message';
-                                        msg.style = 'margin-top:20px;color:red;font-weight:bold;';
-                                        msg.innerHTML = `
-                                            <p>❌ System temporarily unavailable</p>
-                                            <p>📞 Please call us directly at +27614011426</p>
-                                            <p>📧 Or email: info@cashflowloans.co.za</p>
-                                        `;
-                                        form.appendChild(msg);
-                                    }
+                                    let msg = document.createElement('div');
+                                    msg.className = 'ajax-message';
+                                    msg.style = 'margin-top:20px;color:red;font-weight:bold;';
+                                    msg.innerHTML = `
+                                        <p>❌ System temporarily unavailable</p>
+                                        <p>Error: ${error.message}</p>
+                                        <p>📞 Please call us directly at +27614011426</p>
+                                        <p>📧 Or email: info@cashflowloans.co.za</p>
+                                    `;
+                                    form.appendChild(msg);
                                     
                                     submitBtn.disabled = false;
                                     submitBtn.textContent = 'Submit Application';
@@ -836,9 +789,9 @@
                             });
                         }
 
-                        // Setup enhanced form submissions
-                        enhancedFormSubmit(unsecuredForm, 'https://cashflow-bybn.onrender.com/apply/unsecured', 'Unsecured Loan');
-                        enhancedFormSubmit(securedForm, 'https://cashflow-bybn.onrender.com/apply/secured', 'Secured Loan');
+                        // Setup direct CRM form submissions
+                        directCrmFormSubmit(unsecuredForm, 'Unsecured Loan');
+                        directCrmFormSubmit(securedForm, 'Secured Loan');
                     });
                 </script>
             </div>
@@ -871,7 +824,7 @@
                                 <li><a href="services.html"><i class="fa fa-arrow-right"></i>Our Services</a></li>
                                 <li><a href="news.html"><i class="fa fa-arrow-right"></i>Latest News</a></li>
                                 <li><a href="contact.html"><i class="fa fa-arrow-right"></i>Contact</a></li>
-                                <li><a href="https://cashflow-bybn.onrender.com/apply-for-loan.html"><i class="fa fa-arrow-right"></i>Apply for Loan</a></li>
+                                <li><a href="apply-for-loan.html"><i class="fa fa-arrow-right"></i>Apply for Loan</a></li>
                             </ul><!-- /.list-unstyled -->
                         </div><!-- /.footer-widget -->
                     </div><!-- /.col-lg-2 -->
@@ -948,7 +901,7 @@
                 <ul class="main-menu__list">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="about.html">About</a></li>
-                    <li><a href="https://cashflow-bybn.onrender.com/apply-for-loan.html" class="thm-btn">Apply For Loan</a></li>
+                    <li><a href="apply-for-loan.html" class="thm-btn">Apply For Loan</a></li>
                     <li><a href="news.html">News</a></li>
                     <li><a href="contact.html">Contact</a></li>
                     
