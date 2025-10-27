@@ -297,30 +297,54 @@ def create_crm_client():
         start_date = datetime.strptime(data.get('startDate'), '%Y-%m-%d').date()
         due_date = datetime.strptime(data.get('dueDate'), '%Y-%m-%d').date()
         
-        # Create new CRM client
-        client = CrmClient(
-            id=data.get('id', str(uuid.uuid4())),
-            name=data['name'],
-            email=data['email'],
-            phone=data['phone'],
-            idNumber=data['idNumber'],
-            loanAmount=float(data['loanAmount']),
-            loanType=data['loanType'],
-            interestRate=float(data.get('interestRate', 50.0)),
-            monthlyPayment=float(data.get('monthlyPayment', data['loanAmount'] * 1.5)),
-            startDate=start_date,
-            dueDate=due_date,
-            status=data.get('status', 'new-lead'),
-            applicationDate=datetime.fromisoformat(data.get('applicationDate', datetime.utcnow().isoformat())),
-            lastStatusUpdate=datetime.fromisoformat(data.get('lastStatusUpdate', datetime.utcnow().isoformat())),
-            amountPaid=float(data.get('amountPaid', 0.0)),
-            paymentHistory=str(data.get('paymentHistory', [])),
-            notes=str(data.get('notes', [])),
-            documents=str(data.get('documents', []))
-        )
-        
-        db.session.add(client)
-        db.session.commit()
+        # Forward to external CRM and store locally
+        try:
+            import requests
+            external_response = requests.post(
+                'https://cashflow-crm.onrender.com/api/clients',
+                json=data,
+                timeout=10
+            )
+            external_success = external_response.status_code == 201
+            if external_success:
+                external_data = external_response.json()
+                print(f"Successfully forwarded to external CRM: {external_data.get('id')}")
+            else:
+                print(f"External CRM failed: {external_response.status_code}")
+        except Exception as e:
+            print(f"Failed to forward to external CRM: {e}")
+            external_success = False
+            external_data = None
+
+        # Create local backup entry
+        try:
+            client = CrmClient(
+                id=data.get('id', str(uuid.uuid4())),
+                name=data['name'],
+                email=data['email'],
+                phone=data['phone'],
+                idNumber=data['idNumber'],
+                loanAmount=float(data['loanAmount']),
+                loanType=data['loanType'],
+                interestRate=float(data.get('interestRate', 50.0)),
+                monthlyPayment=float(data.get('monthlyPayment', data['loanAmount'] * 1.5)),
+                startDate=start_date,
+                dueDate=due_date,
+                status=data.get('status', 'new-lead'),
+                applicationDate=datetime.fromisoformat(data.get('applicationDate', datetime.utcnow().isoformat())),
+                lastStatusUpdate=datetime.fromisoformat(data.get('lastStatusUpdate', datetime.utcnow().isoformat())),
+                amountPaid=float(data.get('amountPaid', 0.0)),
+                paymentHistory=str(data.get('paymentHistory', [])),
+                notes=str(data.get('notes', [])),
+                documents=str(data.get('documents', []))
+            )
+            
+            db.session.add(client)
+            db.session.commit()
+            local_success = True
+        except Exception as e:
+            print(f"Local database error: {e}")
+            local_success = False
         
         # Send email notification
         try:
@@ -351,29 +375,35 @@ Please review this application in the CRM dashboard.
         except Exception as e:
             print(f"Failed to send email notification: {e}")
         
-        # Return client data in expected format
-        response_data = {
-            'id': client.id,
-            'name': client.name,
-            'email': client.email,
-            'phone': client.phone,
-            'idNumber': client.idNumber,
-            'loanAmount': client.loanAmount,
-            'loanType': client.loanType,
-            'interestRate': client.interestRate,
-            'monthlyPayment': client.monthlyPayment,
-            'startDate': client.startDate.isoformat(),
-            'dueDate': client.dueDate.isoformat(),
-            'status': client.status,
-            'applicationDate': client.applicationDate.isoformat(),
-            'lastStatusUpdate': client.lastStatusUpdate.isoformat(),
-            'amountPaid': client.amountPaid,
-            'paymentHistory': eval(client.paymentHistory) if client.paymentHistory else [],
-            'notes': eval(client.notes) if client.notes else [],
-            'documents': eval(client.documents) if client.documents else []
-        }
-        
-        return jsonify(response_data), 201
+        # Return success response
+        if external_success and external_data:
+            # Use external CRM response if successful
+            return jsonify(external_data), 201
+        elif local_success:
+            # Return local data if external failed but local succeeded
+            response_data = {
+                'id': client.id,
+                'name': client.name,
+                'email': client.email,
+                'phone': client.phone,
+                'idNumber': client.idNumber,
+                'loanAmount': client.loanAmount,
+                'loanType': client.loanType,
+                'interestRate': client.interestRate,
+                'monthlyPayment': client.monthlyPayment,
+                'startDate': client.startDate.isoformat(),
+                'dueDate': client.dueDate.isoformat(),
+                'status': client.status,
+                'applicationDate': client.applicationDate.isoformat(),
+                'lastStatusUpdate': client.lastStatusUpdate.isoformat(),
+                'amountPaid': client.amountPaid,
+                'paymentHistory': eval(client.paymentHistory) if client.paymentHistory else [],
+                'notes': eval(client.notes) if client.notes else [],
+                'documents': eval(client.documents) if client.documents else []
+            }
+            return jsonify(response_data), 201
+        else:
+            return jsonify({'error': 'Both external and local storage failed'}), 500
         
     except ValueError as e:
         return jsonify({'error': f'Invalid data format: {str(e)}'}), 400
