@@ -5,7 +5,7 @@ Checks for payment due dates and sends notifications
 
 from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Any
-from supabase_database import SupabaseDatabase
+from supabase_database import SupabaseService
 from email_service import email_service
 import schedule
 import time
@@ -13,7 +13,7 @@ import threading
 
 class NotificationScheduler:
     def __init__(self):
-        self.db = SupabaseDatabase()
+        self.db = SupabaseService()
         self.is_running = False
         
     def get_clients_with_payments_due(self) -> List[Dict[str, Any]]:
