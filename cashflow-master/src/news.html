@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News | Cashflow Loans</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/jpeg" href="assets/images/logo.jpeg">
+    <meta name="description" content="Cashflow Loans - Latest News and Updates">
+
+    <!-- fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/swiper.min.css">
+    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="assets/css/pylon-icons.css">
+    <link rel="stylesheet" href="assets/css/odometer.min.css">
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="assets/css/nouislider.min.css">
+    <link rel="stylesheet" href="assets/css/nouislider.pips.css">
+
+    <!-- template styles -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/mobile-nav.css">
+    <style>
+        :root {
+            --money-green: #1b4d3e;
+            --light-money-green: #2e8b57;
+            --pale-money-green: #98c9a3;
+        }
+        /* Remove all dropdown arrows */
+        .mobile-nav__container .dropdown > a:after,
+        .mobile-nav__container .dropdown > a:before,
+        .mobile-nav__container li.dropdown:after,
+        .mobile-nav__container li.dropdown:before {
+            display: none !important;
+        }
+        /* Clean menu styling */
+        .mobile-nav__container .main-menu__list > li > a {
+            display: block;
+            padding: 10px 0;
+            color: white;
+            font-size: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+            border: none;
+            background: transparent !important;
+        }
+        .mobile-nav__container .main-menu__list > li {
+            background: transparent !important;
+            border: none !important;
+        }
+        .mobile-nav__container .main-menu__list > li.dropdown {
+            background: transparent !important;
+            border: none !important;
+        }
+        .mobile-nav__container .main-menu__list > li ul {
+            padding-left: 15px;
+            margin-left: 5px;
+            border: none !important;
+            background: transparent !important;
+        }
+        .mobile-nav__container .main-menu__list > li ul li {
+            background: transparent !important;
+            border: none !important;
+        }
+        .mobile-nav__container .main-menu__list > li ul li a {
+            padding: 8px 0;
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            background: transparent !important;
+            border: none !important;
+        }
+        /* Override any theme dropdown backgrounds */
+        .mobile-nav__container .dropdown,
+        .mobile-nav__container .dropdown > a,
+        .mobile-nav__container .dropdown ul,
+        .mobile-nav__container .dropdown ul li,
+        .mobile-nav__container .dropdown ul li a {
+            background: transparent !important;
+            border: none !important;
+        }
+        /* Additional overrides for any remaining blue elements */
+        .mobile-nav__container *,
+        .mobile-nav__container *:before,
+        .mobile-nav__container *:after {
+            background: transparent !important;
+            border-color: transparent !important;
+        }
+        .mobile-nav__container .main-menu__list li.dropdown ul {
+            border: none !important;
+            background: rgba(0, 0, 0, 0.1) !important;
+            margin: 0;
+            padding-left: 15px;
+        }
+        /* Override any theme arrows */
+        .mobile-nav__container .fa,
+        .mobile-nav__container .fas,
+        .mobile-nav__container [class^="fa-"] {
+            display: none !important;
+        }
+    </style>
+    <script src="assets/js/mobile-nav.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileNavTogglers = document.querySelectorAll('.mobile-nav__toggler');
+            const mobileNavWrapper = document.querySelector('.mobile-nav__wrapper');
+            mobileNavTogglers.forEach(function(toggler) {
+                toggler.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    mobileNavWrapper.classList.toggle('expanded');
+                    document.body.classList.toggle('active');
+                });
+            });
+            // Close menu when clicking overlay
+            const mobileNavOverlay = document.querySelector('.mobile-nav__overlay');
+            if (mobileNavOverlay) {
+                mobileNavOverlay.addEventListener('click', function() {
+                    mobileNavWrapper.classList.remove('expanded');
+                    document.body.classList.remove('active');
+                });
+            }
+            // Close menu when clicking close button
+            const mobileNavClose = document.querySelector('.mobile-nav__close');
+            if (mobileNavClose) {
+                mobileNavClose.addEventListener('click', function() {
+                    mobileNavWrapper.classList.remove('expanded');
+                    document.body.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+        <img class="preloader__image" src="assets/images/loader.png" alt="">
+    </div><!-- /.preloader -->
+    <div class="page-wrapper">
+        <header class="main-header">
+            <div class="topbar">
+                <div class="container">
+                    <div class="topbar__left">
+                        <div class="topbar__social">
+                            <a href="https://www.facebook.com/share/1Jcb8SKRQd/" class="fab fa-facebook-f"></a>
+                            <a href="https://wa.me/27614011426" aria-label="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                             <a href="https://www.instagram.com/cashflowloans27?igsh=aGdieno5Mmd1NGNn" aria-label="instagram"><i class="fab fa-instagram"></i></a>
+                        </div><!-- /.topbar__social -->
+                        
+                        <a href="news.html">Company News</a>
+                        
+                    </div><!-- /.topbar__left -->
+                    <div class="topbar__right">
+                        <a href="mailto:info@cashflowloans.co.za"><i class="pylon-icon-email1"></i>info@cashflowloans.co.za</a>
+                        <a href="#"><i class="pylon-icon-clock2"></i>Mon - Sat 8:00 AM - 6:00 PM</a>
+                    </div><!-- /.topbar__right -->
+                </div><!-- /.container -->
+            </div><!-- /.topbar -->
+            <nav class="main-menu">
+                <div class="container">
+                    <div class="logo-box">
+                        <a href="index.html" aria-label="logo image" style="display: flex; align-items: center; text-decoration: none;">
+                            <img src="assets/images/logo.jpeg" width="100" alt="" style="border-radius: 50%;">
+                            
+                        </a>
+                        <span class="fa fa-bars mobile-nav__toggler"></span>
+                    </div><!-- /.logo-box -->
+                    <ul class="main-menu__list">
+                        <li class="dropdown">
+                            <a href="index.html">Home</a>
+                            
+                        </li>
+                        <li class="dropdown">
+                            <a href="about.html">About Us</a>
+                            
+                        </li>
+                        
+                        <li class="dropdown"><a href="apply-for-loan.html">Apply Now</a>
+                            <ul>
+                                
+                                
+                                <li><a href="apply-for-loan.html">Apply For Loan</a></li>
+                                
+                                
+                               
+                            </ul>
+                        </li>
+                        
+                        <li><a href="contact.html">Contact Us</a></li>
+                        
+                    </ul>
+                    <!-- /.main-menu__list -->
+
+                    <div class="main-header__info">
+                        <div class="main-header__info-phone">
+                            <i class="pylon-icon-tech-support"></i>
+                            <div class="main-header__info-phone-content">
+                                <span>Call Anytime</span>
+                                <h3><a href="tel:+27614011426">+27614011426</a></h3>
+                            </div><!-- /.main-header__info-phone-content -->
+                        </div><!-- /.main-header__info-phone -->
+                    </div><!-- /.main-header__info -->
+                </div><!-- /.container -->
+            </nav>
+            <!-- /.main-menu -->
+        </header><!-- /.main-header -->
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content"></div><!-- /.sticky-header__content -->
+        </div><!-- /.stricky-header -->
+
+        <section class="page-header">
+            <div class="page-header__bg" style="background-image: url(assets/images/backgrounds/page-header-bg-1-1.jpg);"></div>
+            <!-- /.page-header__bg -->
+            <div class="container">
+                <ul class="thm-breadcrumb list-unstyled">
+                    <li><a href="index.html">Home</a></li>
+                    <li>/</li>
+                    <li><span>News</span></li>
+                </ul><!-- /.thm-breadcrumb list-unstyled -->
+                <h2>News</h2>
+            </div><!-- /.container -->
+        </section><!-- /.page-header -->
+
+        <section class="blog-page pt-100 pb-60">
+            <div class="container">
+                <div class="row">
+                    <!-- Blog cards from blog folder -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="blog-card">
+                            <div class="blog-card__image">
+                                <span>7 Aug, 2025</span>
+                                <img src="assets/images/img5.jpeg" alt="How to avoid the debt spiral">
+                            </div>
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <a href="#"><i class="far fa-user"></i>Admin</a>
+                                    <a href="blog/avoid-debt-spiral.html"><i class="far fa-credit-card"></i>Financial Tips</a>
+                                </div>
+                                <h3><a href="blog/avoid-debt-spiral.html">How to avoid the debt spiral</a></h3>
+                                <div class="blog-card__bottom">
+                                    <div class="blog-card-bottom-readmore">
+                                        <a href="blog/avoid-debt-spiral.html" class="readmore-card-link"><i class="pylon-icon-right-arrow"></i>Read More</a>
+                                    </div>
+                                    <span class="blog_comment">
+                                        <a href="#"><i class="far fa-comments"></i>0 Comments</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="blog-card">
+                            <div class="blog-card__image">
+                                <span>7 Aug, 2025</span>
+                                <img src="assets/images/img11.jpeg" alt="When to take out a debt consolidation loan">
+                            </div>
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <a href="#"><i class="far fa-user"></i>Admin</a>
+                                    <a href="blog/debt-consolidation.html"><i class="far fa-credit-card"></i>Loans</a>
+                                </div>
+                                <h3><a href="blog/debt-consolidation.html">When to take out a debt consolidation loan</a></h3>
+                                <div class="blog-card__bottom">
+                                    <div class="blog-card-bottom-readmore">
+                                        <a href="blog/debt-consolidation.html" class="readmore-card-link"><i class="pylon-icon-right-arrow"></i>Read More</a>
+                                    </div>
+                                    <span class="blog_comment">
+                                        <a href="#"><i class="far fa-comments"></i>0 Comments</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="blog-card">
+                            <div class="blog-card__image">
+                                <span>7 Aug, 2025</span>
+                                <img src="assets/images/img12.jpeg" alt="The Basics of Financial Responsibilities">
+                            </div>
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <a href="#"><i class="far fa-user"></i>Admin</a>
+                                    <a href="blog/financial-responsibilities.html"><i class="far fa-credit-card"></i>Financial Tips</a>
+                                </div>
+                                <h3><a href="blog/financial-responsibilities.html">The Basics of Financial Responsibilities</a></h3>
+                                <div class="blog-card__bottom">
+                                    <div class="blog-card-bottom-readmore">
+                                        <a href="blog/financial-responsibilities.html" class="readmore-card-link"><i class="pylon-icon-right-arrow"></i>Read More</a>
+                                    </div>
+                                    <span class="blog_comment">
+                                        <a href="#"><i class="far fa-comments"></i>0 Comments</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="blog-card">
+                            <div class="blog-card__image">
+                                <span>7 Aug, 2025</span>
+                                <img src="assets/images/img7.jpeg" alt="How to choose a personal loan">
+                            </div>
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <a href="#"><i class="far fa-user"></i>Admin</a>
+                                    <a href="blog/how-to-choose-personal-loan.html"><i class="far fa-credit-card"></i>Loans</a>
+                                </div>
+                                <h3><a href="blog/how-to-choose-personal-loan.html">How to choose a personal loan</a></h3>
+                                <div class="blog-card__bottom">
+                                    <div class="blog-card-bottom-readmore">
+                                        <a href="blog/how-to-choose-personal-loan.html" class="readmore-card-link"><i class="pylon-icon-right-arrow"></i>Read More</a>
+                                    </div>
+                                    <span class="blog_comment">
+                                        <a href="#"><i class="far fa-comments"></i>0 Comments</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="blog-card">
+                            <div class="blog-card__image">
+                                <span>7 Aug, 2025</span>
+                                <img src="assets/images/img6.jpeg" alt="Needs vs wants">
+                            </div>
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <a href="#"><i class="far fa-user"></i>Admin</a>
+                                    <a href="blog/needs-vs-wants.html"><i class="far fa-credit-card"></i>Financial Tips</a>
+                                </div>
+                                <h3><a href="blog/needs-vs-wants.html">Needs vs wants</a></h3>
+                                <div class="blog-card__bottom">
+                                    <div class="blog-card-bottom-readmore">
+                                        <a href="blog/needs-vs-wants.html" class="readmore-card-link"><i class="pylon-icon-right-arrow"></i>Read More</a>
+                                    </div>
+                                    <span class="blog_comment">
+                                        <a href="#"><i class="far fa-comments"></i>0 Comments</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="blog-card">
+                            <div class="blog-card__image">
+                                <span>7 Aug, 2025</span>
+                                <img src="assets/images/img13.jpeg" alt="Personal loans vs Credit cards">
+                            </div>
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <a href="#"><i class="far fa-user"></i>Admin</a>
+                                    <a href="blog/personal-vs-credit-cards.html"><i class="far fa-credit-card"></i>Loans</a>
+                                </div>
+                                <h3><a href="blog/personal-vs-credit-cards.html">Personal loans vs Credit cards</a></h3>
+                                <div class="blog-card__bottom">
+                                    <div class="blog-card-bottom-readmore">
+                                        <a href="blog/personal-vs-credit-cards.html" class="readmore-card-link"><i class="pylon-icon-right-arrow"></i>Read More</a>
+                                    </div>
+                                    <span class="blog_comment">
+                                        <a href="#"><i class="far fa-comments"></i>0 Comments</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="blog-card">
+                            <div class="blog-card__image">
+                                <span>7 Aug, 2025</span>
+                                <img src="assets/images/img9.jpeg" alt="Personal loans vs Payday loans">
+                            </div>
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <a href="#"><i class="far fa-user"></i>Admin</a>
+                                    <a href="blog/personal-vs-payday-loans.html"><i class="far fa-credit-card"></i>Loans</a>
+                                </div>
+                                <h3><a href="blog/personal-vs-payday-loans.html">Personal loans vs Payday loans</a></h3>
+                                <div class="blog-card__bottom">
+                                    <div class="blog-card-bottom-readmore">
+                                        <a href="blog/personal-vs-payday-loans.html" class="readmore-card-link"><i class="pylon-icon-right-arrow"></i>Read More</a>
+                                    </div>
+                                    <span class="blog_comment">
+                                        <a href="#"><i class="far fa-comments"></i>0 Comments</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="blog-card">
+                            <div class="blog-card__image">
+                                <span>7 Aug, 2025</span>
+                                <img src="assets/images/img10.jpeg" alt="Unsecured loans vs Secured loans">
+                            </div>
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <a href="#"><i class="far fa-user"></i>Admin</a>
+                                    <a href="blog/unsecured-vs-secured-loans.html"><i class="far fa-credit-card"></i>Loans</a>
+                                </div>
+                                <h3><a href="blog/unsecured-vs-secured-loans.html">Unsecured loans vs Secured loans</a></h3>
+                                <div class="blog-card__bottom">
+                                    <div class="blog-card-bottom-readmore">
+                                        <a href="blog/unsecured-vs-secured-loans.html" class="readmore-card-link"><i class="pylon-icon-right-arrow"></i>Read More</a>
+                                    </div>
+                                    <span class="blog_comment">
+                                        <a href="#"><i class="far fa-comments"></i>0 Comments</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.row -->
+            </div><!-- /.container -->
+        </section><!-- /.blog-page -->
+
+        <footer class="site-footer" style="background-color: var(--money-green);">
+            <div class="container" >
+                <div class="row justify-content-between">
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="footer-widget footer-widget__about">
+                            <a href="index.html" style="display: flex; flex-direction: column; align-items: flex-start; text-decoration: none;">
+                                <img src="assets/images/logo.jpeg" width="100" alt="" style="border-radius: 50%;">
+                                <h6 style="margin: 10px 0; color: white;">cashflowloans</h6>
+                            </a>
+                            <p>Welcome to cashflowloans company we  provide loans at a  very reasonable interest get started today.</p>
+                            <div class="footer-widget__about-phone">
+                                <i class="pylon-icon-tech-support"></i>
+                                <div class="footer-widget__about-phone-content">
+                                    <span>Call Anytime</span>
+                                    <h3><a href="tel:+27614011426">+27614011426 </a></h3>
+                                </div><!-- /.footer-widget__about-phone-content -->
+                            </div><!-- /.footer-widget__about-phone -->
+                        </div><!-- /.footer-widget footer-widget__about -->
+                    </div><!-- /.col-lg-3 -->
+                    <div class="col-lg-2 col-sm-6">
+                        <div class="footer-widget footer-widget__link">
+                            <h3 class="footer-widget__title">Explore</h3>
+                            <ul class="list-unstyled footer-widget__link-list">
+                                <li><a href="about.html"><i class="fa fa-arrow-right"></i>About</a></li>
+                                <li><a href="services.html"><i class="fa fa-arrow-right"></i>Our Services</a></li>
+                                <li><a href="news.html"><i class="fa fa-arrow-right"></i>Latest News</a></li>
+                                <li><a href="contact.html"><i class="fa fa-arrow-right"></i>Contact</a></li>
+                                <li><a href="apply-for-loan.html"><i class="fa fa-arrow-right"></i>Apply for Loan</a></li>
+                            </ul><!-- /.list-unstyled -->
+                        </div><!-- /.footer-widget -->
+                    </div><!-- /.col-lg-2 -->
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="footer-widget footer-widget__post">
+                            <h3 class="footer-widget__title">Latest News</h3>
+                            <ul class="list-unstyled footer-widget__post-list">
+                                <li>
+                                    <img src="assets/images/img5.jpeg" alt="" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+                                    <div class="footer-widget__post-list-content">
+                                        <span>7 Aug, 2025</span>
+                                        <h3><a href="blog/avoid-debt-spiral.html">How to avoid the debt spiral</a></h3>
+                                    </div><!-- /.footer-widget__post-content -->
+                                </li>
+                                <li>
+                                    <img src="assets/images/img6.jpeg" alt="" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+                                    <div class="footer-widget__post-list-content">
+                                        <span>7 Aug, 2025</span>
+                                        <h3><a href="blog/needs-vs-wants.html">Needs vs wants</a></h3>
+                                    </div><!-- /.footer-widget__post-content -->
+                                </li>
+                            </ul><!-- /.list-unstyled -->
+                        </div><!-- /.footer-widget -->
+                    </div><!-- /.col-lg-3 -->
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="footer-widget footer-widget__contact">
+                            <h3>Contact</h3>
+                            <ul class="list-unstyled footer-widget__contact-list">
+                                <li>
+                                    <a href="mailto:info@cashflowloans.co.za"><i class="pylon-icon-email1"></i>info@cashflowloans.co.za</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="pylon-icon-clock2"></i>Mon - Sat 8:00 AM - 17:00 PM</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="pylon-icon-pin1"></i>South Africa</a>
+                                </li>
+                            </ul>
+                        </div><!-- /.footer-widget footer-widget__contact -->
+                    </div><!-- /.col-lg-4 -->
+                </div><!-- /.row -->
+            </div><!-- /.container -->
+        </footer><!-- /.site-footer -->
+        <div class="bottom-footer">
+            <div class="container">
+                <p>© Copyright 2025 by cashflowloans</p>
+                <div class="bottom-footer__social">
+                    <a href="https://www.facebook.com/share/1Jcb8SKRQd/" aria-label="facebook"><i class="fab fa-facebook-square"></i></a>
+                    <a href="https://wa.me/27614011426" aria-label="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.instagram.com/cashflowloans27?igsh=aGdieno5Mmd1NGNn" aria-label="instagram"><i class="fab fa-instagram"></i></a>
+                </div><!-- /.bottom-footer__social -->
+            </div><!-- /.container -->
+        </div><!-- /.bottom-footer -->
+
+    </div><!-- /.page-wrapper -->
+
+
+    <div class="mobile-nav__wrapper">
+        <div class="mobile-nav__overlay mobile-nav__toggler"></div>
+        <!-- /.mobile-nav__overlay -->
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close mobile-nav__toggler"></span>
+            <div class="logo-box">
+                <a href="index.html" aria-label="logo image" style="display: flex; flex-direction: column; align-items: center; text-decoration: none;">
+                    <img src="assets/images/logo.jpeg" width="100" alt="" style="border-radius: 50%;">
+                    
+                </a>
+            </div>
+            <!-- /.logo-box -->
+            <!-- /.logo-box -->
+            <div class="mobile-nav__container">
+                <ul class="main-menu__list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="apply-for-loan.html" class="thm-btn">Apply For Loan</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- /.mobile-nav__container -->
+
+            <ul class="mobile-nav__contact list-unstyled">
+                <li>
+                    <i class="pylon-icon-email1"></i>
+                    <a href="mailto:info@cashflowloans.co.za">info@cashflowloans.co.za</a>
+                </li>
+                <li>
+                    <i class="pylon-icon-telephone"></i>
+                    <a href="tel:+27614011426">+27614011426</a>
+                </li>
+            </ul><!-- /.mobile-nav__contact -->
+            <div class="mobile-nav__top">
+                <div class="mobile-nav__social">
+                    
+                    <a href="https://www.facebook.com/share/1Jcb8SKRQd/" aria-label="facebook"><i class="fab fa-facebook-square"></i></a>
+                    <a href="https://wa.me/27614011426" aria-label="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.instagram.com/cashflowloans27?igsh=aGdieno5Mmd1NGNn" aria-label="instagram"><i class="fab fa-instagram"></i></a>
+                </div><!-- /.mobile-nav__social -->
+            </div><!-- /.mobile-nav__top -->
+
+
+
+        </div>
+        <!-- /.mobile-nav__content -->
+    </div>
+    <!-- /.mobile-nav__wrapper -->
+
+    <div class="search-popup">
+        <div class="search-popup__overlay search-toggler"></div>
+        <!-- /.search-popup__overlay -->
+        <div class="search-popup__content">
+            <form action="#">
+                <label for="search" class="sr-only">search here</label><!-- /.sr-only -->
+                <input type="text" id="search" placeholder="Search Here..." />
+                <button type="submit" aria-label="search submit" class="thm-btn">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
+        </div>
+        <!-- /.search-popup__content -->
+    </div>
+    <!-- /.search-popup -->
+
+    <a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="fa fa-angle-up"></i></a>
+
+
+    <script src="assets/js/jquery-3.5.1.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/swiper.min.js"></script>
+    <script src="assets/js/jquery.ajaxchimp.min.js"></script>
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="assets/js/jquery.validate.min.js"></script>
+    <script src="assets/js/bootstrap-select.min.js"></script>
+    <script src="assets/js/wow.js"></script>
+    <script src="assets/js/odometer.min.js"></script>
+    <script src="assets/js/jquery.appear.min.js"></script>
+    <script src="assets/js/wNumb.min.js"></script>
+    <script src="assets/js/nouislider.min.js"></script>
+
+    <!-- template js -->
+    <script src="assets/js/theme.js"></script>
+</body>
+
+
+</html>

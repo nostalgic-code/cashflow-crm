@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Cashflow Loans</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-green-50 via-white to-green-100 min-h-screen">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-green-100 flex flex-col py-8 px-6 shadow-xl">
+      <div class="flex items-center gap-3 mb-10">
+        <img src="/static/assets/images/logo.jpeg" alt="Logo" class="w-12 h-12 rounded-full shadow border border-green-200">
+        <span class="text-2xl font-bold text-green-800 tracking-tight">Cashflow Admin</span>
+      </div>
+      <nav class="flex flex-col gap-2 mt-4">
+        <a href="/dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-green-900 font-semibold bg-green-100">
+          <svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6"/></svg>
+          Dashboard
+        </a>
+        <a href="/pages.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-green-700 hover:bg-green-50 transition">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6"/></svg>
+          Applications
+        </a>
+          <button id="advanced-tab" class="flex items-center gap-3 px-4 py-3 rounded-lg text-purple-700 hover:bg-purple-50 transition w-full text-left">
+            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01"/></svg>
+            Advanced Stats
+          </button>
+      </nav>
+      <div class="mt-auto flex items-center gap-3 pt-10">
+        <div class="relative group">
+          <span id="profile-tooltip" class="absolute left-1/2 -translate-x-1/2 -top-10 bg-gray-900 text-white text-xs rounded px-3 py-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">Username</span>
+          <div class="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center text-green-900 text-xl font-bold cursor-pointer border-2 border-green-400" id="profile-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a8.25 8.25 0 1115 0v.75a.75.75 0 01-.75.75h-13.5a.75.75 0 01-.75-.75v-.75z" />
+            </svg>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-green-900 font-semibold text-base" id="sidebar-username"></span>
+          <button id="logout-btn" class="text-green-700 hover:underline text-xs mt-1 text-left">Logout</button>
+        </div>
+      </div>
+    </aside>
+    <!-- Main Content -->
+    <main class="flex-1 p-12 bg-gradient-to-br from-white via-green-50 to-green-100">
+      <div class="flex justify-between items-center mb-10">
+        <h1 class="text-4xl font-extrabold text-green-900 tracking-tight">Dashboard Overview</h1>
+        <button id="refresh-stats-btn" class="bg-green-700 hover:bg-green-900 text-white font-semibold px-6 py-3 rounded-lg shadow transition-all duration-200 flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582M20 20v-5h-.581M5 19A9 9 0 1119 5"/></svg>
+          Refresh Stats
+        </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div class="bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center border-t-4 border-green-600">
+          <div class="bg-green-100 rounded-full p-4 mb-4">
+            <svg class="w-8 h-8 text-green-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 0V4m0 16v-4"/></svg>
+          </div>
+          <div class="text-5xl font-extrabold text-green-900" id="stat-unsecured">0</div>
+          <div class="text-green-700 mt-2 font-semibold text-lg">Unsecured Applications</div>
+        </div>
+        <div class="bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center border-t-4 border-blue-600">
+          <div class="bg-blue-100 rounded-full p-4 mb-4">
+            <svg class="w-8 h-8 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a5 5 0 00-10 0v2a5 5 0 00-1 9.9V21a1 1 0 001 1h10a1 1 0 001-1v-2.1A5 5 0 0017 9z"/></svg>
+          </div>
+          <div class="text-5xl font-extrabold text-blue-900" id="stat-secured">0</div>
+          <div class="text-blue-700 mt-2 font-semibold text-lg">Secured Applications</div>
+        </div>
+        <div class="bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center border-t-4 border-yellow-500">
+          <div class="bg-yellow-100 rounded-full p-4 mb-4">
+            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 01-8 0m8 0a4 4 0 00-8 0m8 0V5a4 4 0 00-8 0v2m8 0a4 4 0 01-8 0m8 0v2a4 4 0 01-8 0"/></svg>
+          </div>
+          <div class="text-5xl font-extrabold text-yellow-700" id="stat-admins">0</div>
+          <div class="text-yellow-700 mt-2 font-semibold text-lg">Admins</div>
+        </div>
+      </div>
+      <div class="flex gap-6">
+        <a href="/pages.html" class="bg-green-700 hover:bg-green-900 text-white font-semibold px-8 py-4 rounded-xl shadow-lg transition-all duration-200 flex items-center gap-3 text-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6"/></svg>
+          View Submitted Forms
+        </a>
+      </div>
+      <!-- Advanced Stats Section (hidden by default) -->
+      <section id="advanced-section" class="hidden">
+        <h2 class="text-3xl font-bold text-purple-900 mb-8">Advanced Statistics & Tables</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          <div class="bg-white rounded-2xl shadow-lg p-8 border-t-4 border-purple-600">
+            <h3 class="text-xl font-bold text-purple-800 mb-4">Dashboard Metrics</h3>
+            <ul class="space-y-2 text-purple-700 text-lg">
+              <li>Total Loan + Interest: <span id="metric-total-loan"></span></li>
+              <li>Outstanding Balance: <span id="metric-outstanding"></span></li>
+              <li>Number of Overdue Loans: <span id="metric-overdue"></span></li>
+              <li>Total Loans Disbursed: <span id="metric-disbursed"></span></li>
+              <li>Total Repayments Collected: <span id="metric-repaid"></span></li>
+            </ul>
+          </div>
+          <div class="bg-white rounded-2xl shadow-lg p-8 border-t-4 border-indigo-600">
+            <h3 class="text-xl font-bold text-indigo-800 mb-4">Money Out</h3>
+            <table class="w-full text-left border">
+              <thead><tr class="bg-indigo-100"><th>Recipient</th><th>Amount</th><th>Date</th></tr></thead>
+              <tbody id="moneyout-table"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white rounded-2xl shadow-lg p-8 border-t-4 border-green-600">
+            <h3 class="text-xl font-bold text-green-800 mb-4">Clients</h3>
+            <input type="text" id="client-search" placeholder="Search clients..." class="mb-4 px-3 py-2 border rounded w-full">
+            <table class="w-full text-left border">
+              <thead><tr class="bg-green-100"><th>Name</th><th>Surname</th><th>Email</th><th>Phone</th></tr></thead>
+              <tbody id="clients-table"></tbody>
+            </table>
+          </div>
+          <div class="bg-white rounded-2xl shadow-lg p-8 border-t-4 border-blue-600">
+            <h3 class="text-xl font-bold text-blue-800 mb-4">Loans</h3>
+            <select id="loan-status-filter" class="mb-4 px-3 py-2 border rounded w-full">
+              <option value="">All</option>
+              <option value="active">Active</option>
+              <option value="paid">Paid</option>
+              <option value="overdue">Overdue</option>
+            </select>
+            <table class="w-full text-left border">
+              <thead><tr class="bg-blue-100"><th>Name</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody id="loans-table"></tbody>
+            </table>
+          </div>
+          <div class="bg-white rounded-2xl shadow-lg p-8 border-t-4 border-yellow-600">
+            <h3 class="text-xl font-bold text-yellow-800 mb-4">Repayments</h3>
+            <input type="number" id="repayment-loan-id" placeholder="Loan ID (optional)" class="mb-4 px-3 py-2 border rounded w-full">
+            <table class="w-full text-left border">
+              <thead><tr class="bg-yellow-100"><th>Loan ID</th><th>Amount</th><th>Date</th></tr></thead>
+              <tbody id="repayments-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script>
+    function fetchStats() {
+      fetch('https://cashflow-bybn.onrender.com/admin/stats')
+        .then(r => r.json())
+        .then(stats => {
+          document.getElementById('stat-unsecured').textContent = stats.unsecured_loans;
+          document.getElementById('stat-secured').textContent = stats.secured_loans;
+          document.getElementById('stat-admins').textContent = stats.admins;
+        })
+        .catch(() => {
+          document.getElementById('stat-unsecured').textContent = 'Err';
+          document.getElementById('stat-secured').textContent = 'Err';
+          document.getElementById('stat-admins').textContent = 'Err';
+        });
+    }
+    fetchStats();
+    document.getElementById('refresh-stats-btn').onclick = fetchStats;
+    document.getElementById('logout-btn').onclick = function() {
+      localStorage.removeItem('admin-auth');
+      window.location.href = '/admin.html';
+    };
+    // Set username in tooltip, sidebar, and profile icon
+    const username = localStorage.getItem('admin-username') || 'Admin';
+    document.getElementById('profile-tooltip').textContent = username;
+    const sidebarUsername = document.getElementById('sidebar-username');
+    if (sidebarUsername) sidebarUsername.textContent = username;
+    const icon = document.getElementById('profile-icon');
+    if (icon) {
+      icon.title = username;
+      // Show first letter of username in icon
+      icon.textContent = username.charAt(0).toUpperCase();
+      icon.innerHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 absolute opacity-0 pointer-events-none"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a8.25 8.25 0 1115 0v.75a.75.75 0 01-.75.75h-13.5a.75.75 0 01-.75-.75v-.75z" /></svg>';
+    }
+
+    // Advanced tab logic
+    const advancedTab = document.getElementById('advanced-tab');
+    const advancedSection = document.getElementById('advanced-section');
+    const mainContent = document.querySelector('main > div');
+    advancedTab.onclick = function() {
+      advancedSection.classList.remove('hidden');
+      mainContent.classList.add('hidden');
+    };
+    // Show main dashboard when not in advanced
+    document.querySelector('a[href="/dashboard.html"]').onclick = function(e) {
+      e.preventDefault();
+      advancedSection.classList.add('hidden');
+      mainContent.classList.remove('hidden');
+    };
+
+    // Fetch advanced metrics
+    function fetchAdvancedMetrics() {
+      fetch('https://cashflow-bybn.onrender.com/admin/metrics')
+        .then(r => r.json())
+        .then(m => {
+          document.getElementById('metric-total-loan').textContent = m.total_loan_with_interest.toFixed(2);
+          document.getElementById('metric-outstanding').textContent = m.outstanding_balance.toFixed(2);
+          document.getElementById('metric-overdue').textContent = m.number_of_overdue_loans;
+          document.getElementById('metric-disbursed').textContent = m.total_loans_disbursed.toFixed(2);
+          document.getElementById('metric-repaid').textContent = m.total_repayments_collected.toFixed(2);
+          // Money out table
+          const moneyoutTable = document.getElementById('moneyout-table');
+          moneyoutTable.innerHTML = m.money_out.map(row => `<tr><td>${row.recipient}</td><td>${row.amount}</td><td>${row.date}</td></tr>`).join('');
+        });
+    }
+    advancedTab.addEventListener('click', fetchAdvancedMetrics);
+
+    // Clients table
+    function fetchClients(q = '') {
+      fetch('https://cashflow-bybn.onrender.com/admin/clients?q=' + encodeURIComponent(q))
+        .then(r => r.json())
+        .then(clients => {
+          const table = document.getElementById('clients-table');
+          table.innerHTML = clients.map(c => `<tr><td>${c.name}</td><td>${c.surname}</td><td>${c.email}</td><td>${c.phone}</td></tr>`).join('');
+        });
+    }
+    document.getElementById('client-search').addEventListener('input', e => fetchClients(e.target.value));
+    advancedTab.addEventListener('click', () => fetchClients());
+
+    // Loans table
+    function fetchLoans(status = '') {
+      fetch('https://cashflow-bybn.onrender.com/admin/loans?status=' + encodeURIComponent(status))
+        .then(r => r.json())
+        .then(loans => {
+          const table = document.getElementById('loans-table');
+          table.innerHTML = loans.map(l => `<tr><td>${l.name}</td><td>${l.amount}</td><td>${l.status}</td></tr>`).join('');
+        });
+    }
+    document.getElementById('loan-status-filter').addEventListener('change', e => fetchLoans(e.target.value));
+    advancedTab.addEventListener('click', () => fetchLoans());
+
+    // Repayments table
+    function fetchRepayments(loanId = '') {
+      fetch('https://cashflow-bybn.onrender.com/admin/repayments' + (loanId ? ('?loan_id=' + loanId) : ''))
+        .then(r => r.json())
+        .then(repayments => {
+          const table = document.getElementById('repayments-table');
+          table.innerHTML = repayments.map(r => `<tr><td>${r.loan_id}</td><td>${r.amount}</td><td>${r.date}</td></tr>`).join('');
+        });
+    }
+    document.getElementById('repayment-loan-id').addEventListener('input', e => fetchRepayments(e.target.value));
+    advancedTab.addEventListener('click', () => fetchRepayments());
+  </script>
+</body>
+</html>

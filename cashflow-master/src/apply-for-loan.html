@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply For Loan - cashflowloans</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/jpeg" href="/static/assets/images/logo.jpeg">
+    <link rel="stylesheet" href="/static/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/static/assets/css/swiper.min.css">
+    <link rel="stylesheet" href="/static/assets/css/animate.min.css">
+    <link rel="stylesheet" href="/static/assets/css/pylon-icons.css">
+    <link rel="stylesheet" href="/static/assets/css/odometer.min.css">
+    <link rel="stylesheet" href="/static/assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="/static/assets/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="/static/assets/css/nouislider.min.css">
+    <link rel="stylesheet" href="/static/assets/css/nouislider.pips.css">
+    <link rel="stylesheet" href="/static/assets/css/main.css">
+    <link rel="stylesheet" href="/static/assets/css/mobile-nav.css">
+    <style>
+        :root {
+            --money-green: #1b4d3e;
+            --light-money-green: #2e8b57;
+            --pale-money-green: #98c9a3;
+        }
+        /* Remove all dropdown arrows */
+        .mobile-nav__container .dropdown > a:after,
+        .mobile-nav__container .dropdown > a:before,
+        .mobile-nav__container li.dropdown:after,
+        .mobile-nav__container li.dropdown:before {
+            display: none !important;
+        }
+        /* Clean menu styling */
+        .mobile-nav__container .main-menu__list > li > a {
+            display: block;
+            padding: 10px 0;
+            color: white;
+            font-size: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+            border: none;
+            background: transparent !important;
+        }
+        .mobile-nav__container .main-menu__list > li {
+            background: transparent !important;
+            border: none !important;
+        }
+        .mobile-nav__container .main-menu__list > li.dropdown {
+            background: transparent !important;
+            border: none !important;
+        }
+        .mobile-nav__container .main-menu__list > li ul {
+            padding-left: 15px;
+            margin-left: 5px;
+            border: none !important;
+            background: transparent !important;
+        }
+        .mobile-nav__container .main-menu__list > li ul li {
+            background: transparent !important;
+            border: none !important;
+        }
+        .mobile-nav__container .main-menu__list > li ul li a {
+            padding: 8px 0;
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            background: transparent !important;
+            border: none !important;
+        }
+        /* Override any theme dropdown backgrounds */
+        .mobile-nav__container .dropdown,
+        .mobile-nav__container .dropdown > a,
+        .mobile-nav__container .dropdown ul,
+        .mobile-nav__container .dropdown ul li,
+        .mobile-nav__container .dropdown ul li a {
+            background: transparent !important;
+            border: none !important;
+        }
+        /* Additional overrides for any remaining blue elements */
+        .mobile-nav__container *,
+        .mobile-nav__container *:before,
+        .mobile-nav__container *:after {
+            background: transparent !important;
+            border-color: transparent !important;
+        }
+        .mobile-nav__container .main-menu__list li.dropdown ul {
+            border: none !important;
+            background: rgba(0, 0, 0, 0.1) !important;
+            margin: 0;
+            padding-left: 15px;
+        }
+        /* Override any theme arrows */
+        .mobile-nav__container .fa,
+        .mobile-nav__container .fas,
+        .mobile-nav__container [class^="fa-"] {
+            display: none !important;
+        }
+    </style>
+    <script src="/static/assets/js/mobile-nav.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileNavTogglers = document.querySelectorAll('.mobile-nav__toggler');
+            const mobileNavWrapper = document.querySelector('.mobile-nav__wrapper');
+            mobileNavTogglers.forEach(function(toggler) {
+                toggler.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    mobileNavWrapper.classList.toggle('expanded');
+                    document.body.classList.toggle('active');
+                });
+            });
+            // Close menu when clicking overlay
+            const mobileNavOverlay = document.querySelector('.mobile-nav__overlay');
+            if (mobileNavOverlay) {
+                mobileNavOverlay.addEventListener('click', function() {
+                    mobileNavWrapper.classList.remove('expanded');
+                    document.body.classList.remove('active');
+                });
+            }
+            // Close menu when clicking close button
+            const mobileNavClose = document.querySelector('.mobile-nav__close');
+            if (mobileNavClose) {
+                mobileNavClose.addEventListener('click', function() {
+                    mobileNavWrapper.classList.remove('expanded');
+                    document.body.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <header class="main-header">
+            <div class="topbar">
+                <div class="container">
+                    <div class="topbar__left">
+                        <div class="topbar__social">
+                            <a href="https://www.facebook.com/share/1Jcb8SKRQd/" class="fab fa-facebook-f"></a>
+                            <a href="https://wa.me/27614011426" aria-label="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                             <a href="https://www.instagram.com/cashflowloans27?igsh=aGdieno5Mmd1NGNn" aria-label="instagram"><i class="fab fa-instagram"></i></a>
+                        </div><!-- /.topbar__social -->
+                        
+                        <a href="news.html">Company News</a>
+                       
+                    </div>
+                    <div class="topbar__right">
+                        <a href="mailto:info@cashflowloans.co.za"><i class="pylon-icon-email1"></i>info@cashflowloans.co.za</a>
+                        <a href="#"><i class="pylon-icon-clock2"></i>Mon - Sat 8:00 AM - 6:00 PM</a>
+                    </div>
+                </div>
+            </div>
+            <nav class="main-menu">
+                <div class="container">
+                    <div class="logo-box">
+                        <a href="index.html" aria-label="logo image" style="display: flex; align-items: center; text-decoration: none;">
+                            <img src="/static/assets/images/logo.jpeg" width="100" alt="" style="border-radius: 50%;">
+                            
+                        </a>
+                        <span class="fa fa-bars mobile-nav__toggler"></span>
+                    </div><!-- /.logo-box -->
+                    <ul class="main-menu__list">
+                        <li class="dropdown">
+                            <a href="index.html">Home</a>
+                            
+                        </li>
+                        <li class="dropdown">
+                            <a href="about.html">About Us</a>
+                            
+                        </li>
+                        
+                        <li class="dropdown"><a href="apply-for-loan.html">Apply Now</a>
+                            <ul>
+                                
+
+                                <li><a href="apply-for-loan.html">Apply Now</a></li>
+
+                                
+                                
+                            </ul>
+                        </li>
+                        
+                        <li><a href="contact.html">Contact Us</a></li>
+                        
+                    </ul>
+                    <!-- /.main-menu__list -->
+
+                    <div class="main-header__info">
+                        <div class="main-header__info-phone">
+                            <i class="pylon-icon-tech-support"></i>
+                            <div class="main-header__info-phone-content">
+                                <span>Call Anytime</span>
+                                <h3><a href="tel:+27614011426">+27614011426</a></h3>
+                            </div><!-- /.main-header__info-phone-content -->
+                        </div><!-- /.main-header__info-phone -->
+                    </div><!-- /.main-header__info -->
+                </div><!-- /.container -->
+            </nav>
+            <!-- /.main-menu -->
+        </header>
+
+        <div class="stricky-header stricked-menu main-menu">
+            <div class="sticky-header__content"></div>
+        </div>
+
+        <section class="page-header">
+            <div class="page-header__bg" style="background-image: url(/static/assets/images/backgrounds/page-header-bg-1-1.jpg);"></div>
+            <div class="container">
+                <ul class="thm-breadcrumb list-unstyled">
+                    <li><a href="index.html">Home</a></li>
+                    <li>/</li>
+                    <li><span>Apply For Loan</span></li>
+                </ul>
+                <h2>Apply For Loan</h2>
+            </div>
+        </section>
+
+        <section class="apply-one">
+            <div class="container">
+                <!-- Unsecured Loan Form -->
+                <form id="unsecuredLoanForm" class="loan-form" method="POST">
+                    <h2 style="color: var(--money-green); margin-bottom: 30px;">Unsecured Loan Application</h2>
+                    <input type="hidden" name="loanType" value="Unsecured Loan">
+
+                    <div class="form-group">
+                        <label>Loan Amount (R)</label>
+                        <input type="number" class="form-control" id="securedAmount" name="amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Surname</label>
+                        <input type="text" class="form-control" name="surname" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ID Number</label>
+                        <input type="text" class="form-control" name="idNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" class="form-control" name="phone" required pattern="[0-9\-\+\s]{7,15}" placeholder="e.g. 0614011426">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" name="email" required placeholder="e.g. your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Payslip</label>
+                        <div class="file-upload">
+                            <input type="file" name="payslip" accept=".pdf,.jpg,.jpeg,.png" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>ID Document</label>
+                        <div class="file-upload">
+                            <input type="file" name="idDocument" accept=".pdf,.jpg,.jpeg,.png" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Bank Statement</label>
+                        <div class="file-upload">
+                            <input type="file" name="bankStatement" accept=".pdf" required>
+                        </div>
+                    </div>
+                    <!-- Honeypot anti-spam field -->
+                    <input type="hidden" name="_gotcha" style="display:none !important">
+                    <div class="form-group terms-group">
+                        <div class="terms-container">
+                            <div class="terms-text" id="unsecuredTermsText">
+                                <h4>Terms and Conditions for Cashflow Loans</h4>
+                                <p><em>Effective Date: August 11, 2025</em></p>
+                                <p>By applying for or obtaining a loan from Cashflow Loans ("we," "us," or "our"), you ("the Borrower" or "you") agree to be bound by the following Terms and Conditions ("Terms"). Please read these Terms carefully before entering into any loan agreement with us. If you do not agree with these Terms, you should not apply for or accept a loan from Cashflow Loans.</p>
+                                
+                                <h4>1. Loan Terms</h4>
+                                <h5>1.1 Loan Duration:</h5>
+                                <p>All loans provided by Cashflow Loans are for a fixed term of one (1) month from the date of disbursement, unless otherwise specified in the loan agreement.</p>
+                                
+                                <h5>1.2 Repayment Obligation:</h5>
+                                <p>The Borrower is required to repay the full loan amount, including any applicable interest and fees, by the due date specified in the loan agreement.</p>
+                                
+                                <h4>2. Consequences of Non-Payment</h4>
+                                <h5>2.1 Unsecured Loans:</h5>
+                                <p>In the event of non-payment by the due date, Cashflow Loans reserves the right to take any and all actions to recover the outstanding amount, including but not limited to:</p>
+                                <ul>
+                                    <li>Blacklisting the Borrower with credit bureaus or other relevant authorities.</li>
+                                    <li>Repossessing assets owned by the Borrower with a value equivalent to the outstanding loan amount, in accordance with applicable laws.</li>
+                                </ul>
+                                
+                                <h5>2.2 Secured Loans:</h5>
+                                <p>For loans secured by collateral, failure to repay the loan by the due date will result in Cashflow Loans taking possession of and selling the collateral to recover the outstanding loan amount, including any associated costs, fees, or interest. The Borrower will be responsible for any shortfall if the sale of the collateral does not fully cover the outstanding amount.</p>
+                                
+                                <h5>2.3 Additional Recovery Measures:</h5>
+                                <p>Cashflow Loans reserves the right to pursue all legal remedies available to recover the owed amount, including but not limited to legal action, debt collection services, and reporting to credit bureaus.</p>
+                                
+                                <h4>3. Borrower Responsibilities</h4>
+                                <h5>3.1 Accuracy of Information:</h5>
+                                <p>The Borrower is responsible for providing accurate and complete information, including banking details, at the time of loan application. Cashflow Loans will not be liable for any loss of income, funds, or other financial consequences resulting from incorrect or incomplete banking details provided by the Borrower.</p>
+                                
+                                <h5>3.2 Timely Repayment:</h5>
+                                <p>The Borrower agrees to ensure that sufficient funds are available in the designated repayment account to cover the loan repayment on the due date.</p>
+                                
+                                <h4>4. Liability</h4>
+                                <h5>4.1 Non-Liability for Incorrect Banking Details:</h5>
+                                <p>Cashflow Loans shall not be responsible or liable for any loss, delay, or financial harm caused by the Borrower providing incorrect or incomplete banking details.</p>
+                                
+                                <h5>4.2 Collateral Sale:</h5>
+                                <p>For secured loans, the Borrower acknowledges that Cashflow Loans is not liable for any loss in value or other consequences arising from the sale of collateral to recover the outstanding loan amount.</p>
+                                <h4>5. General Provisions</h4>
+                                <p>5.1 Compliance with Laws: All actions taken by Cashflow Loans to recover outstanding amounts will be conducted in accordance with applicable local, state, and federal laws.</p>
+                                <p>5.2 Amendments: Cashflow Loans reserves the right to amend these Terms at any time. Any changes will be communicated to Borrowers in writing or through our website and will take effect upon the specified date.</p>
+                                <p>5.3 Governing Law: These Terms and any loan agreement shall be governed by and construed in accordance with the laws of the jurisdiction in which Cashflow Loans operates.</p>
+                                <p>5.4 Severability: If any provision of these Terms is found to be invalid or unenforceable, the remaining provisions shall remain in full force and effect.</p>
+                                <p>5.5 Entire Agreement: These Terms, together with the loan agreement, constitute the entire agreement between the Borrower and Cashflow Loans and supersede any prior agreements or understandings.</p>
+                                
+                                <h4>6. Contact Information</h4>
+                                <p>For any questions or concerns regarding these Terms or your loan, please contact Cashflow Loans at:</p>
+                                <ul>
+                                    <li>Phone: 0614011426</li>
+                                    <li>Email: info@cashflowloans.co.za</li>
+                                    <li>Website: www.cashflowloans.co.za</li>
+                                </ul>
+                                
+                                <p><strong>By applying for or accepting a loan from Cashflow Loans, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.</strong></p>
+                                
+                                <p><strong>Cashflow Loans</strong><br>
+                                Effective as of August 11, 2025.</p>
+                            </div>
+                        </div>
+                        <div class="checkbox-wrapper" id="unsecuredCheckbox" style="display: none;">
+                            <input type="checkbox" id="unsecuredTerms" name="terms" required>
+                            <label for="unsecuredTerms">I have read and agree to the Terms and Conditions</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Submit Application</button>
+                </form>
+
+                <!-- Secured Loan Form -->
+                <form id="securedLoanForm" class="loan-form" method="POST">
+                    <h2 style="color: var(--money-green); margin-bottom: 30px;">Secured Loan Application</h2>
+                    <input type="hidden" name="loanType" value="Secured Loan">
+                    
+                    <div class="form-group">
+                        <label>Loan Amount (R)</label>
+                        <input type="number" class="form-control" id="unsecuredAmount" name="amount" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>ID Number</label>
+                        <input type="text" class="form-control" name="idNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" class="form-control" name="phone" required pattern="[0-9\-\+\s]{7,15}" placeholder="e.g. 0614011426">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" name="email" required placeholder="e.g. your@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Collateral Images</label>
+                        <div class="file-upload">
+                            <input type="file" name="collateralImages" accept="image/*" multiple required>
+                            <p style="margin-top: 10px; color: #666;">Upload clear images of your collateral item (e.g., phone)</p>
+                        </div>
+                    </div>
+                    <!-- Honeypot anti-spam field -->
+                    <input type="hidden" name="_gotcha" style="display:none !important">
+                    <div class="form-group terms-group">
+                        <div class="terms-container">
+                            <div class="terms-text" id="securedTermsText">
+                                <h4>Terms and Conditions for Cashflow Loans</h4>
+                                <p><em>Effective Date: August 11, 2025</em></p>
+                                <p>By applying for or obtaining a loan from Cashflow Loans ("we," "us," or "our"), you ("the Borrower" or "you") agree to be bound by the following Terms and Conditions ("Terms"). Please read these Terms carefully before entering into any loan agreement with us. If you do not agree with these Terms, you should not apply for or accept a loan from Cashflow Loans.</p>
+                                <h4>1. Loan Terms</h4>
+                                <h5>1.1 Loan Duration:</h5>
+                                <p>All loans provided by Cashflow Loans are for a fixed term of one (1) month from the date of disbursement, unless otherwise specified in the loan agreement.</p>
+                                <h5>1.2 Repayment Obligation:</h5>
+                                <p>The Borrower is required to repay the full loan amount, including any applicable interest and fees, by the due date specified in the loan agreement.</p>
+                                <h4>2. Consequences of Non-Payment</h4>
+                                <h5>2.1 Unsecured Loans:</h5>
+                                <p>In the event of non-payment by the due date, Cashflow Loans reserves the right to take any and all actions to recover the outstanding amount, including but not limited to:</p>
+                                <ul>
+                                    <li>Blacklisting the Borrower with credit bureaus or other relevant authorities.</li>
+                                    <li>Repossessing assets owned by the Borrower with a value equivalent to the outstanding loan amount, in accordance with applicable laws.</li>
+                                </ul>
+                                <h5>2.2 Secured Loans:</h5>
+                                <p>For loans secured by collateral, failure to repay the loan by the due date will result in Cashflow Loans taking possession of and selling the collateral to recover the outstanding loan amount, including any associated costs, fees, or interest. The Borrower will be responsible for any shortfall if the sale of the collateral does not fully cover the outstanding amount.</p>
+                                <h5>2.3 Additional Recovery Measures:</h5>
+                                <p>Cashflow Loans reserves the right to pursue all legal remedies available to recover the owed amount, including but not limited to legal action, debt collection services, and reporting to credit bureaus.</p>
+                                <h4>3. Borrower Responsibilities</h4>
+                                <h5>3.1 Accuracy of Information:</h5>
+                                <p>The Borrower is responsible for providing accurate and complete information, including banking details, at the time of loan application. Cashflow Loans will not be liable for any loss of income, funds, or other financial consequences resulting from incorrect or incomplete banking details provided by the Borrower.</p>
+                                <h5>3.2 Timely Repayment:</h5>
+                                <p>The Borrower agrees to ensure that sufficient funds are available in the designated repayment account to cover the loan repayment on the due date.</p>
+                                <h4>4. Liability</h4>
+                                <h5>4.1 Non-Liability for Incorrect Banking Details:</h5>
+                                <p>Cashflow Loans shall not be responsible or liable for any loss, delay, or financial harm caused by the Borrower providing incorrect or incomplete banking details.</p>
+                                <h5>4.2 Collateral Sale:</h5>
+                                <p>For secured loans, the Borrower acknowledges that Cashflow Loans is not liable for any loss in value or other consequences arising from the sale of collateral to recover the outstanding loan amount.</p>
+                                <h4>5. General Provisions</h4>
+                                <p>5.1 Compliance with Laws: All actions taken by Cashflow Loans to recover outstanding amounts will be conducted in accordance with applicable local, state, and federal laws.</p>
+                                <p>5.2 Amendments: Cashflow Loans reserves the right to amend these Terms at any time. Any changes will be communicated to Borrowers in writing or through our website and will take effect upon the specified date.</p>
+                                <p>5.3 Governing Law: These Terms and any loan agreement shall be governed by and construed in accordance with the laws of the jurisdiction in which Cashflow Loans operates.</p>
+                                <p>5.4 Severability: If any provision of these Terms is found to be invalid or unenforceable, the remaining provisions shall remain in full force and effect.</p>
+                                <p>5.5 Entire Agreement: These Terms, together with the loan agreement, constitute the entire agreement between the Borrower and Cashflow Loans and supersede any prior agreements or understandings.</p>
+                                <h4>6. Contact Information</h4>
+                                <p>For any questions or concerns regarding these Terms or your loan, please contact Cashflow Loans at:</p>
+                                <ul>
+                                    <li>Phone: 0614011426</li>
+                                    <li>Email: info@cashflowloans.co.za</li>
+                                    <li>Website: www.cashflowloans.co.za</li>
+                                </ul>
+                                <p><strong>By applying for or accepting a loan from Cashflow Loans, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.</strong></p>
+                                <p><strong>Cashflow Loans</strong><br>
+                                Effective as of August 11, 2025.</p>
+                            </div>
+                        </div>
+                        <div class="checkbox-wrapper" id="securedCheckbox" style="display: none;">
+                            <input type="checkbox" id="securedTerms" name="terms" required>
+                            <label for="securedTerms">I have read and agree to the Terms and Conditions</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">Submit Application</button>
+                </form>
+
+                <style>
+                    .loan-form {
+                        display: none;
+                        max-width: 800px;
+                        margin: 0 auto;
+                        padding: 30px;
+                        background: #fff;
+                        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+                        border-radius: 8px;
+                        margin-bottom: 40px;
+                    }
+                    
+                    .loan-form.active {
+                        display: block;
+                    }
+
+                    .form-group {
+                        margin-bottom: 20px;
+                    }
+
+                    .form-group label {
+                        display: block;
+                        margin-bottom: 8px;
+                        font-weight: 600;
+                        color: #333;
+                    }
+
+                    .form-control {
+                        width: 100%;
+                        padding: 10px;
+                        border: 1px solid #ddd;
+                        border-radius: 4px;
+                        font-size: 16px;
+                    }
+
+                    .file-upload {
+                        border: 2px dashed #ddd;
+                        padding: 20px;
+                        text-align: center;
+                        border-radius: 4px;
+                        background: #f9f9f9;
+                        transition: all 0.3s ease;
+                    }
+
+                    .file-upload:hover {
+                        border-color: var(--money-green, #4CAF50);
+                        background: #f0f9f0;
+                    }
+
+                    .submit-btn {
+                        background: var(--money-green, #4CAF50);
+                        color: white;
+                        padding: 12px 30px;
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-size: 16px;
+                        width: 100%;
+                        transition: all 0.3s ease;
+                    }
+
+                    .submit-btn:hover {
+                        background: var(--money-dark-green, #45a049);
+                        transform: translateY(-1px);
+                    }
+
+                    .terms-group {
+                        margin-top: 30px;
+                        border: 1px solid #ddd;
+                        padding: 20px;
+                        border-radius: 4px;
+                    }
+
+                    .terms-container {
+                        margin-bottom: 20px;
+                    }
+
+                    .terms-text {
+                        max-height: 300px;
+                        overflow-y: auto;
+                        padding: 20px;
+                        background: #f9f9f9;
+                        border: 1px solid #eee;
+                        border-radius: 4px;
+                        margin-bottom: 15px;
+                        line-height: 1.6;
+                        font-size: 14px;
+                        scrollbar-width: thin;
+                        scrollbar-color: var(--money-green, #4CAF50) #ddd;
+                    }
+
+                    .terms-text::-webkit-scrollbar {
+                        width: 8px;
+                    }
+
+                    .terms-text::-webkit-scrollbar-track {
+                        background: #f1f1f1;
+                        border-radius: 4px;
+                    }
+
+                    .terms-text::-webkit-scrollbar-thumb {
+                        background: var(--money-green, #4CAF50);
+                        border-radius: 4px;
+                    }
+
+                    .terms-text h4 {
+                        color: var(--money-green, #4CAF50);
+                        margin: 20px 0 15px;
+                        font-size: 16px;
+                        font-weight: 600;
+                    }
+
+                    .terms-text h5 {
+                        color: #333;
+                        margin: 15px 0 10px;
+                        font-size: 14px;
+                        font-weight: 600;
+                    }
+
+                    .terms-text p {
+                        margin-bottom: 12px;
+                    }
+
+                    .terms-text ul {
+                        margin: 10px 0;
+                        padding-left: 20px;
+                    }
+
+                    .terms-text ul li {
+                        margin-bottom: 8px;
+                    }
+
+                    .checkbox-wrapper {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+                    .checkbox-wrapper input[type="checkbox"] {
+                        width: 18px;
+                        height: 18px;
+                        cursor: pointer;
+                    }
+
+                    .checkbox-wrapper label {
+                        margin: 0;
+                        cursor: pointer;
+                    }
+                </style>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Get loan type and amount from URL parameters
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const loanType = urlParams.get('type');
+                        const amount = urlParams.get('amount');
+
+                        const securedForm = document.getElementById('securedLoanForm');
+                        const unsecuredForm = document.getElementById('unsecuredLoanForm');
+
+                        // Function to check if element is scrolled to bottom
+                        function isScrolledToBottom(element) {
+                            return Math.abs(element.scrollHeight - element.clientHeight - element.scrollTop) < 1;
+                        }
+
+                        // Function to handle terms scroll
+                        function handleTermsScroll(termsText, checkbox) {
+                            termsText.addEventListener('scroll', function() {
+                                if (isScrolledToBottom(this)) {
+                                    checkbox.style.display = 'flex';
+                                }
+                            });
+                        }
+
+                        // Show the appropriate form based on loan type
+                        if (loanType === 'secured') {
+                            securedForm.classList.add('active');
+                            if (amount) {
+                                document.getElementById('securedAmount').value = amount;
+                            }
+                            handleTermsScroll(
+                                document.getElementById('securedTermsText'),
+                                document.getElementById('securedCheckbox')
+                            );
+                        } else if (loanType === 'unsecured') {
+                            unsecuredForm.classList.add('active');
+                            if (amount) {
+                                document.getElementById('unsecuredAmount').value = amount;
+                            }
+                            handleTermsScroll(
+                                document.getElementById('unsecuredTermsText'),
+                                document.getElementById('unsecuredCheckbox')
+                            );
+                        } else {
+                            // If no loan type specified, show secured by default
+                            securedForm.classList.add('active');
+                            handleTermsScroll(
+                                document.getElementById('securedTermsText'),
+                                document.getElementById('securedCheckbox')
+                            );
+                        }
+
+                        // AJAX form submission for both forms
+                        function ajaxFormSubmit(form, loanType) {
+                            form.addEventListener('submit', function(e) {
+                                e.preventDefault();
+                                // Remove any previous messages
+                                let prevMsg = form.querySelector('.ajax-message');
+                                if (prevMsg) prevMsg.remove();
+
+                                const formData = new FormData(form);
+                                const submitBtn = form.querySelector('.submit-btn');
+                                submitBtn.disabled = true;
+                                submitBtn.textContent = 'Submitting...';
+
+                                // Prepare data for CRM API
+                                const name = formData.get('name');
+                                const surname = formData.get('surname') || '';
+                                const fullName = surname ? `${name} ${surname}` : name;
+                                
+                                // Generate UUID for client
+                                function generateUUID() {
+                                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                                        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                                        return v.toString(16);
+                                    });
+                                }
+
+                                // Calculate due date (end of next month)
+                                function getEndOfNextMonth() {
+                                    const now = new Date();
+                                    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+                                    const endOfNextMonth = new Date(nextMonth.getFullYear(), nextMonth.getMonth() + 1, 0);
+                                    return endOfNextMonth.toISOString().split('T')[0];
+                                }
+
+                                const crmPayload = {
+                                    id: generateUUID(),
+                                    name: fullName,
+                                    email: formData.get('email'),
+                                    phone: formData.get('phone'),
+                                    idNumber: formData.get('idNumber'),
+                                    loanAmount: parseFloat(formData.get('amount')),
+                                    loanType: loanType,
+                                    interestRate: 50,
+                                    monthlyPayment: parseFloat(formData.get('amount')) * 1.5, // 50% interest
+                                    startDate: new Date().toISOString().split('T')[0],
+                                    dueDate: getEndOfNextMonth(),
+                                    status: "new-lead",
+                                    applicationDate: new Date().toISOString(),
+                                    lastStatusUpdate: new Date().toISOString(),
+                                    amountPaid: 0,
+                                    paymentHistory: [],
+                                    notes: [`Application submitted via website for ${loanType}`],
+                                    documents: []
+                                };
+
+                                // Submit to CRM API
+                                fetch('https://cashflow-crm.onrender.com/api/clients', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(crmPayload)
+                                })
+                                .then(async response => {
+                                    let msg;
+                                    if (response.ok) {
+                                        msg = document.createElement('div');
+                                        msg.className = 'ajax-message';
+                                        msg.style = 'margin-top:20px;color:green;font-weight:bold;text-align:center;padding:15px;background:#d4edda;border:1px solid #c3e6cb;border-radius:4px;';
+                                        msg.innerHTML = '✅ <strong>Application submitted successfully!</strong><br/>Your application has been added to our CRM system. We will contact you soon to process your loan.';
+                                        form.reset();
+                                        // Hide the terms checkbox again
+                                        const checkbox = form.querySelector('.checkbox-wrapper');
+                                        if (checkbox) checkbox.style.display = 'none';
+                                    } else {
+                                        let errorText = await response.text();
+                                        msg = document.createElement('div');
+                                        msg.className = 'ajax-message';
+                                        msg.style = 'margin-top:20px;color:red;font-weight:bold;text-align:center;padding:15px;background:#f8d7da;border:1px solid #f5c6cb;border-radius:4px;';
+                                        msg.innerHTML = '❌ <strong>Submission failed:</strong><br/>' + errorText;
+                                    }
+                                    form.appendChild(msg);
+                                    submitBtn.disabled = false;
+                                    submitBtn.textContent = 'Submit Application';
+                                })
+                                .catch(error => {
+                                    let msg = document.createElement('div');
+                                    msg.className = 'ajax-message';
+                                    msg.style = 'margin-top:20px;color:red;font-weight:bold;text-align:center;padding:15px;background:#f8d7da;border:1px solid #f5c6cb;border-radius:4px;';
+                                    msg.innerHTML = '❌ <strong>Submission failed:</strong><br/>' + error.message;
+                                    form.appendChild(msg);
+                                    submitBtn.disabled = false;
+                                    submitBtn.textContent = 'Submit Application';
+                                });
+                            });
+                        }
+
+                        ajaxFormSubmit(unsecuredForm, 'Unsecured Loan');
+                        ajaxFormSubmit(securedForm, 'Secured Loan');
+                    });
+                </script>
+            </div>
+        </section>
+
+         <footer class="site-footer" style="background-color: var(--money-green);">
+            <div class="container" >
+                <div class="row justify-content-between">
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="footer-widget footer-widget__about">
+                            <a href="index.html" style="display: flex; flex-direction: column; align-items: flex-start; text-decoration: none;">
+                                <img src="/static/assets/images/logo.jpeg" width="100" alt="" style="border-radius: 50%;">
+                                <h6 style="margin: 10px 0; color: white;">cashflowloans</h6>
+                            </a>
+                            <p>Welcome to cashflowloans company we  provide loans at a  very reasonable interest get started today.</p>
+                            <div class="footer-widget__about-phone">
+                                <i class="pylon-icon-tech-support"></i>
+                                <div class="footer-widget__about-phone-content">
+                                    <span>Call Anytime</span>
+                                    <h3><a href="tel:+27614011426">+27614011426 </a></h3>
+                                </div><!-- /.footer-widget__about-phone-content -->
+                            </div><!-- /.footer-widget__about-phone -->
+                        </div><!-- /.footer-widget footer-widget__about -->
+                    </div><!-- /.col-lg-3 -->
+                    <div class="col-lg-2 col-sm-6">
+                        <div class="footer-widget footer-widget__link">
+                            <h3 class="footer-widget__title">Explore</h3>
+                            <ul class="list-unstyled footer-widget__link-list">
+                                <li><a href="about.html"><i class="fa fa-arrow-right"></i>About</a></li>
+                                <li><a href="services.html"><i class="fa fa-arrow-right"></i>Our Services</a></li>
+                                <li><a href="news.html"><i class="fa fa-arrow-right"></i>Latest News</a></li>
+                                <li><a href="contact.html"><i class="fa fa-arrow-right"></i>Contact</a></li>
+                                <li><a href="apply-for-loan.html"><i class="fa fa-arrow-right"></i>Apply for Loan</a></li>
+                            </ul><!-- /.list-unstyled -->
+                        </div><!-- /.footer-widget -->
+                    </div><!-- /.col-lg-2 -->
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="footer-widget footer-widget__post">
+                            <h3 class="footer-widget__title">Latest News</h3>
+                            <ul class="list-unstyled footer-widget__post-list">
+                                <li>
+                                    <img src="/static/assets/images/img5.jpeg" alt="" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+                                    <div class="footer-widget__post-list-content">
+                                        <span>7 Aug, 2025</span>
+                                        <h3><a href="blog/avoid-debt-spiral.html">How to avoid the debt spiral</a></h3>
+                                    </div><!-- /.footer-widget__post-content -->
+                                </li>
+                                <li>
+                                    <img src="/static/assets/images/img6.jpeg" alt="" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+                                    <div class="footer-widget__post-list-content">
+                                        <span>7 Aug, 2025</span>
+                                        <h3><a href="blog/needs-vs-wants.html">Needs vs wants</a></h3>
+                                    </div><!-- /.footer-widget__post-content -->
+                                </li>
+                            </ul><!-- /.list-unstyled -->
+                        </div><!-- /.footer-widget -->
+                    </div><!-- /.col-lg-3 -->
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="footer-widget footer-widget__contact">
+                            <h3>Contact</h3>
+                            <ul class="list-unstyled footer-widget__contact-list">
+                                <li>
+                                    <a href="mailto:info@cashflowloans.co.za"><i class="pylon-icon-email1"></i>info@cashflowloans.co.za</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="pylon-icon-clock2"></i>Mon - Sat 8:00 AM - 17:00 PM</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="pylon-icon-pin1"></i>South Africa</a>
+                                </li>
+                            </ul>
+                        </div><!-- /.footer-widget footer-widget__contact -->
+                    </div><!-- /.col-lg-4 -->
+                </div><!-- /.row -->
+            </div><!-- /.container -->
+        </footer><!-- /.site-footer -->
+        <div class="bottom-footer">
+            <div class="container">
+                <p>© Copyright 2025 by cashflowloans</p>
+                <div class="bottom-footer__social">
+                    <a href="https://www.facebook.com/share/1Jcb8SKRQd/" class="fab fa-facebook-f"></a>
+                   
+                    <a href="https://wa.me/27614011426" aria-label="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                    
+                    <a href="https://www.instagram.com/cashflowloans27?igsh=aGdieno5Mmd1NGNn" class="fab fa-instagram"></a>
+                </div><!-- /.bottom-footer__social -->
+            </div><!-- /.container -->
+        </div><!-- /.bottom-footer -->
+
+    </div><!-- /.page-wrapper -->
+
+
+    <div class="mobile-nav__wrapper">
+        <div class="mobile-nav__overlay mobile-nav__toggler"></div>
+        <!-- /.mobile-nav__overlay -->
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close mobile-nav__toggler"></span>
+            <div class="logo-box">
+                <a href="index.html" aria-label="logo image" style="display: flex; flex-direction: column; align-items: center; text-decoration: none;">
+                    <img src="/static/assets/images/logo.jpeg" width="100" alt="" style="border-radius: 50%;">
+                    
+                </a>
+            </div>
+            <!-- /.logo-box -->
+           <!-- /.logo-box -->
+            <div class="mobile-nav__container">
+                <ul class="main-menu__list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="apply-for-loan.html" class="thm-btn">Apply For Loan</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- /.mobile-nav__container -->
+
+            <ul class="mobile-nav__contact list-unstyled">
+                <li>
+                    <i class="pylon-icon-email1"></i>
+                    <a href="mailto:info@cashflowloans.co.za">info@cashflowloans.co.za</a>
+                </li>
+                <li>
+                    <i class="pylon-icon-telephone"></i>
+                    <a href="tel:+27614011426">+27614011426</a>
+                </li>
+            </ul><!-- /.mobile-nav__contact -->
+            <div class="mobile-nav__top">
+                <div class="mobile-nav__social">
+                   <a href="https://www.facebook.com/share/1Jcb8SKRQd/" aria-label="facebook"><i class="fab fa-facebook-square"></i></a>
+                    <a href="https://wa.me/27614011426" aria-label="whatsapp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.instagram.com/cashflowloans27?igsh=aGdieno5Mmd1NGNn" aria-label="instagram"><i class="fab fa-instagram"></i></a>
+                </div><!-- /.mobile-nav__social -->
+            </div><!-- /.mobile-nav__top -->
+
+
+
+        </div>
+        <!-- /.mobile-nav__content -->
+    </div>
+    <!-- /.mobile-nav__wrapper -->
+
+    <div class="search-popup">
+        <div class="search-popup__overlay search-toggler"></div>
+        <!-- /.search-popup__overlay -->
+        <div class="search-popup__content">
+            <form action="#">
+                <label for="search" class="sr-only">search here</label><!-- /.sr-only -->
+                <input type="text" id="search" placeholder="Search Here..." />
+                <button type="submit" aria-label="search submit" class="thm-btn">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
+        </div>
+        <!-- /.search-popup__content -->
+    </div>
+    <!-- /.search-popup -->
+
+    <script src="/static/assets/js/jquery-3.5.1.min.js"></script>
+    <script src="/static/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/assets/js/swiper.min.js"></script>
+    <script src="/static/assets/js/jquery.ajaxchimp.min.js"></script>
+    <script src="/static/assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="/static/assets/js/jquery.validate.min.js"></script>
+    <script src="/static/assets/js/bootstrap-select.min.js"></script>
+    <script src="/static/assets/js/wow.js"></script>
+    <script src="/static/assets/js/odometer.min.js"></script>
+    <script src="/static/assets/js/jquery.appear.min.js"></script>
+    <script src="/static/assets/js/wNumb.min.js"></script>
+    <script src="/static/assets/js/nouislider.min.js"></script>
+    <script src="/static/assets/js/theme.js"></script>
+</body>
+</html>
