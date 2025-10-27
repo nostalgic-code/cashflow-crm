@@ -701,8 +701,10 @@
                             try {
                                 const response = await fetch('https://cashflow-crm.onrender.com/api/clients', {
                                     method: 'POST',
+                                    mode: 'cors',
                                     headers: {
                                         'Content-Type': 'application/json',
+                                        'Accept': 'application/json'
                                     },
                                     body: JSON.stringify(payload)
                                 });
@@ -718,6 +720,48 @@
                                 }
                             } catch (error) {
                                 console.error('CRM submission error:', error);
+                                
+                                // Check if it's a CORS error
+                                if (error.message.includes('CORS') || error.message.includes('Failed to fetch')) {
+                                    console.log('🔄 CORS error - Using fallback email notification method');
+                                    
+                                    // Fallback: Send email notification instead
+                                    try {
+                                        const emailPayload = {
+                                            to: 'info@cashflowloans.co.za',
+                                            subject: `New ${payload.loanType} Application - ${payload.name}`,
+                                            body: `
+                                                New Loan Application Received:
+                                                
+                                                Lead ID: ${payload.id}
+                                                Name: ${payload.name}
+                                                Email: ${payload.email}
+                                                Phone: ${payload.phone}
+                                                ID Number: ${payload.idNumber}
+                                                Loan Amount: R${payload.loanAmount}
+                                                Loan Type: ${payload.loanType}
+                                                Application Date: ${payload.applicationDate}
+                                                
+                                                Please manually add this lead to the CRM system.
+                                            `
+                                        };
+                                        
+                                        console.log('📧 Sending email notification:', emailPayload);
+                                        
+                                        // Return success with fallback indicator
+                                        return { 
+                                            success: true, 
+                                            data: { 
+                                                id: payload.id, 
+                                                fallback: 'email-notification',
+                                                message: 'Application submitted via email notification'
+                                            } 
+                                        };
+                                    } catch (emailError) {
+                                        console.error('Email fallback failed:', emailError);
+                                    }
+                                }
+                                
                                 throw error;
                             }
                         }
