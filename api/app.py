@@ -12,13 +12,18 @@ from flask_cors import CORS
 # Use DATABASE_URL from environment (Render sets this for you)
 app = Flask(__name__)
 
-# Enable CORS for your domain
-CORS(app, origins=[
-    'https://www.cashflowloans.co.za',
-    'https://cashflowloans.co.za',
-    'http://localhost:3000',
-    'http://127.0.0.1:5000'
-])
+# Enable CORS for your domain with proper headers
+CORS(app, 
+    origins=[
+        'https://www.cashflowloans.co.za',
+        'https://cashflowloans.co.za',
+        'http://localhost:3000',
+        'http://127.0.0.1:5000'
+    ],
+    methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allow_headers=['Content-Type', 'Authorization', 'Accept'],
+    supports_credentials=True
+)
 
 # Flask-Mail configuration
 app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.zoho.com')
@@ -282,7 +287,11 @@ def apply_secured():
 def create_crm_client():
     # Handle preflight CORS request
     if request.method == 'OPTIONS':
-        return jsonify({'status': 'ok'}), 200
+        response = jsonify({'status': 'ok'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        return response, 200
     
     try:
         data = request.get_json()
@@ -297,24 +306,9 @@ def create_crm_client():
         start_date = datetime.strptime(data.get('startDate'), '%Y-%m-%d').date()
         due_date = datetime.strptime(data.get('dueDate'), '%Y-%m-%d').date()
         
-        # Forward to external CRM and store locally
-        try:
-            import requests
-            external_response = requests.post(
-                'https://cashflow-crm.onrender.com/api/clients',
-                json=data,
-                timeout=10
-            )
-            external_success = external_response.status_code == 201
-            if external_success:
-                external_data = external_response.json()
-                print(f"Successfully forwarded to external CRM: {external_data.get('id')}")
-            else:
-                print(f"External CRM failed: {external_response.status_code}")
-        except Exception as e:
-            print(f"Failed to forward to external CRM: {e}")
-            external_success = False
-            external_data = None
+        # Store directly in local database (this Flask app IS the CRM now)
+        external_success = True
+        external_data = None
 
         # Create local backup entry
         try:
@@ -376,11 +370,8 @@ Please review this application in the CRM dashboard.
             print(f"Failed to send email notification: {e}")
         
         # Return success response
-        if external_success and external_data:
-            # Use external CRM response if successful
-            return jsonify(external_data), 201
-        elif local_success:
-            # Return local data if external failed but local succeeded
+        if local_success:
+            # Return local data (this Flask app IS the CRM)
             response_data = {
                 'id': client.id,
                 'name': client.name,
@@ -403,7 +394,7 @@ Please review this application in the CRM dashboard.
             }
             return jsonify(response_data), 201
         else:
-            return jsonify({'error': 'Both external and local storage failed'}), 500
+            return jsonify({'error': 'Failed to create client record'}), 500
         
     except ValueError as e:
         return jsonify({'error': f'Invalid data format: {str(e)}'}), 400
