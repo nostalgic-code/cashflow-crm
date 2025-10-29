@@ -15,7 +15,8 @@ CORS(app, origins=[
     "http://localhost:5175",
     "https://cashflow-crm.vercel.app",
     "https://cashflow-crm.vercel.app/crm",
-    "https://cashflow-crm.onrender.com"
+    "https://cashflow-crm.onrender.com",
+    "https://loan-forms.vercel.app"
 ], supports_credentials=True)  # Allow requests from React frontend
 
 print(f"✅ Connected to Supabase successfully!")
