@@ -374,10 +374,10 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-6xl max-h-[98vh] sm:max-h-[95vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 sm:p-6">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-white/20 rounded-full">
@@ -467,9 +467,9 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
         </div>
 
         {/* Content */}
-        <div className="flex h-[calc(90vh-120px)] overflow-hidden">
+        <div className="flex flex-col lg:flex-row flex-1 min-h-0 overflow-hidden">
           {/* Main Content */}
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6">
             {/* Contact Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="space-y-4">
@@ -734,10 +734,11 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
           </div>
 
           {/* Sidebar - Payment Actions */}
-          <div className="w-80 border-l border-gray-200 p-6 bg-gray-50">
-            <h3 className="text-lg font-semibold text-gray-900 border-b pb-2 mb-4">
-              Quick Actions
-            </h3>
+          <div className="w-full lg:w-80 border-t lg:border-t-0 lg:border-l border-gray-200 bg-gray-50 overflow-y-auto">
+            <div className="p-4 sm:p-6">
+              <h3 className="text-lg font-semibold text-gray-900 border-b pb-2 mb-4">
+                Quick Actions
+              </h3>
             
             {/* Approval Notice for New Leads */}
             {normalizedClient.status === 'new-lead' && (
@@ -873,7 +874,7 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
             </div>
 
             {/* Payment Information */}
-            <div>
+            <div className="pb-6">
               <h4 className="font-medium text-gray-900 mb-3">Payment Information</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between p-2 bg-white rounded border">
@@ -891,6 +892,7 @@ const ClientModal = ({ client, isOpen, onClose, onUpdate }) => {
                   </span>
                 </div>
               </div>
+            </div>
             </div>
           </div>
         </div>
